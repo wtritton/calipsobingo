@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidad - Calipso Bingo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #1a5e3a; /* Verde más profundo y elegante */
+            --secondary-green: #2E8B57; /* Tu verde original */
+            --accent-orange: #FF6B35; /* Naranja más vibrante */
+            --accent-yellow: #FFD700;
+            --bg-color: #F4F7F6;
+            --text-dark: #2c3e50;
+            --white: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            font-size: 14px;
+            /* Patrón de fondo sutil */
+            background-image: radial-gradient(#2E8B57 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
+            background-color: #f0fdf4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Navbar Mejorado */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-decoration: none;
+        }
+        
+        .logo img {
+            height: 36px;
+            border-radius: 50%;
+            background: white;
+            padding: 2px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* Botones de Navegación */
+        .btn-nav-action {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            text-decoration: none;
+            transition: transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-vendedor {
+            background-color: transparent;
+            color: var(--white);
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+        
+        .btn-vendedor:hover {
+            border-color: var(--white);
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .btn-soporte {
+            background-color: var(--accent-orange);
+            color: white;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .btn-soporte:hover {
+            background-color: #e55a2b;
+            transform: translateY(-2px);
+        }
+        
+        /* Layout de Contenido Legal */
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            color: var(--primary-green);
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .legal-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .legal-section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        .legal-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .section-title {
+            color: var(--primary-green);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-number {
+            background: var(--accent-orange);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .legal-text {
+            color: #444;
+            line-height: 1.8;
+            font-size: 15px;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .legal-list {
+            list-style-type: none;
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .legal-list li {
+            position: relative;
+            margin-bottom: 8px;
+            padding-left: 20px;
+        }
+
+        .legal-list li::before {
+            content: "•";
+            color: var(--secondary-green);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .contact-box {
+            background-color: #f0fdf4;
+            border: 2px dashed var(--secondary-green);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .contact-box strong {
+            color: var(--primary-green);
+        }
+
+        /* Footer Styles (Idéntico al index) */
+        .main-footer {
+            background-color: #124029;
+            color: #e0e0e0;
+            padding: 30px 20px 20px;
+            margin-top: 30px;
+            border-top: 5px solid var(--accent-orange);
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .footer-social-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 13px;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+
+        .social-icons a {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .social-icons a:hover {
+            background: var(--accent-orange);
+            transform: translateY(-3px);
+        }
+
+        .footer-legal-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 13px;
+            margin: 5px 0;
+        }
+
+        .footer-legal-links a {
+            color: #a0c4b3;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-legal-links a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .footer-separator {
+            color: #406856;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 15px;
+            font-size: 12px;
+            color: #88a697;
+        }
+
+        .developer-credit {
+            margin-top: 5px;
+            font-size: 11px;
+            opacity: 0.7;
+        }
+
+        .developer-credit i {
+            color: var(--accent-orange);
+        }
+
+        /* WhatsApp Flotante */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: #25D366;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            text-decoration: none;
+            z-index: 1000;
+            transition: transform 0.3s;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        @media (max-width: 850px) {
+            .nav-links {
+                display: none;
+            }
+            .navbar {
+                justify-content: center;
+            }
+            .legal-card {
+                padding: 20px;
+            }
+            .page-title {
+                font-size: 1.8rem;
+            }
+            .footer-legal-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .footer-separator {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <img src="Logo-oficial.png" alt="Bingo Logo">
+            Calipso Bingo
+        </a>
+        <div class="nav-links">
+            <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+            <a href="#">Mis compras</a>
+            <a href="#">Resultados</a>
+            <a href="#" class="btn-nav-action btn-vendedor">SE VENDEDOR</a>
+            <a href="https://wa.me/584248991277" class="btn-nav-action btn-soporte"><i class="fab fa-whatsapp"></i> SOPORTE</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Declaración de Privacidad</h1>
+            <p class="page-subtitle">Última actualización: Enero 2026</p>
+        </div>
+
+        <div class="legal-card">
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">1</span>
+                    Consideraciones Preliminares
+                </div>
+                <p class="legal-text">
+                    <strong>Calipso Bingo Centro de Apuestas C.A.</strong>, empresa constituida bajo la normativa de la República Bolivariana de Venezuela, identificada con el RIF J-XXXXXXXXX y con domicilio social en El Tigre, Estado Anzoátegui, administradora del portal digital <strong>https://calipsobingo.com</strong> y del servicio en línea "Calipso Bingo" (denominado en lo sucesivo <strong>"el Servicio"</strong> o <strong>"Calipso Bingo"</strong>), asume el compromiso de salvaguardar la privacidad y la información personal de sus usuarios, de acuerdo con la legislación vigente en Venezuela.
+                </p>
+                <p class="legal-text">
+                    La presente Declaración de Privacidad explica los métodos mediante los cuales recabamos, empleamos, custodiamos y resguardamos sus datos personales durante su interacción con nuestro Servicio. Al acceder y utilizar el Servicio, usted manifiesta su conformidad con las prácticas detalladas en este documento.
+                </p>
+                <p class="legal-text">
+                    Esta Declaración constituye un componente integral de los Términos y Condiciones Generales de Uso de Calipso Bingo.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">2</span>
+                    Entidad Responsable del Tratamiento
+                </div>
+                <p class="legal-text">
+                    La entidad responsable del tratamiento de su información personal es:
+                </p>
+                <ul class="legal-list">
+                    <li><strong>Denominación Legal:</strong> Calipso Bingo Centro de Apuestas C.A.</li>
+                    <li><strong>RIF:</strong> J-xxxxxxxxx</li>
+                    <li><strong>Domicilio:</strong> El Tigre, Estado Anzoátegui, Venezuela</li>
+                    <li><strong>Correo Electrónico:</strong> calipsobingo@gmail.com</li>
+                    <li><strong>WhatsApp:</strong> +58 424 8991277</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">3</span>
+                    Información que Recabamos
+                </div>
+                <p class="legal-text">
+                    Durante su uso del Servicio, podemos recopilar los siguientes tipos de datos personales:
+                </p>
+                <ul class="legal-list">
+                    <li><strong>Información de Identidad:</strong> nombre y apellidos completos, número de documento de identificación nacional (cédula de identidad o pasaporte).</li>
+                    <li><strong>Información de Contacto:</strong> número telefónico (particularmente para WhatsApp), dirección de correo electrónico.</li>
+                    <li><strong>Información de Transacciones:</strong> datos vinculados a la adquisición de boletos, medios de pago empleados, imágenes de los comprobantes de pago.</li>
+                    <li><strong>Información de Participación:</strong> boletos obtenidos, juegos en los que ha tomado parte, resultados de su participación.</li>
+                    <li><strong>Información Técnica:</strong> dirección de protocolo de Internet (IP), tipo y versión de navegador, sistema operativo del dispositivo, páginas consultadas, fecha y hora de cada acceso (mediante cookies y tecnologías afines).</li>
+                    <li><strong>Información de Comunicaciones:</strong> contenido de los mensajes, preguntas o solicitudes que nos dirija a través de nuestros canales de atención.</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">4</span>
+                    Propósitos del Tratamiento de Datos
+                </div>
+                <p class="legal-text">
+                    Sus datos personales son tratados con las siguientes finalidades:
+                </p>
+                <ul class="legal-list">
+                    <li><strong>Administración de la Participación:</strong> gestionar su registro, confirmar su identidad y edad, administrar su inclusión en los juegos, asignar y entregar los boletos correspondientes.</li>
+                    <li><strong>Gestión Financiera:</strong> procesar los pagos recibidos, verificar la autenticidad de los comprobantes, gestionar reintegros cuando proceda.</li>
+                    <li><strong>Comunicaciones:</strong> informarle sobre los resultados de los juegos, contactarlo en caso de ser acreedor a un premio, atender sus consultas y solicitudes, enviarle información pertinente sobre futuros juegos y promociones (siempre que cuente con su autorización previa).</li>
+                    <li><strong>Otorgamiento de Premios:</strong> coordinar la entrega de los premios, verificar su identidad al momento de la adjudicación.</li>
+                    <li><strong>Cumplimiento Normativo:</strong> dar cumplimiento a obligaciones legales y regulatorias, prevenir actividades fraudulentas, proteger los derechos de Calipso Bingo y de los demás participantes.</li>
+                    <li><strong>Optimización del Servicio:</strong> analizar patrones de uso del Servicio, mejorar nuestras funcionalidades y personalizar su experiencia.</li>
+                    <li><strong>Publicidad y Promoción:</strong> enviarle información publicitaria sobre nuevas dinámicas y actividades de Calipso Bingo (exclusivamente previo consentimiento expreso por su parte).</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">5</span>
+                    Fundamentos Legales para el Tratamiento
+                </div>
+                <p class="legal-text">
+                    El tratamiento de su información personal se sustenta en las siguientes bases jurídicas:
+                </p>
+                <ul class="legal-list">
+                    <li><strong>Ejecución de un Contrato:</strong> para gestionar su participación en los juegos y dar cumplimiento a los Términos y Condiciones acordados.</li>
+                    <li><strong>Consentimiento:</strong> para el envío de comunicaciones promocionales y de marketing (usted puede revocar este consentimiento en cualquier momento).</li>
+                    <li><strong>Obligación Legal:</strong> para cumplir con disposiciones legales, fiscales o administrativas aplicables.</li>
+                    <li><strong>Interés Legítimo:</strong> para prevenir fraudes, mejorar la calidad del Servicio y defender nuestros derechos legítimos.</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">6</span>
+                    Cesión de Información a Terceros
+                </div>
+                <p class="legal-text">
+                    Calipso Bingo no comercia, arrienda ni transfiere sus datos personales a terceros con fines de comercialización. No obstante, podemos compartir su información bajo las siguientes circunstancias:
+                </p>
+                <ul class="legal-list">
+                    <li><strong>Proveedores de Servicios Asociados:</strong> con empresas colaboradoras que nos prestan servicios esenciales (alojamiento web, procesamiento de pagos, servicios de mensajería), quienes están sujetos a estrictas cláusulas de confidencialidad.</li>
+                    <li><strong>Requerimiento Legal:</strong> cuando sea necesario para dar cumplimiento a una ley, mandato judicial o solicitud de una autoridad competente.</li>
+                    <li><strong>Protección de Derechos:</strong> para proteger los derechos, propiedad o seguridad de Calipso Bingo, de nuestros usuarios o del público en general.</li>
+                    <li><strong>Con su Autorización Expresa:</strong> en cualquier otro supuesto no contemplado anteriormente, únicamente con su permiso explícito.</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">7</span>
+                    Protección y Seguridad de la Información
+                </div>
+                <p class="legal-text">
+                    Implementamos medidas técnicas y organizativas adecuadas para proteger sus datos personales contra accesos no autorizados, pérdida, alteración o destrucción. Estas medidas incluyen, entre otras:
+                </p>
+                <ul class="legal-list">
+                    <li>Cifrado de datos sensibles.</li>
+                    <li>Acceso limitado a la información personal únicamente al personal autorizado con necesidad de conocimiento.</li>
+                    <li>Sistemas de seguridad informática y monitoreo continuo.</li>
+                    <li>Actualizaciones periódicas de nuestros protocolos de seguridad.</li>
+                </ul>
+                <p class="legal-text">
+                    Cabe destacar que ningún sistema de transmisión por Internet o método de almacenamiento electrónico puede garantizar una seguridad absoluta. Si bien empleamos esfuerzos comerciales razonables para proteger sus datos, no podemos asegurar una protección infalible.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">8</span>
+                    Plazo de Conservación de los Datos
+                </div>
+                <p class="legal-text">
+                    Conservaremos sus datos personales durante el período necesario para cumplir con los fines descritos en esta Declaración, considerando:
+                </p>
+                <ul class="legal-list">
+                    <li>La duración de su relación activa como usuario del Servicio.</li>
+                    <li>Los plazos de prescripción y retención establecidos por la legislación aplicable (por ejemplo, para fines fiscales y contables).</li>
+                    <li>Hasta que usted solicite su eliminación, siempre y cuando no exista una obligación legal que nos obligue a conservarlos.</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">9</span>
+                    Sus Derechos como Titular de los Datos
+                </div>
+                <p class="legal-text">
+                    De conformidad con la normativa venezolana en materia de protección de datos, usted tiene derecho a:
+                </p>
+                <ul class="legal-list">
+                    <li><strong>Acceso:</strong> Solicitar información sobre los datos personales que tratamos y los fines del tratamiento.</li>
+                    <li><strong>Rectificación:</strong> Solicitar la corrección de sus datos si son inexactos o están incompletos.</li>
+                    <li><strong>Actualización:</strong> Solicitar la puesta al día de sus datos cuando hayan sufrido modificaciones.</li>
+                    <li><strong>Oposición:</strong> Oponerse al tratamiento de sus datos para ciertos fines específicos, como el marketing directo.</li>
+                    <li><strong>Supresión (Derecho al Olvido):</strong> Solicitar la eliminación de sus datos cuando ya no sean necesarios para los fines recogidos o retire su consentimiento.</li>
+                    <li><strong>Portabilidad:</strong> Recibir los datos que nos haya proporcionado en un formato estructurado y de uso común.</li>
+                    <li><strong>Revocación del Consentimiento:</strong> Retirar el consentimiento otorgado para el tratamiento en cualquier momento, cuando dicho tratamiento se base en el consentimiento.</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">10</span>
+                    Cookies y Tecnologías de Seguimiento
+                </div>
+                <p class="legal-text">
+                    Empleamos cookies y tecnologías similares para optimizar su experiencia en nuestro Servicio, analizar métricas de uso y personalizar contenidos. Las cookies son pequeños archivos de datos que se almacenan en su navegador.
+                </p>
+                <p class="legal-text">
+                    Usted puede configurar las preferencias de su navegador para rechazar las cookies, aunque esto podría limitar el uso pleno de algunas funcionalidades del Servicio.
+                </p>
+                <p class="legal-text">
+                    Utilizamos estas tecnologías para:
+                </p>
+                <ul class="legal-list">
+                    <li>Mantener la sesión del usuario activa.</li>
+                    <li>Recordar sus configuraciones y preferencias.</li>
+                    <li>Analizar el tráfico y rendimiento del sitio (ej. mediante Google Analytics o Meta Pixel).</li>
+                    <li>Mejorar las características de seguridad y usabilidad.</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">11</span>
+                    Menores de Edad
+                </div>
+                <p class="legal-text">
+                    El Servicio está destinado exclusivamente a personas que hayan alcanzado la mayoría de edad legal (18 años). No recabamos de manera intencionada información personal de menores. De descubrir que hemos recolectado datos de un menor sin el consentimiento verificable de sus padres o representantes legales, tomaremos las medidas pertinentes para eliminar dicha información de manera inmediata.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">12</span>
+                    Enlaces a Sitios Externos
+                </div>
+                <p class="legal-text">
+                    Nuestro Servicio puede contener hipervínculos a sitios web operados por terceros. La presente Declaración de Privacidad no es aplicable a dichos sitios externos. Le recomendamos revisar las políticas de privacidad de esos sitios antes de facilitarles cualquier información personal.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">13</span>
+                    Transferencias Internacionales de Datos
+                </div>
+                <p class="legal-text">
+                    Sus datos personales se almacenan y procesan principalmente en servidores localizados dentro del territorio venezolano. En el eventual caso de que sea necesaria una transferencia internacional, adoptaremos las garantías contractuales y técnicas adecuadas para asegurar un nivel de protección equivalente al de sus datos.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">14</span>
+                    Modificaciones a la Presente Declaración
+                </div>
+                <p class="legal-text">
+                    Nos reservamos el derecho de modificar esta Declaración de Privacidad de forma ocasional. Las actualizaciones entrarán en vigor en el momento de su publicación en la dirección <strong>https://calipsobingo.com</strong>. Le notificaremos sobre cambios sustanciales a través de nuestros canales de comunicación habituales o mediante un aviso destacado en el Servicio.
+                </p>
+                <p class="legal-text">
+                    Le sugerimos consultar esta Declaración periódicamente para mantenerse informado sobre nuestras prácticas de protección de datos.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">15</span>
+                    Canales de Atención
+                </div>
+                <p class="legal-text">
+                    Para cualquier pregunta o inquietud relacionada con esta Declaración de Privacidad o el tratamiento de sus datos personales, puede contactarnos a través de los medios indicados en la sección 2.
+                </p>
+                <div class="contact-box">
+                    <p><i class="fas fa-envelope"></i> <strong>calipsobingo@gmail.com</strong></p>
+                    <p style="margin-top:10px;"><i class="fab fa-whatsapp"></i> <strong>+58 424 8991277</strong></p>
+                    <p style="margin-top:10px;"><i class="fas fa-globe"></i> <strong>https://calipsobingo.com</strong></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-social-title">Síguenos en nuestras redes:</div>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/calipso_bingo?igsh=ZHllOHZmY3NkN2pr"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-legal-links">
+                <a href="terminos-y-condiciones.html">Términos y condiciones</a>
+                <span class="footer-separator">|</span>
+                <a href="politica-de-privacidad.html">Declaración de privacidad</a>
+                <span class="footer-separator">|</span>
+                <a href="programa-de-vendedores.html">Términos del programa de vendedores</a>
+            </div>
+
+            <div class="footer-bottom">
+                <p>Copyright © 2026 Calipso Bingo. Todos los derechos reservados.</p>
+                <div class="developer-credit">
+                    Sitio web desarrollado por </i> <strong>Wilmer Martínez Tritton</strong>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <a href="https://wa.me/584248991277" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+</body>
+</html>

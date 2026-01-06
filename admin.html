@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Calipso Bingo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #f4f6f9; font-family: 'Segoe UI', sans-serif; }
+        .navbar { background: #1a5e3a !important; }
+        .card-config { border-left: 5px solid #ffc107; }
+        .btn-action { margin: 0 2px; }
+        .row-verificado { background-color: #d1e7dd !important; } /* Fila Verde */
+        .badge-verificado { background-color: #198754; }
+        .badge-pendiente { background-color: #ffc107; color: #000; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-dark mb-4">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1"><i class="fas fa-cogs"></i> Panel de Control</span>
+            <div class="d-flex gap-2">
+                <a href="index.html" class="btn btn-outline-light btn-sm" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> Ver Tienda
+                </a>
+                <button class="btn btn-warning btn-sm fw-bold" onclick="window.location.href='index.html'">Salir</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <div class="card shadow-sm mb-4 card-config">
+            <div class="card-header bg-white fw-bold">
+                <i class="fas fa-edit"></i> Configuración General
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-5">
+                        <label class="form-label">Título del Evento</label>
+                        <input type="text" id="confTitulo" class="form-control" placeholder="Cargando...">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Subtítulo (Fecha)</label>
+                        <input type="text" id="confFecha" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold text-dark">📦 Cantidad Cartones</label>
+                        <input type="number" id="confTotalCartones" class="form-control" placeholder="Ej: 1000">
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold text-success">Precio Base (1)</label>
+                        <input type="number" id="confPrecioBase" class="form-control" step="0.01">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold text-primary">Promo x 4</label>
+                        <input type="number" id="confPromo4" class="form-control" step="0.01">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold text-primary">Promo x 8</label>
+                        <input type="number" id="confPromo8" class="form-control" step="0.01">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold text-primary">Promo x 12</label>
+                        <input type="number" id="confPromo12" class="form-control" step="0.01">
+                    </div>
+
+                    <div class="col-12 text-end">
+                        <button class="btn btn-success fw-bold px-4" onclick="guardarConfiguracion()">
+                            <i class="fas fa-save"></i> ACTUALIZAR DATOS
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card bg-white p-3 shadow-sm text-center border-0">
+                    <h6 class="text-muted text-uppercase small">Total Vendidos</h6>
+                    <h2 class="text-success fw-bold" id="totalVendidos">0</h2>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-white p-3 shadow-sm text-center border-0">
+                    <h6 class="text-muted text-uppercase small">Ingresos Estimados</h6>
+                    <h2 class="text-primary fw-bold" id="totalDinero">Bs 0,00</h2>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-white p-3 shadow-sm text-center border-0">
+                    <h6 class="text-muted text-uppercase small">Disponibles</h6>
+                    <h2 class="text-secondary fw-bold" id="totalDisponibles">...</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12 text-end">
+                <button class="btn btn-outline-danger btn-sm" onclick="reiniciarJuego()">
+                    <i class="fas fa-trash-alt"></i> BORRAR TODO Y REINICIAR
+                </button>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white fw-bold">
+                <i class="fas fa-list"></i> Gestión de Ventas
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Cartón #</th>
+                                <th>Cliente</th>
+                                <th>Teléfono / Referencia</th>
+                                <th>Estado</th>
+                                <th class="text-end">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaCuerpo">
+                            <tr><td colspan="5" class="text-center p-4 text-muted">Cargando datos...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        const password = prompt("Ingrese contraseña de administrador:");
+        if (password !== "admin123") { window.location.href = "index.html"; }
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtj_J5wQ4y-U3UDwwphud9Wir1n7WcI2s",
+            authDomain: "calipsobingo-f532b.firebaseapp.com",
+            databaseURL: "https://calipsobingo-f532b-default-rtdb.firebaseio.com",
+            projectId: "calipsobingo-f532b",
+            storageBucket: "calipsobingo-f532b.firebasestorage.app",
+            messagingSenderId: "196074596826",
+            appId: "1:196074596826:web:db6280789eb0d51ddd38e3",
+            measurementId: "G-M9XK1H641N"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const cartonesRef = database.ref('cartones');
+        const configRef = database.ref('configuracion');
+
+        let precioBaseActual = 50;
+        let totalCartonesGlobal = 1000;
+
+        // --- CARGAR CONFIGURACIÓN ---
+        configRef.on('value', (snapshot) => {
+            const config = snapshot.val();
+            if (config) {
+                document.getElementById('confTitulo').value = config.titulo || '';
+                document.getElementById('confFecha').value = config.fecha || '';
+                document.getElementById('confTotalCartones').value = config.totalCartones || 1000; // Carga Cantidad
+                document.getElementById('confPrecioBase').value = config.precioBase || 0;
+                document.getElementById('confPromo4').value = config.promo4 || 0;
+                document.getElementById('confPromo8').value = config.promo8 || 0;
+                document.getElementById('confPromo12').value = config.promo12 || 0;
+                
+                precioBaseActual = parseFloat(config.precioBase) || 0;
+                totalCartonesGlobal = parseInt(config.totalCartones) || 1000;
+                
+                // Forzar actualización visual de estadísticas
+                actualizarEstadisticasVisuales(document.getElementById('totalVendidos').textContent);
+            }
+        });
+
+        // --- GUARDAR CONFIGURACIÓN ---
+        window.guardarConfiguracion = function() {
+            const datos = {
+                titulo: document.getElementById('confTitulo').value,
+                fecha: document.getElementById('confFecha').value,
+                totalCartones: parseInt(document.getElementById('confTotalCartones').value), // Guarda Cantidad
+                precioBase: parseFloat(document.getElementById('confPrecioBase').value),
+                promo4: parseFloat(document.getElementById('confPromo4').value),
+                promo8: parseFloat(document.getElementById('confPromo8').value),
+                promo12: parseFloat(document.getElementById('confPromo12').value)
+            };
+
+            configRef.set(datos)
+                .then(() => alert("✅ Configuración guardada correctamente."))
+                .catch((error) => alert("❌ Error: " + error.message));
+        };
+
+        // --- GESTIÓN DE VENTAS ---
+        cartonesRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            const tabla = document.getElementById('tablaCuerpo');
+            tabla.innerHTML = '';
+            let totalVendidosCount = 0;
+
+            if (data) {
+                const lista = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+                lista.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+                lista.forEach(item => {
+                    if (item.estado === 'vendido') {
+                        totalVendidosCount++;
+                        
+                        // Determinar si está verificado
+                        const esVerificado = item.verificado === true;
+                        const claseFila = esVerificado ? 'row-verificado' : '';
+                        const badgeEstado = esVerificado 
+                            ? '<span class="badge badge-verificado"><i class="fas fa-check-circle"></i> Verificado</span>' 
+                            : '<span class="badge badge-pendiente"><i class="fas fa-clock"></i> Pendiente</span>';
+
+                        const botonAccion = esVerificado
+                            ? `<button class="btn btn-warning btn-sm btn-action" title="Desmarcar" onclick="toggleVerificado('${item.id}', false)"><i class="fas fa-undo"></i></button>`
+                            : `<button class="btn btn-success btn-sm btn-action" title="Confirmar Pago" onclick="toggleVerificado('${item.id}', true)"><i class="fas fa-check"></i></button>`;
+
+                        const tr = document.createElement('tr');
+                        tr.className = claseFila;
+                        tr.innerHTML = `
+                            <td><strong>#${item.id}</strong></td>
+                            <td>${item.nombre}</td>
+                            <td>
+                                <small class="d-block text-muted">${item.telefono}</small>
+                                <span class="fw-bold text-primary">Ref: ${item.referencia}</span>
+                            </td>
+                            <td>${badgeEstado}</td>
+                            <td class="text-end">
+                                ${botonAccion}
+                                <button class="btn btn-outline-danger btn-sm btn-action" title="Eliminar" onclick="liberar('${item.id}')"><i class="fas fa-times"></i></button>
+                            </td>
+                        `;
+                        tabla.appendChild(tr);
+                    }
+                });
+            } else {
+                tabla.innerHTML = '<tr><td colspan="5" class="text-center p-4 text-muted">No hay ventas registradas.</td></tr>';
+            }
+            actualizarEstadisticasVisuales(totalVendidosCount);
+        });
+
+        function actualizarEstadisticasVisuales(vendidos) {
+            vendidos = parseInt(vendidos) || 0;
+            document.getElementById('totalVendidos').textContent = vendidos;
+            document.getElementById('totalDisponibles').textContent = totalCartonesGlobal - vendidos;
+            const estimado = vendidos * precioBaseActual;
+            document.getElementById('totalDinero').textContent = 'Bs ' + estimado.toLocaleString('es-VE', {minimumFractionDigits: 2});
+        }
+
+        // --- NUEVA FUNCIÓN: VERIFICAR PAGO ---
+        window.toggleVerificado = function(id, estado) {
+            cartonesRef.child(id).update({ verificado: estado });
+        }
+
+        window.liberar = function(id) {
+            if(confirm('¿Eliminar venta del cartón #' + id + '? Quedará libre de nuevo.')) {
+                cartonesRef.child(id).remove();
+            }
+        }
+
+        window.reiniciarJuego = function() {
+            if(confirm("⚠️ ¿Estás seguro de borrar TODAS las ventas?")) {
+                if(prompt("Escribe BORRAR para confirmar") === "BORRAR") {
+                    cartonesRef.remove();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
