@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="description" content="Participa en el Gran Sorteo Calipso Bingo. Compra tus cartones de la suerte, aprovecha nuestras promociones y gana grandes premios. ¡Juega y gana con Calipso Bingo!">
+    <meta property="og:title" content="Calipso Bingo - Venta de Cartones">
+    <meta property="og:description" content="Participa en el Gran Sorteo Calipso Bingo. Compra tus cartones de la suerte y gana.">
+    <meta property="og:image" content="https://calipsobingo1.vercel.app/Logo-oficial.png">
+    
     <title>Calipso Bingo - Venta de Cartones</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -90,7 +96,7 @@
         .card-header { background: var(--primary-green); color: white; padding: 15px; text-align: center; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; }
         .bingo-deco { position: absolute; width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.1); top: -15px; right: -15px; }
         .header-title { font-size: 20px; font-weight: 800; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .subtitle { font-size: 20px; opacity: 0.9; }
+        .subtitle { font-size: 13px; opacity: 0.9; }
         .price-tag { background: var(--accent-orange); color: white; display: inline-block; padding: 4px 12px; border-radius: 15px; font-weight: bold; margin-top: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-size: 13px; }
         .promo-text { background-color: #FFD54F; color: #1a5e3a; display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-top: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); text-transform: uppercase; letter-spacing: 0.5px; border: 2px solid white; }
         
@@ -119,7 +125,7 @@
         .quantity-btn { background-color: white; color: var(--primary-green); border: 1px solid #e0e0e0; width: 36px; height: 36px; border-radius: 10px; font-size: 16px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .quantity-btn:hover { background-color: #f0fdf4; border-color: var(--primary-green); }
         .quantity-input { background-color: transparent; color: var(--primary-green); border: none; width: 40px; text-align: center; font-size: 18px; font-weight: 800; outline: none; }
-        .price-summary-box { background-color: #1a5e3a; color: white; padding: 15px; border-radius: 12px; text-align: center; margin: 15px 0; box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 0px solid #000000; }
+        .price-summary-box { background-color: #1a5e3a; color: white; padding: 15px; border-radius: 12px; text-align: center; margin: 15px 0; box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 2px solid #000000; }
         .price-label { font-size: 14px; opacity: 0.9; margin-bottom: 2px; }
         .total-display { text-align: center; font-size: 32px; font-weight: 800; margin: 0; color: white; line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
         .savings-text { color: #FFD54F; font-weight: 700; font-size: 14px; margin-top: 5px; display: none; animation: pulse 2s infinite; }
@@ -128,6 +134,16 @@
         .form-input { width: 100%; padding: 10px 12px; padding-left: 35px; border: 2px solid #eee; border-radius: 8px; font-size: 14px; transition: all 0.3s; outline: none; }
         .form-input:focus { border-color: var(--secondary-green); }
         .input-error { border-color: var(--error-red) !important; background-color: #fffafa; animation: shake 0.3s ease-in-out; }
+        
+        /* RECOMENDACIÓN 2: MENSAJE DE ERROR ELEGANTE */
+        .error-message {
+            color: var(--error-red);
+            font-size: 11px;
+            margin-top: 4px;
+            font-weight: 600;
+            display: none; /* Oculto por defecto */
+        }
+        
         @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } 100% { transform: translateX(0); } }
         .input-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 14px; }
         .whatsapp-input-container { display: flex; gap: 8px; }
@@ -465,7 +481,9 @@
     <div id="cartonModal" class="modal"><div class="modal-content"><div class="carton-modal-header modal-header"><div><h3 style="margin:0; font-size: 18px;">Selecciona tu Cartón</h3><small style="opacity: 0.8" id="modalInstruction">Selecciona los cartones que deseas comprar</small></div><span style="font-size: 24px; cursor: pointer;" id="closeModal">&times;</span></div><div class="modal-body"><input type="text" class="search-bar" id="searchInput" placeholder="🔍 Buscar número (ej: 5) o terminal (ej: 5)..."><div class="carton-grid" id="cartonGrid"><p style="text-align:center;">Cargando...</p></div></div><div class="carton-modal-footer modal-footer"><button class="continue-btn" id="continueBtn">Confirmar Selección</button></div></div></div>
     
     <div id="paymentModal" class="modal"><div class="modal-content"><div class="payment-modal-header"><h3>Proceso de compra</h3><span class="close-payment" id="closePaymentModal">&times;</span></div><div class="timer-banner"><i class="far fa-clock"></i> Tienes <strong id="paymentTimer">05:00</strong> para completar el pago.</div><div class="modal-body payment-body"><p class="payment-instructions">Asegúrate de pagar el monto exacto...</p><div class="payment-details-list"><div class="payment-detail-row"><span class="detail-label">Monto exacto:</span><span class="detail-value"><span id="paymentAmountDisplay" class="copy-text">Bs 0,00</span><i class="far fa-copy copy-icon" title="Copiar"></i></span></div><div class="payment-detail-row"><span class="detail-label">Banco:</span><span class="detail-value"><span class="copy-text">Banesco (0134)</span><i class="far fa-copy copy-icon" title="Copiar"></i></span></div><div class="payment-detail-row"><span class="detail-label">Teléfono:</span><span class="detail-value"><span class="copy-text">04248991277</span><i class="far fa-copy copy-icon" title="Copiar"></i></span></div><div class="payment-detail-row"><span class="detail-label">Cédula:</span><span class="detail-value"><span class="copy-text">V10069692</span><i class="far fa-copy copy-icon" title="Copiar"></i></span></div><div class="payment-detail-row" style="border-bottom: none; padding-top: 15px;"><span class="detail-label">Cartones:</span><span class="detail-value" id="selectedCartonesList" style="word-break: break-all; text-align: right;">-</span></div></div><div class="payment-input-group"><label class="payment-label">Últimos 6 dígitos de la referencia:</label>
-    <input type="text" id="referenciaInput" class="payment-input" placeholder="Ej: 123456" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')"></div><div class="payment-input-group"><label class="payment-label">Comprobante de pago:</label><input type="file" id="comprobanteInput" style="display: none;" accept="image/*"><button class="upload-btn" id="triggerUploadBtn"><i class="fas fa-file-upload"></i> Subir comprobante de pago</button></div></div><div class="payment-footer"><button class="reservar-btn" id="finalReserveBtn">RESERVAR CARTONES</button></div></div></div>
+    <input type="text" id="referenciaInput" class="payment-input" placeholder="Ej: 123456" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+    <div id="referenciaError" class="error-message">La referencia debe tener 4 dígitos o más.</div>
+    </div><div class="payment-input-group"><label class="payment-label">Comprobante de pago:</label><input type="file" id="comprobanteInput" style="display: none;" accept="image/*"><button class="upload-btn" id="triggerUploadBtn"><i class="fas fa-file-upload"></i> Subir comprobante de pago</button></div></div><div class="payment-footer"><button class="reservar-btn" id="finalReserveBtn">RESERVAR CARTONES</button></div></div></div>
     
     <div id="singleCardModal" class="modal" style="background-color: rgba(0,0,0,0.85);"><div class="modal-content"><div class="modal-header"><div>Proceso de compra</div><span style="font-size: 20px; cursor: pointer; color:white;" id="closeSingleCardModal">&times;</span></div><div class="modal-body"><p id="previewMaxText">Selecciona tus cartones (Máximo: 1)</p><img src="Logo-oficial.png" alt="Vista Previa Cartón" class="single-card-image" id="singleCardImage" onerror="this.src='https://via.placeholder.com/400x500?text=Bingo+Card'"><p id="previewStatusText">Confirma si deseas elegir este cartón</p><div class="single-card-actions" id="previewActionButtons"></div><button class="btn-continue-preview" id="btnContinuePreview">CONTINUAR</button></div></div></div>
 
@@ -648,6 +666,7 @@
             const selectedCartonesList = document.getElementById('selectedCartonesList');
             const finalReserveBtn = document.getElementById('finalReserveBtn');
             const referenciaInput = document.getElementById('referenciaInput');
+            const referenciaError = document.getElementById('referenciaError');
             const triggerUploadBtn = document.getElementById('triggerUploadBtn');
             const comprobanteInput = document.getElementById('comprobanteInput');
             
@@ -933,7 +952,16 @@
 
             finalReserveBtn.addEventListener('click', function() {
                 const referencia = referenciaInput.value.trim();
-                if (referencia === "" || referencia.length < 4) { alert("Número de referencia inválido"); return; }
+                
+                // VALIDACIÓN DE REFERENCIA (SIN ALERT)
+                if (referencia === "" || referencia.length < 4) {
+                    referenciaInput.classList.add('input-error');
+                    referenciaError.style.display = 'block'; // MOSTRAR MENSAJE ROJO
+                    return; 
+                } else {
+                    referenciaInput.classList.remove('input-error');
+                    referenciaError.style.display = 'none';
+                }
 
                 finalReserveBtn.disabled = true;
                 finalReserveBtn.innerText = "Procesando...";
@@ -965,6 +993,14 @@
                     alert("Error al reservar: " + error.message);
                     finalReserveBtn.disabled = false;
                 });
+            });
+
+            // LIMPIAR ERROR AL ESCRIBIR
+            referenciaInput.addEventListener('input', function() {
+                if(this.value.length >= 4) {
+                    referenciaInput.classList.remove('input-error');
+                    referenciaError.style.display = 'none';
+                }
             });
 
             window.openSinglePreview = function(numero) {
