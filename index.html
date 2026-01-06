@@ -37,6 +37,59 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
+
+        /* --- PANTALLA DE CARGA (SPLASH SCREEN) --- */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff; /* Fondo blanco */
+            z-index: 9999; /* Por encima de todo */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 0.5s ease-out, visibility 0.5s;
+        }
+        
+        #splash-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .splash-logo {
+            /* TAMAÑO PARA MÓVILES (Celulares) */
+            width: 60%;         /* Ocupa el 60% del ancho de la pantalla */
+            max-width: 280px;   /* Pero que no pase de 280px */
+            height: auto;
+            animation: splash-pulse 1.5s infinite;
+        }
+
+        /* TAMAÑO PARA PC (Pantallas grandes) */
+        @media (min-width: 850px) {
+            .splash-logo {
+                width: 500px; /* <--- AQUÍ CAMBIAS EL TAMAÑO DE PC (Más grande) */
+                max-width: 100%;
+            }
+        }
+
+        .splash-text {
+            margin-top: 15px;
+            color: var(--primary-green);
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        @keyframes splash-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
         
         /* Navbar */
         .navbar {
@@ -202,7 +255,7 @@
         .quantity-btn { background-color: white; color: var(--primary-green); border: 1px solid #e0e0e0; width: 36px; height: 36px; border-radius: 10px; font-size: 16px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .quantity-btn:hover { background-color: #f0fdf4; border-color: var(--primary-green); }
         .quantity-input { background-color: transparent; color: var(--primary-green); border: none; width: 40px; text-align: center; font-size: 18px; font-weight: 800; outline: none; }
-        .price-summary-box { background-color: #1a5e3a; color: white; padding: 15px; border-radius: 12px; text-align: center; margin: 15px 0; box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 0px solid #000000; }
+        .price-summary-box { background-color: #1a5e3a; color: white; padding: 15px; border-radius: 12px; text-align: center; margin: 15px 0; box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 2px solid #000000; }
         .price-label { font-size: 14px; opacity: 0.9; margin-bottom: 2px; }
         .total-display { text-align: center; font-size: 32px; font-weight: 800; margin: 0; color: white; line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
         .savings-text { color: #FFD54F; font-weight: 700; font-size: 14px; margin-top: 5px; display: none; animation: pulse 2s infinite; }
@@ -328,6 +381,12 @@
     </style>
 </head>
 <body>
+
+    <div id="splash-screen">
+        <img src="logo-regreso.png" alt="Cargando..." class="splash-logo">
+        <div class="splash-text"></div>
+    </div>
+
     <nav class="navbar">
         <a href="#" class="logo">
             <img src="Logo-oficial.png" alt="Bingo Logo">
@@ -505,7 +564,6 @@
             </div>
             <div class="modal-body">
                 <p style="font-size:13px; color:#666; margin-bottom:10px;">Ingresa el número de teléfono con el que realizaste la compra para ver tus cartones.</p>
-                
                 <div class="styled-search-wrapper">
                     <div class="prefix-section">
                         <img src="https://flagcdn.com/w40/ve.png" alt="VE">
@@ -513,11 +571,8 @@
                         <span style="font-weight:600; margin-left:2px;">+58</span>
                     </div>
                     <input type="tel" id="inputSearchPhone" class="styled-input" placeholder="412-1234567" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                    <button id="btnSearchAction" class="styled-search-btn">
-                        Buscar
-                    </button>
+                    <button id="btnSearchAction" class="styled-search-btn">Buscar</button>
                 </div>
-                
                 <div class="search-results-container" id="searchResultsContainer"></div>
                 <button class="btn-back-home" id="btnBackFromSearch"><i class="fas fa-arrow-left"></i> VOLVER A INICIO</button>
             </div>
@@ -546,7 +601,6 @@
         const cartonesRef = database.ref('cartones');
         const configRef = database.ref('configuracion'); 
 
-        // VARIABLES GLOBALES (Se actualizarán desde Firebase)
         let configSorteo = {
             precioBase: 50.00,
             promo4: 180.00,
@@ -578,7 +632,15 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // UI References
+            // REMOVER SPLASH SCREEN
+            setTimeout(function() {
+                const loader = document.getElementById('splash-screen');
+                if(loader) {
+                    loader.classList.add('hidden');
+                    setTimeout(() => loader.style.display = 'none', 500);
+                }
+            }, 3000);
+
             const menuToggle = document.getElementById('mobile-menu');
             const navLinks = document.querySelector('.nav-links');
             if(menuToggle) {
@@ -620,7 +682,6 @@
             const previewStatusText = document.getElementById('previewStatusText');
             const previewActionButtons = document.getElementById('previewActionButtons');
 
-            // Etiquetas dinámicas
             const lblTitulo = document.getElementById('lblTitulo');
             const lblSubtitulo = document.getElementById('lblSubtitulo');
             const lblPrecioTag = document.getElementById('lblPrecioTag');
@@ -639,18 +700,15 @@
             let maxSelections = 1;
             let currentPreviewCardNumber = null;
 
-            // --- LEER CONFIGURACIÓN DE FIREBASE ---
             configRef.on('value', (snapshot) => {
                 const config = snapshot.val();
                 if (config) {
-                    // Actualizar variables globales
                     configSorteo.precioBase = parseFloat(config.precioBase) || 50;
                     configSorteo.promo4 = parseFloat(config.promo4) || 180;
                     configSorteo.promo8 = parseFloat(config.promo8) || 360;
                     configSorteo.promo12 = parseFloat(config.promo12) || 520;
                     configSorteo.totalCartones = parseInt(config.totalCartones) || 1000;
 
-                    // Actualizar UI
                     if(lblTitulo) lblTitulo.textContent = config.titulo || "Gran Sorteo";
                     if(lblSubtitulo) lblSubtitulo.textContent = config.fecha || "Muy Pronto";
                     if(lblPrecioTag) lblPrecioTag.textContent = "Valor: Bs. " + configSorteo.precioBase.toFixed(2).replace('.', ',');
@@ -663,12 +721,10 @@
                         txtDisponibles.textContent = configSorteo.totalCartones + " Cartones Disponibles";
                     }
 
-                    // Recalcular el total si el usuario ya tenía una cantidad seleccionada
                     updateTotalPrice();
                 }
             });
             
-            // --- CUENTA REGRESIVA ---
             const fechaMeta = new Date(2026, 0, 31, 20, 0, 0).getTime();
             const x = setInterval(function() {
                 const now = new Date().getTime();
@@ -687,7 +743,6 @@
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                // Desktop
                 if(document.getElementById("cdDays")) {
                     document.getElementById("cdDays").innerText = days < 10 ? "0" + days : days;
                     document.getElementById("cdHours").innerText = hours < 10 ? "0" + hours : hours;
@@ -695,7 +750,6 @@
                     document.getElementById("cdSeconds").innerText = seconds < 10 ? "0" + seconds : seconds;
                 }
 
-                // Mobile
                 if(document.getElementById("cdDaysM")) {
                     document.getElementById("cdDaysM").innerText = days < 10 ? "0" + days : days;
                     document.getElementById("cdHoursM").innerText = hours < 10 ? "0" + hours : hours;
@@ -704,7 +758,6 @@
                 }
             }, 1000);
 
-            // Restored File Upload Logic (Visual Only)
             triggerUploadBtn.addEventListener('click', function() {
                 comprobanteInput.click();
             });
@@ -712,12 +765,11 @@
             comprobanteInput.addEventListener('change', function() {
                 if(this.files && this.files[0]) {
                     triggerUploadBtn.innerHTML = `<i class="fas fa-check"></i> Archivo listo`;
-                    triggerUploadBtn.style.backgroundColor = "#2E8B57"; // Green
+                    triggerUploadBtn.style.backgroundColor = "#2E8B57";
                     triggerUploadBtn.style.color = "white";
                 }
             });
 
-            // --- LÓGICA DE BÚSQUEDA ---
             const openSearch = () => {
                 searchModal.style.display = 'block';
                 searchResultsContainer.innerHTML = '';
@@ -756,7 +808,6 @@
                         const carton = data[key];
                         if (carton.telefono === phoneToSearch && carton.estado === 'vendido') {
                             foundCards.push(key);
-                            // Verificamos si al menos uno está verificado (asumimos lote)
                             if (carton.verificado === true) {
                                 verifiedStatus = true;
                             }
@@ -773,7 +824,6 @@
                         const summaryDiv = document.createElement('div');
                         summaryDiv.className = 'user-summary-box';
                         
-                        // Lógica del Badge
                         let badgeHtml = '';
                         if (verifiedStatus) {
                             badgeHtml = '<span class="status-badge" style="background-color: #2e7d32; color: white;">VERIFICADO ✅</span>';
@@ -811,7 +861,6 @@
                 });
             });
 
-            // --- LÓGICA PRINCIPAL (Carga cartones, Reserva, etc.) ---
             function generateCartons() {
                 cartonGrid.innerHTML = '<p style="width:100%; text-align:center;">Cargando...</p>';
                 cartonesRef.once('value').then((snapshot) => {
@@ -869,7 +918,6 @@
                 });
             }
 
-            // --- BÚSQUEDA DE CARTÓN EN MODAL ---
             searchInput.addEventListener('input', function(e) {
                 const searchTerm = e.target.value.toLowerCase().trim();
                 const items = cartonGrid.getElementsByClassName('carton-item');
