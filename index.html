@@ -75,7 +75,7 @@
         
         /* Card */
         .card { background: white; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.05); }
-        .card-header { background: var(--primary-green); color: white; padding: 15px; text-align: center; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; } /* Flex para ordenar en móvil */
+        .card-header { background: var(--primary-green); color: white; padding: 15px; text-align: center; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; }
         .bingo-deco { position: absolute; width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.1); top: -15px; right: -15px; }
         .header-title { font-size: 20px; font-weight: 800; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .subtitle { font-size: 13px; opacity: 0.9; }
@@ -95,7 +95,6 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             border: 2px solid white;
-            order: 2; /* Orden por defecto */
         }
 
         /* --- ESTILOS CUENTA REGRESIVA --- */
@@ -110,7 +109,7 @@
         .countdown-mobile {
             display: none; /* Oculto por defecto */
             margin-top: 15px;
-            order: 3; /* Para que aparezca debajo de la promo */
+            width: 100%;
         }
 
         .countdown-title {
@@ -126,7 +125,6 @@
             display: inline-block;
         }
         
-        /* Ajuste de color para la versión móvil dentro del header verde */
         .countdown-mobile .countdown-title {
             color: white;
             background: rgba(0,0,0,0.2);
@@ -149,147 +147,46 @@
             border: 1px solid rgba(255,255,255,0.2);
         }
         
-        /* Ajuste de borde para la versión móvil */
         .countdown-mobile .time-box {
             border-color: rgba(255,255,255,0.5);
-            background: rgba(0,0,0,0.3); /* Fondo más oscuro para contraste */
+            background: rgba(0,0,0,0.3);
             box-shadow: none;
         }
 
-        .time-value {
-            font-size: 18px;
-            font-weight: 800;
-            line-height: 1;
-            display: block;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-        }
-        .time-label {
-            font-size: 8px;
-            text-transform: uppercase;
-            font-weight: 600;
-            opacity: 0.9;
-            margin-top: 2px;
-            display: block;
-        }
+        .time-value { font-size: 18px; font-weight: 800; line-height: 1; display: block; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+        .time-label { font-size: 8px; text-transform: uppercase; font-weight: 600; opacity: 0.9; margin-top: 2px; display: block; }
         .pulse-animation { animation: pulse-shadow 2s infinite; }
-        @keyframes pulse-shadow {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
-        }
+        @keyframes pulse-shadow { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
         .card-body { padding: 15px 20px; }
-
         .availability-badge { background-color: #e8f5e9; color: var(--primary-green); padding: 6px; border-radius: 8px; text-align: center; margin-bottom: 15px; font-size: 13px; font-weight: 600; border: 1px solid #c8e6c9; display: flex; justify-content: center; align-items: center; gap: 8px; }
-        
         .control-group { margin-bottom: 12px; }
         .control-label { display: block; margin-bottom: 5px; font-weight: 700; color: var(--text-dark); font-size: 13px; text-align: center; }
-        
-        /* SELECTOR DE CANTIDAD */
-        .carton-count-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            background: white;
-            padding: 5px;
-            border-radius: 12px;
-            border: 1px solid #e0e0e0;
-            width: fit-content;
-            margin: 0 auto;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .quantity-btn {
-            background-color: white;
-            color: var(--primary-green);
-            border: 1px solid #e0e0e0;
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
+        .carton-count-wrapper { display: flex; align-items: center; justify-content: center; gap: 15px; background: white; padding: 5px; border-radius: 12px; border: 1px solid #e0e0e0; width: fit-content; margin: 0 auto; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .quantity-btn { background-color: white; color: var(--primary-green); border: 1px solid #e0e0e0; width: 36px; height: 36px; border-radius: 10px; font-size: 16px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .quantity-btn:hover { background-color: #f0fdf4; border-color: var(--primary-green); }
-
-        .quantity-input {
-            background-color: transparent;
-            color: var(--primary-green);
-            border: none;
-            width: 40px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: 800;
-            outline: none;
-        }
-
-        /* --- NUEVO CONTENEDOR DE PRECIO (Estilo Ticket Oscuro) --- */
-        .price-summary-box {
-            background-color: #1a5e3a; /* Marrón oscuro / Café */
-            color: white;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            margin: 15px 0;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            border: 0px solid #000000;
-        }
-        
-        .price-label {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-bottom: 2px;
-        }
-
-        .total-display { 
-            text-align: center; 
-            font-size: 32px; /* Más grande */
-            font-weight: 800; 
-            margin: 0; 
-            color: white; /* Blanco */
-            line-height: 1.2;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .savings-text {
-            color: #FFD54F; /* Amarillo dorado */
-            font-weight: 700;
-            font-size: 14px;
-            margin-top: 5px;
-            display: none; /* Oculto por defecto */
-            animation: pulse 2s infinite;
-        }
+        .quantity-input { background-color: transparent; color: var(--primary-green); border: none; width: 40px; text-align: center; font-size: 18px; font-weight: 800; outline: none; }
+        .price-summary-box { background-color: #1a5e3a; color: white; padding: 15px; border-radius: 12px; text-align: center; margin: 15px 0; box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 2px solid #000000; }
+        .price-label { font-size: 14px; opacity: 0.9; margin-bottom: 2px; }
+        .total-display { text-align: center; font-size: 32px; font-weight: 800; margin: 0; color: white; line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .savings-text { color: #FFD54F; font-weight: 700; font-size: 14px; margin-top: 5px; display: none; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.8; } }
-        
         .form-input-group { position: relative; margin-bottom: 10px; }
         .form-input { width: 100%; padding: 10px 12px; padding-left: 35px; border: 2px solid #eee; border-radius: 8px; font-size: 14px; transition: all 0.3s; outline: none; }
         .form-input:focus { border-color: var(--secondary-green); }
-        
         .input-error { border-color: var(--error-red) !important; background-color: #fffafa; animation: shake 0.3s ease-in-out; }
         @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } 100% { transform: translateX(0); } }
-
         .input-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 14px; }
         .whatsapp-input-container { display: flex; gap: 8px; }
         .country-code { background-color: #eee; color: #555; padding: 0 12px; border-radius: 8px; display: flex; align-items: center; font-weight: bold; border: 2px solid #eee; font-size: 13px; }
-        
         .btn-comprar { background: linear-gradient(to right, #FF6B35, #FF8C42); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: 800; cursor: pointer; width: 100%; margin-top: 5px; box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3); transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px; }
         .btn-comprar:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4); }
-        
         .consultar-btn { background-color: white; color: #666; border: 2px solid #eee; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s; }
         .consultar-btn:hover { border-color: #ccc; background-color: #f9f9f9; }
-        
         .character-image { max-width: 100%; height: auto; max-height: 440px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15)); animation: float 6s ease-in-out infinite; position: relative; }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
-                
         .whatsapp-float { position: fixed; bottom: 25px; right: 25px; background-color: #25D366; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); text-decoration: none; z-index: 1000; transition: transform 0.3s; }
         .whatsapp-float:hover { transform: scale(1.1) rotate(10deg); }
-        
-        /* Footer */
         .main-footer { background-color: #124029; color: #e0e0e0; padding: 30px 20px 20px; margin-top: 30px; border-top: 5px solid var(--accent-orange); position: relative; z-index: 10; }
         .footer-content { max-width: 1000px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; gap: 20px; }
         .footer-social-title { font-weight: 700; margin-bottom: 10px; color: white; text-transform: uppercase; letter-spacing: 1px; font-size: 13px; }
@@ -304,7 +201,6 @@
         .developer-credit { margin-top: 5px; font-size: 11px; opacity: 0.7; }
         .developer-credit i { color: var(--accent-orange); }
         
-        /* Modales */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
         .modal-content { background-color: white; margin: 5% auto; border-radius: 16px; width: 90%; max-width: 400px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); animation: slideIn 0.3s ease-out; display: flex; flex-direction: column; max-height: 75vh; overflow: hidden; }
         @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -366,14 +262,31 @@
         .status-badge { background-color: #2e7d32; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; }
         .btn-back-home { width: 100%; background-color: #757575; color: white; border: none; padding: 10px; border-radius: 8px; margin-top: 15px; cursor: pointer; font-weight: bold; }
 
+        /* --- BOTÓN DE BÚSQUEDA CORREGIDO (SOLUCIÓN MÓVIL) --- */
         .styled-search-wrapper { display: flex; align-items: center; border: 1px solid #ccc; border-radius: 8px; background-color: white; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .prefix-section { display: flex; align-items: center; padding: 10px 0 10px 12px; background-color: white; font-size: 14px; color: #333; gap: 5px; }
         .prefix-section img { width: 20px; height: auto; border-radius: 2px; }
-        .styled-input { border: none; outline: none; flex: 1; padding: 12px; font-size: 15px; color: #333; }
-        .styled-search-btn { background-color: #FFD54F; color: black; font-weight: 800; border: none; padding: 0 25px; height: 45px; cursor: pointer; transition: background 0.2s; text-transform: uppercase; font-size: 14px; flex-shrink: 0; }
+        
+        /* FIX: Asegurar que el input se encoja */
+        .styled-input { border: none; outline: none; flex: 1; min-width: 0; padding: 12px; font-size: 15px; color: #333; }
+        
+        /* FIX: Asegurar que el botón NO se encoja */
+        .styled-search-btn { 
+            background-color: #FFD54F; 
+            color: black; 
+            font-weight: 800; 
+            border: none; 
+            padding: 0 20px; /* Padding un poco menor */
+            height: 45px; 
+            cursor: pointer; 
+            transition: background 0.2s; 
+            text-transform: uppercase; 
+            font-size: 14px; 
+            flex-shrink: 0; /* IMPIDE QUE DESAPAREZCA */
+        }
         .styled-search-btn:hover { background-color: #FFCA28; }
 
-        /* --- MEDIA QUERY: AJUSTES MÓVILES (Cuenta Regresiva y Layout) --- */
+        /* --- MEDIA QUERIES --- */
         @media (max-width: 850px) {
             .container { flex-direction: column; } 
             .menu-toggle { display: block; }
@@ -400,8 +313,10 @@
             .countdown-mobile { display: none; }
         }
         
-        @media (max-width: 400px) {
-            .styled-search-btn { padding: 0 15px; font-size: 12px; }
+        /* Ajuste específico para pantallas MUY pequeñas (iPhone SE, etc) */
+        @media (max-width: 380px) {
+            .styled-search-btn { padding: 0 15px; font-size: 0; } /* Ocultar texto */
+            .styled-search-btn::before { content: "\f002"; font-family: "Font Awesome 5 Free"; font-weight: 900; font-size: 16px; } /* Mostrar Lupa */
         }
     </style>
 </head>
@@ -439,7 +354,7 @@
                     <div class="promo-text" id="lblPromoText"><strong>PROMOCIÓN:</strong> 4×Bs 180 · 8×Bs 360 · 12×Bs 520</div>
 
                     <div class="countdown-wrapper countdown-mobile">
-                        <div class="countdown-title">El sorteo inicia en:</div>
+                        <div class="countdown-title">Queda poco tiempo</div>
                         <div class="countdown-container pulse-animation" id="countdownBoxMobile">
                             <div class="time-box">
                                 <span class="time-value" id="cdDaysM">00</span>
@@ -518,8 +433,8 @@
         <div class="right-column">
             <img src="Logo-oficial.png" alt="Personaje Bingo Oficial" class="character-image" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3210/3210086.png'">
             
-            <div class="countdown-wrapper">
-                <div class="countdown-title">El sorteo inicia en:</div>
+            <div class="countdown-wrapper" id="countdown-desktop-wrapper">
+                <div class="countdown-title">Queda poco tiempo</div>
                 <div class="countdown-container pulse-animation" id="countdownBox">
                     <div class="time-box">
                         <span class="time-value" id="cdDays">00</span>
@@ -756,10 +671,9 @@
 
                 if (distance < 0) {
                     clearInterval(x);
-                    document.getElementById("countdownBox").innerHTML = "<div style='background:white; color:#d32f2f; padding:10px; border-radius:8px; font-weight:bold;'>¡EL SORTEO HA COMENZADO! 🎱</div>";
-                    if(document.getElementById("countdownBoxMobile")) {
-                        document.getElementById("countdownBoxMobile").innerHTML = "<div style='background:white; color:#d32f2f; padding:10px; border-radius:8px; font-weight:bold;'>¡EL SORTEO HA COMENZADO! 🎱</div>";
-                    }
+                    const msg = "<div style='background:white; color:#d32f2f; padding:10px; border-radius:8px; font-weight:bold;'>¡EL SORTEO HA COMENZADO! 🎱</div>";
+                    if(document.getElementById("countdownBox")) document.getElementById("countdownBox").innerHTML = msg;
+                    if(document.getElementById("countdownBoxMobile")) document.getElementById("countdownBoxMobile").innerHTML = msg;
                     return;
                 }
 
@@ -769,10 +683,12 @@
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
                 // Desktop
-                document.getElementById("cdDays").innerText = days < 10 ? "0" + days : days;
-                document.getElementById("cdHours").innerText = hours < 10 ? "0" + hours : hours;
-                document.getElementById("cdMinutes").innerText = minutes < 10 ? "0" + minutes : minutes;
-                document.getElementById("cdSeconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+                if(document.getElementById("cdDays")) {
+                    document.getElementById("cdDays").innerText = days < 10 ? "0" + days : days;
+                    document.getElementById("cdHours").innerText = hours < 10 ? "0" + hours : hours;
+                    document.getElementById("cdMinutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+                    document.getElementById("cdSeconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+                }
 
                 // Mobile
                 if(document.getElementById("cdDaysM")) {
@@ -906,7 +822,6 @@
                     cartonGrid.appendChild(randomOption);
 
                     const fragment = document.createDocumentFragment();
-                    // Usar variable de configuración
                     for (let i = 1; i <= configSorteo.totalCartones; i++) {
                         const cartonItem = document.createElement('div');
                         cartonItem.className = 'carton-item';
@@ -935,7 +850,7 @@
                 });
             }
 
-            // --- BÚSQUEDA DE CARTÓN EN MODAL (NUEVO: POR TERMINAL O NÚMERO) ---
+            // --- BÚSQUEDA DE CARTÓN EN MODAL ---
             searchInput.addEventListener('input', function(e) {
                 const searchTerm = e.target.value.toLowerCase().trim();
                 const items = cartonGrid.getElementsByClassName('carton-item');
@@ -943,12 +858,9 @@
                 Array.from(items).forEach(item => {
                     const number = item.getAttribute('data-number');
                     if (number === 'azar') {
-                        item.style.display = 'flex'; // Siempre mostrar azar
+                        item.style.display = 'flex';
                         return;
                     }
-                    
-                    // Lógica: Si el número es igual a la búsqueda O si el número TERMINA en la búsqueda
-                    // Ejemplo: buscar "5" muestra "5", "15", "25", "105"...
                     if (searchTerm === "" || number === searchTerm || number.endsWith(searchTerm)) {
                         item.style.display = 'flex';
                     } else {
