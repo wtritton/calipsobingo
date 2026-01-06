@@ -62,17 +62,17 @@
             pointer-events: none;
         }
 
-        /* LOGO RESPONSIVE (GRANDE EN PC, ADAPTADO EN MÓVIL) */
+        /* LOGO RESPONSIVE */
         .splash-logo {
-            width: 60%;         /* Móvil: Ocupa el 60% del ancho */
-            max-width: 280px;   /* Móvil: Límite para que no sea enorme */
+            width: 60%;         
+            max-width: 280px;   
             height: auto;
             animation: splash-pulse 1.5s infinite;
         }
 
         @media (min-width: 850px) {
             .splash-logo {
-                width: 500px; /* PC: Tamaño grande fijo */
+                width: 500px;
                 max-width: 100%;
             }
         }
@@ -158,12 +158,12 @@
             text-align: center;
             width: 100%;
             max-width: 300px;
-            display: none; /* Oculto por defecto, se activa según dispositivo */
+            display: none; 
         }
 
         /* CLASE ESPECIAL PARA MÓVIL (OCULTA EN ESCRITORIO) */
         .countdown-mobile {
-            display: none; /* Oculto por defecto */
+            display: none;
             margin-top: 15px;
             width: 100%;
         }
@@ -384,7 +384,7 @@
 <body>
 
     <div id="splash-screen">
-        <img src="logo-regreso.png" alt="Cargando..." class="splash-logo">
+        <img src="Logo-oficial.png" alt="Cargando..." class="splash-logo">
         <div class="splash-text"></div>
     </div>
 
@@ -610,6 +610,9 @@
             totalCartones: 1000
         };
 
+        // Variable global para contar vendidos
+        let cantidadVendidos = 0;
+
         function cerrarModalPago() {
             document.getElementById('paymentModal').style.display = 'none';
             document.body.style.overflow = 'auto';
@@ -633,7 +636,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // CONFETI Y SPLASH SCREEN - CORREGIDO (SALE INMEDIATAMENTE)
+            // CONFETI Y SPLASH SCREEN
             var duration = 2000;
             var end = Date.now() + duration;
             (function frame() {
@@ -662,7 +665,7 @@
                     loader.classList.add('hidden');
                     setTimeout(() => loader.style.display = 'none', 500);
                 }
-            }, 2000); // 2 segundos
+            }, 2000);
 
             const menuToggle = document.getElementById('mobile-menu');
             const navLinks = document.querySelector('.nav-links');
@@ -723,6 +726,7 @@
             let maxSelections = 1;
             let currentPreviewCardNumber = null;
 
+            // CONFIGURACION Y PRECIOS
             configRef.on('value', (snapshot) => {
                 const config = snapshot.val();
                 if (config) {
@@ -740,14 +744,33 @@
                         lblPromoText.innerHTML = `<strong>PROMOCIÓN:</strong> 4×Bs ${configSorteo.promo4} · 8×Bs ${configSorteo.promo8} · 12×Bs ${configSorteo.promo12}`;
                     }
 
-                    if(txtDisponibles) {
-                        txtDisponibles.textContent = configSorteo.totalCartones + " Cartones Disponibles";
-                    }
-
+                    // Actualizar contador al cargar config
+                    actualizarContadorDisponibles();
                     updateTotalPrice();
                 }
             });
             
+            // LISTENER DE VENTAS EN TIEMPO REAL
+            cartonesRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                let cont = 0;
+                if (data) {
+                     Object.keys(data).forEach(key => {
+                         if(data[key].estado === 'vendido') cont++;
+                     });
+                }
+                cantidadVendidos = cont;
+                actualizarContadorDisponibles();
+            });
+
+            function actualizarContadorDisponibles() {
+                if(txtDisponibles) {
+                    let restantes = configSorteo.totalCartones - cantidadVendidos;
+                    if (restantes < 0) restantes = 0;
+                    txtDisponibles.textContent = restantes + " Cartones Disponibles";
+                }
+            }
+
             const fechaMeta = new Date(2026, 0, 31, 20, 0, 0).getTime();
             const x = setInterval(function() {
                 const now = new Date().getTime();
