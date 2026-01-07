@@ -321,18 +321,29 @@
             .nav-links { position: fixed; left: -100%; top: 56px; flex-direction: column; background-color: var(--primary-green); width: 100%; text-align: center; transition: 0.3s; box-shadow: 0 10px 10px rgba(0,0,0,0.1); padding: 20px 0; gap: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
             .nav-links.active { left: 0; }
             .nav-links a { display: block; padding: 10px; width: 80%; margin: 0 auto; }
-            .right-column { display: flex; flex-direction: column; justify-content: center; margin-top: 20px; order: 2; align-items: center; }
             
-            /* --- CORRECCIÓN DE CENTRADO --- */
+            /* --- CORRECCIÓN DEFINITIVA DE CENTRADO DE IMAGEN --- */
+            .right-column { 
+                display: flex; 
+                flex-direction: column; 
+                justify-content: center; 
+                margin-top: 20px; 
+                order: 2; 
+                align-items: center; 
+                width: 100%; /* Forzamos ancho completo para que pueda centrar */
+            }
+            
             .character-image { 
-                position: static; 
-                display: block; 
-                margin: 0 auto; 
-                align-self: center; 
-                animation: none; 
+                position: static !important; /* Desactiva cualquier 'left:0' heredado */
+                display: block !important; 
+                margin: 0 auto !important; 
+                align-self: center !important; 
+                animation: none !important; 
                 max-height: 250px; 
-                left: auto; 
-                top: auto;
+                left: auto !important; 
+                top: auto !important;
+                width: auto;
+                max-width: 80%; /* Evita que se salga si es muy grande */
             }
 
             .left-column { width: 100%; order: 1; }
