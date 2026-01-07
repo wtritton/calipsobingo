@@ -135,14 +135,55 @@
         .form-input:focus { border-color: var(--secondary-green); }
         .input-error { border-color: var(--error-red) !important; background-color: #fffafa; animation: shake 0.3s ease-in-out; }
         
-        /* RECOMENDACIÓN 2: MENSAJE DE ERROR ELEGANTE */
+        /* MENSAJE DE ERROR ELEGANTE */
         .error-message {
             color: var(--error-red);
             font-size: 11px;
             margin-top: 4px;
             font-weight: 600;
-            display: none; /* Oculto por defecto */
+            display: none; 
         }
+        
+        /* ESTILO PARA EL RECUADRO DE CARTONES SELECCIONADOS */
+        .selected-summary-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            text-align: center;
+            display: none; /* Se oculta si no hay selección */
+            font-size: 13px;
+        }
+        .selected-tags {
+            font-weight: 800;
+            color: #333;
+            display: block;
+            margin-top: 2px;
+            font-size: 14px;
+        }
+        
+        /* CONTENEDOR BUSCADOR + BOTÓN RESET */
+        .search-actions-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .search-bar { width: 100%; padding: 10px; border: 2px solid #eee; border-radius: 8px; font-size: 14px; flex: 1; margin-bottom: 0; }
+        .btn-reset-selection {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            width: 42px; /* Cuadrado */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .btn-reset-selection:hover { background-color: #d32f2f; }
         
         @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } 100% { transform: translateX(0); } }
         .input-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 14px; }
@@ -193,7 +234,7 @@
         .payment-input:focus { border-color: var(--secondary-green); }
         .upload-btn { background-color: var(--accent-orange); color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .payment-footer { padding: 0; }
-        .reservar-btn { background-color: var(--primary-green); color: white; border: none; padding: 15px; width: 100%; cursor: pointer; font-weight: 800; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; border-radius: 0 0 16px 16px; }
+        .reservar-btn { background-color: #ff0000; color: white; border: none; padding: 15px; width: 100%; cursor: pointer; font-weight: 800; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; border-radius: 0 0 16px 16px; }
         
         #singleCardModal .modal-content { background-color: white; max-width: 350px; }
         #singleCardModal .modal-header { background-color: var(--preview-header-brown); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; }
@@ -478,7 +519,36 @@
         </div>
     </div>
 
-    <div id="cartonModal" class="modal"><div class="modal-content"><div class="carton-modal-header modal-header"><div><h3 style="margin:0; font-size: 18px;">Selecciona tu Cartón</h3><small style="opacity: 0.8" id="modalInstruction">Selecciona los cartones que deseas comprar</small></div><span style="font-size: 24px; cursor: pointer;" id="closeModal">&times;</span></div><div class="modal-body"><input type="text" class="search-bar" id="searchInput" placeholder="🔍 Buscar número (ej: 5) o terminal (ej: 5)..."><div class="carton-grid" id="cartonGrid"><p style="text-align:center;">Cargando...</p></div></div><div class="carton-modal-footer modal-footer"><button class="continue-btn" id="continueBtn">Confirmar Selección</button></div></div></div>
+    <div id="cartonModal" class="modal">
+        <div class="modal-content">
+            <div class="carton-modal-header modal-header">
+                <div>
+                    <h3 style="margin:0; font-size: 18px;">Selecciona tu Cartón</h3>
+                    <small style="opacity: 0.8" id="modalInstruction">Selecciona los cartones que deseas comprar</small>
+                </div>
+                <span style="font-size: 24px; cursor: pointer;" id="closeModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="search-actions-container">
+                    <input type="text" class="search-bar" id="searchInput" placeholder="🔍 Buscar número (ej: 5) o terminal (ej: 5)...">
+                    <button class="btn-reset-selection" id="btnResetSelection" title="Revertir selección / Borrar todo">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+                
+                <div id="selectionSummary" class="selected-summary-box">
+                    Cartones seleccionados: <span id="selectionList" class="selected-tags">-</span>
+                </div>
+
+                <div class="carton-grid" id="cartonGrid">
+                    <p style="text-align:center;">Cargando...</p>
+                </div>
+            </div>
+            <div class="carton-modal-footer modal-footer">
+                <button class="continue-btn" id="continueBtn">Confirmar Selección</button>
+            </div>
+        </div>
+    </div>
     
     <div id="paymentModal" class="modal"><div class="modal-content"><div class="payment-modal-header"><h3>Proceso de compra</h3><span class="close-payment" id="closePaymentModal">&times;</span></div><div class="timer-banner"><i class="far fa-clock"></i> Tienes <strong id="paymentTimer">05:00</strong> para completar el pago.</div><div class="modal-body payment-body"><p class="payment-instructions">Asegúrate de pagar el monto exacto...</p><div class="payment-details-list"><div class="payment-detail-row"><span class="detail-label">Monto exacto:</span><span class="detail-value"><span id="paymentAmountDisplay" class="copy-text">Bs 0,00</span><i class="far fa-copy copy-icon" title="Copiar"></i></span></div><div class="payment-detail-row"><span class="detail-label">Banco:</span><span class="detail-value"><span class="copy-text">Banesco (0134)</span><i class="far fa-copy copy-icon" title="Copiar"></i></span></div><div class="payment-detail-row"><span class="detail-label">Teléfono:</span><span class="detail-value"><span class="copy-text">04248991277</span><i class="far fa-copy copy-icon" title="Copiar"></i></span></div><div class="payment-detail-row"><span class="detail-label">Cédula:</span><span class="detail-value"><span class="copy-text">V10069692</span><i class="far fa-copy copy-icon" title="Copiar"></i></span></div><div class="payment-detail-row" style="border-bottom: none; padding-top: 15px;"><span class="detail-label">Cartones:</span><span class="detail-value" id="selectedCartonesList" style="word-break: break-all; text-align: right;">-</span></div></div><div class="payment-input-group"><label class="payment-label">Últimos 6 dígitos de la referencia:</label>
     <input type="text" id="referenciaInput" class="payment-input" placeholder="Ej: 123456" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
@@ -659,6 +729,9 @@
             const cartonGrid = document.getElementById('cartonGrid');
             const searchInput = document.getElementById('searchInput');
             const modalInstruction = document.getElementById('modalInstruction');
+            
+            // Botón nuevo para resetear selección
+            const btnResetSelection = document.getElementById('btnResetSelection');
             
             const paymentModal = document.getElementById('paymentModal');
             const closePaymentModal = document.getElementById('closePaymentModal');
@@ -900,6 +973,7 @@
                         for(let i=0; i < maxSelections; i++) {
                             if(availableItems[i]) availableItems[i].classList.add('selected');
                         }
+                        updateSelectionText(); // Update box after random pick
                     });
                     cartonGrid.appendChild(randomOption);
 
@@ -929,6 +1003,21 @@
                         fragment.appendChild(cartonItem);
                     }
                     cartonGrid.appendChild(fragment);
+                });
+            }
+
+            // NUEVA FUNCIÓN: RESETEAR SELECCIÓN
+            if(btnResetSelection) {
+                btnResetSelection.addEventListener('click', function() {
+                    document.querySelectorAll('.carton-item.selected').forEach(item => {
+                        item.classList.remove('selected');
+                        // Restaurar color del botón "Azar" si estaba marcado
+                        if(item.querySelector('.fa-random')) { 
+                            item.style.backgroundColor = 'white'; 
+                            item.style.color = '#FF8C42'; 
+                        }
+                    });
+                    updateSelectionText(); // Limpia el texto resumen
                 });
             }
 
@@ -1038,6 +1127,7 @@
                 if (this.classList.contains('selected')) {
                     this.classList.remove('selected');
                     if(this.querySelector('.fa-random')) { this.style.backgroundColor = 'white'; this.style.color = '#FF8C42'; }
+                    updateSelectionText(); // Update after deselect
                     return;
                 }
                 if (selectedItems.length >= maxSelections) {
@@ -1051,6 +1141,26 @@
                 }
                 this.classList.add('selected');
                 if(this.querySelector('.fa-random')) { this.style.backgroundColor = '#FF8C42'; this.style.color = 'white'; }
+                updateSelectionText(); // Update after select
+            }
+
+            // NEW HELPER FUNCTION TO UPDATE SUMMARY BOX
+            function updateSelectionText() {
+                const selected = document.querySelectorAll('.carton-item.selected');
+                // Filter out the random button itself which has data-number="azar"
+                const nums = Array.from(selected)
+                    .map(el => el.getAttribute('data-number'))
+                    .filter(num => num !== 'azar');
+                
+                const summaryBox = document.getElementById('selectionSummary');
+                const summaryList = document.getElementById('selectionList');
+
+                if(nums.length > 0) {
+                    summaryBox.style.display = 'block';
+                    summaryList.textContent = nums.join(', ');
+                } else {
+                    summaryBox.style.display = 'none';
+                }
             }
             
             function updateTotalPrice() { 
@@ -1112,6 +1222,9 @@
                 if (phoneInput.value.trim() === '') { phoneInput.classList.add('input-error'); error = true; }
                 if (error) { alert('Complete sus datos'); return; }
                 document.querySelectorAll('.carton-item.selected').forEach(item => item.classList.remove('selected'));
+                // Clear selection summary on open
+                document.getElementById('selectionSummary').style.display = 'none';
+                
                 cartonModal.style.display = 'block';
                 document.body.style.overflow = 'hidden';
                 generateCartons(); 

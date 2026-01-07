@@ -14,6 +14,13 @@
         .row-verificado { background-color: #d1e7dd !important; } /* Fila Verde */
         .badge-verificado { background-color: #198754; }
         .badge-pendiente { background-color: #ffc107; color: #000; }
+        
+        /* ESTILOS PARA CALCULADORA DE PREMIOS */
+        .prizes-panel { background-color: #2c3e50; color: white; padding: 20px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .prize-card { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+        .prize-card.grand-prize { background: linear-gradient(135deg, #FF6B35, #e55a2b); border: none; transform: scale(1.05); box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4); }
+        .prize-amount { font-size: 20px; font-weight: 800; display: block; margin-top: 5px; }
+        .input-promedio { width: 80px; text-align: center; font-weight: bold; border-radius: 5px; border: none; padding: 2px; }
     </style>
 </head>
 <body>
@@ -32,6 +39,45 @@
 
     <div class="container">
         
+        <div class="prizes-panel">
+            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                <div>
+                    <h5 class="m-0 fw-bold">💰 ESTRUCTURA DE PREMIOS (70%)</h5>
+                    <small class="text-white-50">Tu Ganancia (30%): <span id="lblGanancia" class="fw-bold text-warning">Bs 0</span></small>
+                </div>
+                <div>
+                    <small>Precio Promedio:</small>
+                    <input type="number" id="inputPrecioPromedio" class="input-promedio" value="45" onchange="recalcularPremios()">
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-6 col-md-3">
+                    <div class="prize-card">
+                        <small class="text-uppercase text-white-50">1ª Tanda (10%)</small>
+                        <span class="prize-amount" id="prizeT1">Bs 0</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="prize-card">
+                        <small class="text-uppercase text-white-50">2ª Tanda (10%)</small>
+                        <span class="prize-amount" id="prizeT2">Bs 0</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="prize-card">
+                        <small class="text-uppercase text-white-50">3ª Tanda (15%)</small>
+                        <span class="prize-amount" id="prizeT3">Bs 0</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="prize-card grand-prize">
+                        <small class="text-uppercase fw-bold">👑 CARTÓN LLENO (35%)</small>
+                        <span class="prize-amount" id="prizeT4">Bs 0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="card shadow-sm mb-4 card-config">
             <div class="card-header bg-white fw-bold">
                 <i class="fas fa-edit"></i> Configuración General
@@ -86,7 +132,7 @@
             </div>
             <div class="col-md-4">
                 <div class="card bg-white p-3 shadow-sm text-center border-0">
-                    <h6 class="text-muted text-uppercase small">Ingresos Estimados</h6>
+                    <h6 class="text-muted text-uppercase small">Recaudación Total (Est.)</h6>
                     <h2 class="text-primary fw-bold" id="totalDinero">Bs 0,00</h2>
                 </div>
             </div>
@@ -99,7 +145,11 @@
         </div>
 
         <div class="row mb-3">
-            <div class="col-12 text-end">
+            <div class="col-12 d-flex justify-content-between">
+                <button class="btn btn-success fw-bold" onclick="descargarExcel()">
+                    <i class="fas fa-file-excel"></i> DESCARGAR LISTA SIMPLIFICADA
+                </button>
+
                 <button class="btn btn-outline-danger btn-sm" onclick="reiniciarJuego()">
                     <i class="fas fa-trash-alt"></i> BORRAR TODO Y REINICIAR
                 </button>
@@ -156,6 +206,8 @@
 
         let precioBaseActual = 50;
         let totalCartonesGlobal = 1000;
+        let totalVendidosCount = 0;
+        let todosLosDatos = {}; 
 
         // --- CARGAR CONFIGURACIÓN ---
         configRef.on('value', (snapshot) => {
@@ -163,7 +215,7 @@
             if (config) {
                 document.getElementById('confTitulo').value = config.titulo || '';
                 document.getElementById('confFecha').value = config.fecha || '';
-                document.getElementById('confTotalCartones').value = config.totalCartones || 1000; // Carga Cantidad
+                document.getElementById('confTotalCartones').value = config.totalCartones || 1000;
                 document.getElementById('confPrecioBase').value = config.precioBase || 0;
                 document.getElementById('confPromo4').value = config.promo4 || 0;
                 document.getElementById('confPromo8').value = config.promo8 || 0;
@@ -172,8 +224,7 @@
                 precioBaseActual = parseFloat(config.precioBase) || 0;
                 totalCartonesGlobal = parseInt(config.totalCartones) || 1000;
                 
-                // Forzar actualización visual de estadísticas
-                actualizarEstadisticasVisuales(document.getElementById('totalVendidos').textContent);
+                recalcularPremios();
             }
         });
 
@@ -182,7 +233,7 @@
             const datos = {
                 titulo: document.getElementById('confTitulo').value,
                 fecha: document.getElementById('confFecha').value,
-                totalCartones: parseInt(document.getElementById('confTotalCartones').value), // Guarda Cantidad
+                totalCartones: parseInt(document.getElementById('confTotalCartones').value),
                 precioBase: parseFloat(document.getElementById('confPrecioBase').value),
                 promo4: parseFloat(document.getElementById('confPromo4').value),
                 promo8: parseFloat(document.getElementById('confPromo8').value),
@@ -197,19 +248,19 @@
         // --- GESTIÓN DE VENTAS ---
         cartonesRef.on('value', (snapshot) => {
             const data = snapshot.val();
+            todosLosDatos = data || {}; 
             const tabla = document.getElementById('tablaCuerpo');
             tabla.innerHTML = '';
-            let totalVendidosCount = 0;
+            totalVendidosCount = 0;
 
             if (data) {
                 const lista = Object.keys(data).map(key => ({ id: key, ...data[key] }));
                 lista.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
                 lista.forEach(item => {
-                    if (item.estado === 'vendido') {
+                    if (item.estado === 'vendido') { 
                         totalVendidosCount++;
                         
-                        // Determinar si está verificado
                         const esVerificado = item.verificado === true;
                         const claseFila = esVerificado ? 'row-verificado' : '';
                         const badgeEstado = esVerificado 
@@ -241,18 +292,32 @@
             } else {
                 tabla.innerHTML = '<tr><td colspan="5" class="text-center p-4 text-muted">No hay ventas registradas.</td></tr>';
             }
-            actualizarEstadisticasVisuales(totalVendidosCount);
+            recalcularPremios();
         });
 
-        function actualizarEstadisticasVisuales(vendidos) {
-            vendidos = parseInt(vendidos) || 0;
-            document.getElementById('totalVendidos').textContent = vendidos;
-            document.getElementById('totalDisponibles').textContent = totalCartonesGlobal - vendidos;
-            const estimado = vendidos * precioBaseActual;
-            document.getElementById('totalDinero').textContent = 'Bs ' + estimado.toLocaleString('es-VE', {minimumFractionDigits: 2});
+        // --- FUNCIONES MATEMÁTICAS ---
+        window.recalcularPremios = function() {
+            document.getElementById('totalVendidos').textContent = totalVendidosCount;
+            document.getElementById('totalDisponibles').textContent = totalCartonesGlobal - totalVendidosCount;
+            
+            const precioPromedio = parseFloat(document.getElementById('inputPrecioPromedio').value) || precioBaseActual;
+            const recaudadoTotal = totalVendidosCount * precioPromedio;
+            document.getElementById('totalDinero').textContent = 'Bs ' + recaudadoTotal.toLocaleString('es-VE', {minimumFractionDigits: 2});
+
+            // Distribución: 30% Ganancia, 70% Premios
+            const ganancia = recaudadoTotal * 0.30;
+            const t1 = recaudadoTotal * 0.10;
+            const t2 = recaudadoTotal * 0.10;
+            const t3 = recaudadoTotal * 0.15;
+            const t4 = recaudadoTotal * 0.35;
+
+            document.getElementById('lblGanancia').textContent = 'Bs ' + ganancia.toLocaleString('es-VE', {minimumFractionDigits: 2});
+            document.getElementById('prizeT1').textContent = 'Bs ' + t1.toLocaleString('es-VE', {minimumFractionDigits: 2});
+            document.getElementById('prizeT2').textContent = 'Bs ' + t2.toLocaleString('es-VE', {minimumFractionDigits: 2});
+            document.getElementById('prizeT3').textContent = 'Bs ' + t3.toLocaleString('es-VE', {minimumFractionDigits: 2});
+            document.getElementById('prizeT4').textContent = 'Bs ' + t4.toLocaleString('es-VE', {minimumFractionDigits: 2});
         }
 
-        // --- NUEVA FUNCIÓN: VERIFICAR PAGO ---
         window.toggleVerificado = function(id, estado) {
             cartonesRef.child(id).update({ verificado: estado });
         }
@@ -269,6 +334,41 @@
                     cartonesRef.remove();
                 }
             }
+        }
+
+        // --- FUNCIÓN EXCEL SIMPLIFICADA (SOLO CARTÓN Y NOMBRE EN ORDEN NUMÉRICO) ---
+        window.descargarExcel = function() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            // Encabezados Simplificados
+            csvContent += "Carton;Nombre del Cliente\r\n";
+
+            if(todosLosDatos) {
+                // 1. Convertir objeto a array de objetos
+                const lista = Object.keys(todosLosDatos).map(key => ({ id: parseInt(key), ...todosLosDatos[key] }));
+                
+                // 2. Ordenar numéricamente por ID de Cartón (1, 2, 3...)
+                lista.sort((a, b) => a.id - b.id);
+
+                // 3. Generar filas
+                lista.forEach(item => {
+                    if(item.estado === 'vendido') {
+                        // Limpiar comas para no romper el CSV
+                        const nombreLimpio = (item.nombre || "Sin Nombre").replace(/;/g, " ");
+                        
+                        // Solo Cartón y Nombre
+                        const fila = `${item.id};${nombreLimpio}`;
+                        csvContent += fila + "\r\n";
+                    }
+                });
+            }
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "lista_simplificada_bingo.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>
