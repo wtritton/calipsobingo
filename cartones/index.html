@@ -1,1272 +1,328 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <meta name="description" content="Participa en el Gran Sorteo Calipso Bingo. Compra tus cartones de la suerte, aprovecha nuestras promociones y gana grandes premios. ¡Juega y gana con Calipso Bingo!">
-    <meta property="og:title" content="Calipso Bingo - Venta de Cartones">
-    <meta property="og:description" content="Participa en el Gran Sorteo Calipso Bingo. Compra tus cartones de la suerte y gana.">
-    <meta property="og:image" content="https://calipsobingo1.vercel.app/Logo-oficial.png">
-    
-    <title>Calipso Bingo - Venta de Cartones</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    
-    <style>
-        :root {
-            --primary-green: #1a5e3a;
-            --secondary-green: #2E8B57;
-            --accent-orange: #FF6B35;
-            --accent-orange-dark: #e55a2b;
-            --bg-color: #F4F7F6;
-            --text-dark: #2c3e50;
-            --white: #ffffff;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --error-red: #ff4444;
-            --btn-preview-confirm: #1a5e3a; 
-            --btn-preview-reject: #333333;
-            --btn-preview-remove: #d32f2f;
-            --preview-header-brown: #1a5e3a;
-        }
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-dark);
-            line-height: 1.6;
-            font-size: 14px;
-            background-image: radial-gradient(#2E8B57 0.5px, transparent 0.5px);
-            background-size: 20px 20px;
-            background-color: #f0fdf4;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+  <title>Calipso Bingo | Gran Especial Regreso 2026</title>
 
-        /* --- PANTALLA DE CARGA (SPLASH SCREEN) --- */
-        #splash-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #ffffff; z-index: 9999;
-            display: flex; justify-content: center; align-items: center; flex-direction: column;
-            transition: opacity 0.5s ease-out, visibility 0.5s;
-        }
-        #splash-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        
-        .splash-logo {
-            width: 60%; max-width: 280px; height: auto;
-            animation: splash-pulse 1.5s infinite;
-        }
-        .splash-text {
-            margin-top: 15px; color: var(--primary-green); font-weight: 700;
-            font-size: 18px; letter-spacing: 1px; text-transform: uppercase;
-        }
-        @keyframes splash-pulse {
-            0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); }
-        }
-        
-        /* Navbar */
-        .navbar {
-            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
-            padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; width: 100%;
-        }
-        .logo { display: flex; align-items: center; gap: 10px; color: white; font-weight: bold; font-size: 1.1rem; text-decoration: none; z-index: 102; }
-        .logo img { height: 36px; border-radius: 50%; background: white; padding: 2px; }
-        .nav-links { display: flex; gap: 15px; align-items: center; }
-        .nav-links a { color: rgba(255,255,255,0.9); text-decoration: none; font-weight: 500; padding: 6px 10px; border-radius: 20px; font-size: 13px; transition: all 0.3s ease; cursor: pointer; }
-        .nav-links a:hover { background-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
-        .btn-nav-action { padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 12px; text-decoration: none; transition: transform 0.2s; display: inline-flex; align-items: center; gap: 5px; }
-        .btn-vendedor { background-color: transparent; color: var(--white); border: 2px solid rgba(255,255,255,0.5); }
-        .btn-vendedor:hover { border-color: var(--white); background: rgba(255,255,255,0.1); }
-        .btn-soporte { background-color: var(--accent-orange); color: white; border: none; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .btn-soporte:hover { background-color: var(--accent-orange-dark); transform: translateY(-2px); }
-        .menu-toggle { display: none; cursor: pointer; z-index: 102; }
-        .bar { display: block; width: 25px; height: 3px; margin: 5px auto; transition: all 0.3s ease-in-out; background-color: white; }
-        
-        /* Layout */
-        .container { max-width: 1100px; margin: 15px auto; padding: 0 20px; display: flex; gap: 40px; align-items: flex-start; flex: 1; width: 100%; }
-        .left-column { flex: 0 0 400px; z-index: 2; }
-        .right-column { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; } 
-        
-        /* Card & UI Elements */
-        .card { background: white; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.05); width: 100%; }
-        .card-header { background: var(--primary-green); color: white; padding: 15px; text-align: center; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; }
-        .bingo-deco { position: absolute; width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.1); top: -15px; right: -15px; }
-        .header-title { font-size: 20px; font-weight: 800; margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .subtitle { font-size: 13px; opacity: 0.9; }
-        .price-tag { background: var(--accent-orange); color: white; display: inline-block; padding: 4px 12px; border-radius: 15px; font-weight: bold; margin-top: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-size: 13px; }
-        .promo-text { background-color: #FFD54F; color: #1a5e3a; display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-top: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); text-transform: uppercase; letter-spacing: 0.5px; border: 2px solid white; }
-        
-        /* Cuenta Regresiva */
-        .countdown-wrapper { margin-top: 20px; text-align: center; width: 100%; max-width: 300px; display: none; }
-        .countdown-mobile { display: none; margin-top: 15px; width: 100%; }
-        .countdown-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 8px; color: #1a5e3a; background: rgba(255,255,255,0.8); padding: 2px 8px; border-radius: 4px; display: inline-block; }
-        .countdown-mobile .countdown-title { color: white; background: rgba(0,0,0,0.2); }
-        .countdown-container { display: flex; justify-content: center; gap: 8px; padding: 5px; }
-        .time-box { background: linear-gradient(135deg, #164f30, #2E8B57); color: white; padding: 8px 5px; border-radius: 8px; min-width: 50px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.2); }
-        .countdown-mobile .time-box { border-color: rgba(255,255,255,0.5); background: rgba(0,0,0,0.3); box-shadow: none; }
-        .time-value { font-size: 18px; font-weight: 800; line-height: 1; display: block; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
-        .time-label { font-size: 8px; text-transform: uppercase; font-weight: 600; opacity: 0.9; margin-top: 2px; display: block; }
-        .pulse-animation { animation: pulse-shadow 2s infinite; }
-        @keyframes pulse-shadow { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+  <meta name="description" content="Compra cartones de Calipso Bingo y participa en el Gran Especial Regreso 2026. Proceso claro, rápido y confiable." />
+  <meta name="theme-color" content="#0b3d2e" />
 
-        /* Visibilidad Countdown */
-        #countdown-desktop-wrapper { display: block; }
-        #countdown-mobile-wrapper { display: none; }
+  <!-- Open Graph -->
+  <meta property="og:title" content="Calipso Bingo – Gran Especial Regreso 2026" />
+  <meta property="og:description" content="Participa comprando tus cartones de bingo de forma sencilla." />
+  <meta property="og:type" content="website" />
 
-        .card-body { padding: 15px 20px; }
-        .availability-badge { background-color: #e8f5e9; color: var(--primary-green); padding: 6px; border-radius: 8px; text-align: center; margin-bottom: 15px; font-size: 13px; font-weight: 600; border: 1px solid #c8e6c9; display: flex; justify-content: center; align-items: center; gap: 8px; }
-        .control-group { margin-bottom: 12px; }
-        .control-label { display: block; margin-bottom: 5px; font-weight: 700; color: var(--text-dark); font-size: 13px; text-align: center; }
-        .carton-count-wrapper { display: flex; align-items: center; justify-content: center; gap: 15px; background: white; padding: 5px; border-radius: 12px; border: 1px solid #e0e0e0; width: fit-content; margin: 0 auto; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .quantity-btn { background-color: white; color: var(--primary-green); border: 1px solid #e0e0e0; width: 36px; height: 36px; border-radius: 10px; font-size: 16px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .quantity-btn:hover { background-color: #f0fdf4; border-color: var(--primary-green); }
-        .quantity-input { background-color: transparent; color: var(--primary-green); border: none; width: 40px; text-align: center; font-size: 18px; font-weight: 800; outline: none; }
-        .price-summary-box { background-color: #1a5e3a; color: white; padding: 15px; border-radius: 12px; text-align: center; margin: 15px 0; box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 2px solid #000000; }
-        .price-label { font-size: 14px; opacity: 0.9; margin-bottom: 2px; }
-        .total-display { text-align: center; font-size: 32px; font-weight: 800; margin: 0; color: white; line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-        .savings-text { color: #FFD54F; font-weight: 700; font-size: 14px; margin-top: 5px; display: none; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.8; } }
-        .form-input-group { position: relative; margin-bottom: 10px; }
-        .form-input { width: 100%; padding: 10px 12px; padding-left: 35px; border: 2px solid #eee; border-radius: 8px; font-size: 14px; transition: all 0.3s; outline: none; }
-        .form-input:focus { border-color: var(--secondary-green); }
-        .input-error { border-color: var(--error-red) !important; background-color: #fffafa; animation: shake 0.3s ease-in-out; }
-        
-        /* MENSAJE DE ERROR ELEGANTE */
-        .error-message {
-            color: var(--error-red);
-            font-size: 11px;
-            margin-top: 4px;
-            font-weight: 600;
-            display: none; 
-        }
-        
-        /* ESTILO PARA EL RECUADRO DE CARTONES SELECCIONADOS */
-        .selected-summary-box {
-            background-color: #fff3cd;
-            border: 1px solid #ffeeba;
-            color: #856404;
-            padding: 8px;
-            border-radius: 6px;
-            margin-bottom: 10px;
-            text-align: center;
-            display: none; /* Se oculta si no hay selección */
-            font-size: 13px;
-        }
-        .selected-tags {
-            font-weight: 800;
-            color: #333;
-            display: block;
-            margin-top: 2px;
-            font-size: 14px;
-        }
-        
-        /* CONTENEDOR BUSCADOR + BOTÓN RESET */
-        .search-actions-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .search-bar { width: 100%; padding: 10px; border: 2px solid #eee; border-radius: 8px; font-size: 14px; flex: 1; margin-bottom: 0; }
-        .btn-reset-selection {
-            background-color: #f44336;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            width: 42px; /* Cuadrado */
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-        }
-        .btn-reset-selection:hover { background-color: #d32f2f; }
-        
-        @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } 100% { transform: translateX(0); } }
-        .input-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 14px; }
-        .whatsapp-input-container { display: flex; gap: 8px; }
-        .country-code { background-color: #eee; color: #555; padding: 0 12px; border-radius: 8px; display: flex; align-items: center; font-weight: bold; border: 2px solid #eee; font-size: 13px; }
-        .btn-comprar { background: linear-gradient(to right, #FF6B35, #FF8C42); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: 800; cursor: pointer; width: 100%; margin-top: 5px; box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3); transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px; }
-        .btn-comprar:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4); }
-        .consultar-btn { background-color: white; color: #666; border: 2px solid #eee; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s; }
-        .consultar-btn:hover { border-color: #ccc; background-color: #f9f9f9; }
-        .character-image { max-width: 100%; height: auto; max-height: 440px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15)); animation: float 6s ease-in-out infinite; position: relative; }
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
-        .whatsapp-float { position: fixed; bottom: 25px; right: 25px; background-color: #25D366; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); text-decoration: none; z-index: 1000; transition: transform 0.3s; }
-        .whatsapp-float:hover { transform: scale(1.1) rotate(10deg); }
-        
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
-        .modal-content { background-color: white; margin: 5% auto; border-radius: 16px; width: 90%; max-width: 400px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); animation: slideIn 0.3s ease-out; display: flex; flex-direction: column; max-height: 75vh; overflow: hidden; }
-        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .modal-body { padding: 15px; overflow-y: auto; }
-        #cartonModal .modal-body { overflow-x: hidden; }
-        .carton-modal-header { background-color: var(--primary-green); color: white; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; }
-        .search-bar { width: 100%; padding: 10px; border: 2px solid #eee; border-radius: 8px; margin-bottom: 15px; font-size: 14px; }
-        .carton-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 10px; margin-bottom: 5px; }
-        .carton-item { display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid #e0e0e0; background: white; border-radius: 10px; aspect-ratio: 1; cursor: pointer; transition: all 0.2s; position: relative; padding: 5px; }
-        .carton-item:hover { border-color: var(--secondary-green); transform: translateY(-2px); }
-        .carton-item.selected { background-color: var(--secondary-green); border-color: var(--secondary-green); color: white; transform: scale(1.05); box-shadow: 0 4px 10px rgba(46, 139, 87, 0.3); }
-        .carton-item.sold { background-color: #f5f5f5; color: #ccc; border-color: #eee; cursor: not-allowed; opacity: 0.7; }
-        .carton-number { font-weight: 800; font-size: 16px; margin-bottom: 2px; }
-        .btn-ver-carton { background-color: var(--preview-header-brown); color: white; border: none; border-radius: 4px; padding: 2px 8px; font-size: 10px; font-weight: bold; text-transform: uppercase; cursor: pointer; width: 100%; transition: background 0.2s; margin-top: 2px; z-index: 10; }
-        .btn-ver-carton:hover { background-color: #3e2723; }
-        .carton-item.selected .btn-ver-carton { background-color: white; color: var(--secondary-green); }
-        .carton-modal-footer { padding: 12px 15px; border-top: 1px solid #eee; background: #f8f9fa; }
-        .continue-btn { background-color: var(--secondary-green); color: white; border: none; padding: 10px; width: 100%; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 15px; transition: background 0.3s; }
-        
-        .payment-modal-header { background-color: var(--primary-green); color: white; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; }
-        .close-payment { font-size: 22px; cursor: pointer; color: white; opacity: 0.8; transition: opacity 0.2s; }
-        .timer-banner { background-color: #e8f5e9; color: var(--primary-green); padding: 8px; text-align: center; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; border-bottom: 1px solid #c8e6c9; font-weight: 600; }
-        .payment-body { padding: 15px 20px; color: #333; }
-        .payment-instructions { color: #666; font-size: 12px; margin-bottom: 15px; line-height: 1.4; }
-        .payment-details-list { margin-bottom: 20px; }
-        .payment-detail-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
-        .payment-detail-row:last-child { border-bottom: none; }
-        .detail-label { font-weight: 700; color: #2c3e50; }
-        .detail-value { font-family: 'Segoe UI', sans-serif; color: #444; display: flex; align-items: center; gap: 8px; }
-        .copy-icon { color: #999; cursor: pointer; font-size: 13px; transition: color 0.2s; padding: 5px; }
-        .payment-input-group { margin-bottom: 15px; }
-        .payment-label { display: block; margin-bottom: 5px; font-weight: 700; font-size: 13px; color: #2c3e50; }
-        .payment-input { width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.3s; }
-        .payment-input:focus { border-color: var(--secondary-green); }
-        .upload-btn { background-color: var(--accent-orange); color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .payment-footer { padding: 0; }
-        .reservar-btn { background-color: #ff0000; color: white; border: none; padding: 15px; width: 100%; cursor: pointer; font-weight: 800; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; border-radius: 0 0 16px 16px; }
-        
-        #singleCardModal .modal-content { background-color: white; max-width: 350px; }
-        #singleCardModal .modal-header { background-color: var(--preview-header-brown); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; }
-        #singleCardModal .modal-body { padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; }
-        #previewMaxText { margin: 0 0 10px 0; font-size: 14px; font-weight: 600; color: #333; }
-        .single-card-image { max-width: 100%; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin-bottom: 15px; }
-        #previewStatusText { margin: 10px 0; font-size: 13px; color: #666; }
-        .single-card-actions { display: flex; gap: 10px; width: 100%; margin-top: 5px; }
-        .btn-preview-action { flex: 1; border: none; padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 12px; color: white; transition: opacity 0.2s; }
-        .btn-want { background-color: var(--btn-preview-confirm); } 
-        .btn-dont-want { background-color: var(--btn-preview-reject); }
-        .btn-remove { background-color: var(--btn-preview-remove); }
-        .btn-continue-preview { background-color: #f0f0f0; color: #333; border: 1px solid #ccc; width: 100%; padding: 10px; border-radius: 5px; margin-top: 10px; font-weight: bold; cursor: pointer; }
-        .toast-notification { visibility: hidden; min-width: 200px; background-color: #333; color: #fff; text-align: center; border-radius: 30px; padding: 12px; position: fixed; z-index: 3000; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); opacity: 0; transition: opacity 0.3s, bottom 0.3s; }
-        .toast-notification.show { visibility: visible; opacity: 1; bottom: 50px; }
-        
-        .search-results-container { margin-top: 15px; width: 100%; display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto; }
-        .found-carton-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #f8f9fa; border: 1px solid #eee; border-radius: 8px; }
-        .found-carton-info { font-weight: bold; color: var(--primary-green); }
-        .user-summary-box { background-color: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 8px; padding: 12px; margin-bottom: 15px; font-size: 13px; }
-        .user-summary-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
-        .status-badge { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; }
-        .btn-back-home { width: 100%; background-color: #757575; color: white; border: none; padding: 10px; border-radius: 8px; margin-top: 15px; cursor: pointer; font-weight: bold; }
+  <!-- ===============================
+       ESTILOS (CSS EMBEBIDO)
+  =============================== -->
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        .styled-search-wrapper { display: flex; align-items: center; border: 1px solid #ccc; border-radius: 8px; background-color: white; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .prefix-section { display: flex; align-items: center; padding: 10px 0 10px 12px; background-color: white; font-size: 14px; color: #333; gap: 5px; }
-        .prefix-section img { width: 20px; height: auto; border-radius: 2px; }
-        .styled-input { border: none; outline: none; flex: 1; padding: 12px; font-size: 15px; color: #333; min-width: 0; }
-        .styled-search-btn { background-color: #FFD54F; color: black; font-weight: 800; border: none; padding: 0 20px; height: 45px; cursor: pointer; transition: background 0.2s; text-transform: uppercase; font-size: 14px; flex-shrink: 0; }
-        .styled-search-btn:hover { background-color: #FFCA28; }
-        
-        @media (max-width: 400px) {
-            .styled-search-btn { padding: 0 15px; font-size: 0; }
-            .styled-search-btn::before { content: "\f002"; font-family: "Font Awesome 5 Free"; font-weight: 900; font-size: 16px; }
-        }
+    html {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      scroll-behavior: smooth;
+    }
 
-        /* --- NOTIFICACIONES SOCIAL PROOF --- */
-        .sales-notification {
-            position: fixed; bottom: 20px; left: 20px; background-color: white; padding: 12px 15px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 12px; z-index: 9000; transform: translateY(100px); opacity: 0; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); max-width: 300px; border-left: 5px solid var(--accent-orange);
-        }
-        .sales-notification.active { transform: translateY(0); opacity: 1; }
-        .sales-icon { background-color: #e8f5e9; color: var(--primary-green); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-        .sales-content { font-size: 12px; line-height: 1.3; }
-        .sales-name { font-weight: 800; color: #333; display: block; }
-        .sales-time { font-size: 10px; color: #888; }
-        @media (max-width: 600px) {
-            .sales-notification { left: 50%; transform: translateX(-50%) translateY(100px); bottom: 80px; width: 90%; }
-            .sales-notification.active { transform: translateX(-50%) translateY(0); }
-        }
+    body {
+      background: #0b3d2e;
+      color: #ffffff;
+      line-height: 1.6;
+    }
 
-        /* --- FOOTER SEGURO --- */
-        .main-footer { 
-            background-color: #124029; 
-            color: #e0e0e0; 
-            padding: 30px 20px 20px; 
-            margin-top: auto; 
-            border-top: 5px solid var(--accent-orange); 
-            position: relative; 
-            z-index: 10;
-            width: 100%; 
-            flex-shrink: 0;
-        }
-        .footer-content { max-width: 1000px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; gap: 20px; }
-        .footer-social-title { font-weight: 700; margin-bottom: 10px; color: white; text-transform: uppercase; letter-spacing: 1px; font-size: 13px; }
-        .social-icons { display: flex; justify-content: center; gap: 15px; margin-bottom: 5px; }
-        .social-icons a { color: white; background: rgba(255,255,255,0.1); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s; text-decoration: none; font-size: 14px; }
-        .social-icons a:hover { background: var(--accent-orange); transform: translateY(-3px); }
-        .footer-legal-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; font-size: 13px; margin: 5px 0; }
-        .footer-legal-links a { color: #a0c4b3; text-decoration: none; transition: color 0.2s; }
-        .footer-legal-links a:hover { color: white; text-decoration: underline; }
-        .footer-separator { color: #406856; }
-        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; font-size: 12px; color: #88a697; }
-        .developer-credit { margin-top: 5px; font-size: 11px; opacity: 0.7; }
-        .developer-credit i { color: var(--accent-orange); }
+    /* HEADER */
+    .header {
+      background: #06261d;
+      padding: 1rem;
+    }
 
-        /* --- MEDIA QUERIES (SIEMPRE AL FINAL) --- */
-        @media (max-width: 850px) {
-            #countdown-desktop-wrapper { display: none; }
-            #countdown-mobile-wrapper { display: block; }
-            
-            .container { flex-direction: column; } 
-            .menu-toggle { display: block; }
-            .navbar { justify-content: space-between; }
-            .nav-links { position: fixed; left: -100%; top: 56px; flex-direction: column; background-color: var(--primary-green); width: 100%; text-align: center; transition: 0.3s; box-shadow: 0 10px 10px rgba(0,0,0,0.1); padding: 20px 0; gap: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
-            .nav-links.active { left: 0; }
-            .nav-links a { display: block; padding: 10px; width: 80%; margin: 0 auto; }
-            .right-column { display: flex; flex-direction: column; justify-content: center; margin-top: 20px; order: 2; align-items: center; }
-            .character-image { left: 0; top: 0; animation: none; max-height: 250px; }
-            .left-column { width: 100%; order: 1; }
-            .menu-toggle.is-active .bar:nth-child(2) { opacity: 0; }
-            .menu-toggle.is-active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-            .menu-toggle.is-active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+    .nav {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-            .right-column .countdown-wrapper { display: none; }
-            
-            /* Footer Responsive Fix */
-            .footer-legal-links { flex-direction: column; gap: 10px; }
-            .footer-separator { display: none; }
-        }
-        
-        @media (min-width: 851px) {
-            .countdown-mobile { display: none; }
-            .splash-logo { width: 500px; max-width: 100%; }
-        }
-    </style>
+    .menu {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .menu a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .countdown div {
+      background: #114d3a;
+      padding: 1rem;
+      border-radius: 10px;
+      min-width: 80px;
+    }
+
+    .countdown span {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    .cta {
+      margin-top: 1.5rem;
+    }
+
+    .btn {
+      background: #1db954;
+      color: #000;
+      padding: 0.75rem 1.2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 0.3rem;
+      display: inline-block;
+    }
+
+    .btn.secondary {
+      background: #ffffff;
+    }
+
+    /* SECCIONES */
+    section {
+      max-width: 900px;
+      margin: auto;
+      padding: 2rem 1rem;
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+    }
+
+    .trust {
+      text-align: center;
+      background: #0f4a38;
+    }
+
+    /* FORMULARIOS */
+    form {
+      display: grid;
+      gap: 1rem;
+    }
+
+    input, button {
+      padding: 0.75rem;
+      border-radius: 6px;
+      border: none;
+    }
+
+    button {
+      background: #1db954;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* FOOTER */
+    .footer {
+      background: #06261d;
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .menu {
+        flex-direction: column;
+      }
+
+      .countdown {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-    <div id="splash-screen">
-        <img src="logo-regreso.png" alt="Cargando..." class="splash-logo">
-        <div class="splash-text"></div>
+<header class="header">
+  <nav class="nav">
+    <div class="logo">🎶 Calipso Bingo</div>
+    <ul class="menu">
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#comprar">Comprar</a></li>
+      <li><a href="#mis-compras">Mis compras</a></li>
+      <li><a href="#resultados">Resultados</a></li>
+      <li><a href="#vendedor">Sé Vendedor</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="inicio">
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Gran Especial Regreso 2026</h1>
+    <p>Compra tus cartones y participa en el gran sorteo</p>
+
+    <div class="countdown">
+      <div><span id="days">--</span><small>Días</small></div>
+      <div><span id="hours">--</span><small>Horas</small></div>
+      <div><span id="minutes">--</span><small>Min</small></div>
     </div>
 
-    <nav class="navbar">
-        <a href="#" class="logo">
-            <img src="Logo-oficial.png" alt="Bingo Logo">
-            Calipso Bingo
-        </a>
-        
-        <div class="menu-toggle" id="mobile-menu">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </div>
-
-        <div class="nav-links">
-            <a href="#"><i class="fas fa-home"></i> Inicio</a>
-            <a href="#" id="navMisCompras">Mis compras</a>
-            <a href="#">Resultados</a>
-            <a href="#" class="btn-nav-action btn-vendedor">SE VENDEDOR</a>
-            <a href="https://wa.me/584248991277?text=Hola,%20necesito%20soporte" target="_blank" class="btn-nav-action btn-soporte"><i class="fab fa-whatsapp"></i> SOPORTE</a>
-        </div>
-    </nav>
-    
-    <div class="container">
-        <div class="left-column">
-            <div class="card">
-                <div class="card-header">
-                    <div class="bingo-deco"></div>
-                    
-                    <div class="header-title" id="lblTitulo">Gran Especial Regreso 2026</div>
-                    <div class="subtitle" id="lblSubtitulo">¡31 de Enero!</div>
-                    <div class="price-tag" id="lblPrecioTag">Valor: Bs. 50,00</div>
-                    <div class="promo-text" id="lblPromoText"><strong>PROMOCIÓN:</strong> 4×Bs 180 · 8×Bs 360 · 12×Bs 520</div>
-
-                    <div class="countdown-wrapper countdown-mobile">
-                        <div class="countdown-title">Queda poco tiempo</div>
-                        <div class="countdown-container pulse-animation" id="countdownBoxMobile">
-                            <div class="time-box">
-                                <span class="time-value" id="cdDaysM">00</span>
-                                <span class="time-label">Días</span>
-                            </div>
-                            <div class="time-box">
-                                <span class="time-value" id="cdHoursM">00</span>
-                                <span class="time-label">Hrs</span>
-                            </div>
-                            <div class="time-box">
-                                <span class="time-value" id="cdMinutesM">00</span>
-                                <span class="time-label">Min</span>
-                            </div>
-                            <div class="time-box">
-                                <span class="time-value" id="cdSecondsM">00</span>
-                                <span class="time-label">Seg</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card-body">
-                    <div class="availability-badge">
-                        <i class="fas fa-ticket-alt"></i>
-                        <span id="txtDisponibles">1000 Cartones Disponibles</span>
-                    </div>
-                    
-                    <div class="control-group">
-                        <label class="control-label">¿Cuántos cartones deseas?</label>
-                        <div class="carton-count-wrapper">
-                            <button class="quantity-btn" id="decrease"><i class="fas fa-minus"></i></button>
-                            <input type="number" class="quantity-input" id="quantity" value="1" min="1" max="20" readonly>
-                            <button class="quantity-btn" id="increase"><i class="fas fa-plus"></i></button>
-                        </div>
-                    </div>
-                    
-                    <div class="price-summary-box">
-                        <div class="price-label">Total a pagar:</div>
-                        <div class="total-display" id="totalPrice">Bs 50,00</div>
-                        <div class="savings-text" id="savingsDisplay">
-                            Estás ahorrando Bs 0,00 🥳
-                        </div>
-                    </div>
-                    
-                    <div class="control-group">
-                        <label class="control-label">Tus Datos</label>
-                        <div class="form-input-group">
-                            <i class="fas fa-user input-icon"></i>
-                            <input type="text" id="nombreCliente" class="form-input" placeholder="Nombre y Apellido">
-                        </div>
-                        
-                        <div class="whatsapp-input-container">
-                            <div class="country-code">🇻🇪 +58</div>
-                            <div class="form-input-group" style="margin-bottom:0; flex:1;">
-                                <i class="fab fa-whatsapp input-icon"></i>
-                                <input type="tel" id="telefonoCliente" class="form-input" placeholder="4121234567" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <button class="btn-comprar" id="comprarBtn">
-                        COMPRA TUS CARTONES <i class="fas fa-arrow-right"></i>
-                    </button>
-                    
-                    <button class="consultar-btn" id="btnOpenSearch">
-                        <i class="fas fa-search"></i> Ya compré, quiero ver mis cartones
-                    </button>
-                </div>
-            </div>
-            
-            <p style="text-align: center; font-size: 13px; color: #888; margin-top: 10px;">
-                <i class="fas fa-lock"></i> Pago 100% seguro 
-            </p>
-        </div>
-        
-        <div class="right-column">
-            <img src="Logo-oficial.png" alt="Personaje Bingo Oficial" class="character-image" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3210/3210086.png'">
-            
-            <div class="countdown-wrapper" id="countdown-desktop-wrapper">
-                <div class="countdown-title">Queda poco tiempo</div>
-                <div class="countdown-container pulse-animation" id="countdownBox">
-                    <div class="time-box">
-                        <span class="time-value" id="cdDays">00</span>
-                        <span class="time-label">Días</span>
-                    </div>
-                    <div class="time-box">
-                        <span class="time-value" id="cdHours">00</span>
-                        <span class="time-label">Hrs</span>
-                    </div>
-                    <div class="time-box">
-                        <span class="time-value" id="cdMinutes">00</span>
-                        <span class="time-label">Min</span>
-                    </div>
-                    <div class="time-box">
-                        <span class="time-value" id="cdSeconds">00</span>
-                        <span class="time-label">Seg</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> <footer class="main-footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <div class="footer-social-title">Síguenos en nuestras redes:</div>
-                <div class="social-icons">
-                    <a href="https://www.facebook.com/profile.php?id=61586188498729"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://www.instagram.com/calipso_bingo?igsh=ZHllOHZmY3NkN2pr"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-tiktok"></i></a>
-                    <a href="https://wa.me/584248991277" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                </div>
-            </div>
-            <div class="footer-legal-links">
-                <a href="terminos-y-condiciones.html">Términos y condiciones</a>
-                <span class="footer-separator">|</span>
-                <a href="politica-de-privacidad.html">Declaración de privacidad</a>
-                <span class="footer-separator">|</span>
-                <a href="programa-de-vendedores.html">Términos del programa de vendedores</a>
-            </div>
-            <div class="footer-bottom">
-                <p>Copyright © 2026 Calipso Bingo. Todos los derechos reservados.</p>
-                <div class="developer-credit">
-                    Sitio web desarrollado por <strong>Wilmer Martínez Tritton</strong>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <a href="https://wa.me/584248991277?text=Hola,%20quiero%20m%C3%A1s%20informaci%C3%B3n" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
-    
-    <div id="salesNotification" class="sales-notification">
-        <div class="sales-icon">🎟️</div>
-        <div class="sales-content">
-            <span class="sales-name" id="notifyName">Juan P.</span>
-            <span id="notifyAction">compró 4 cartones</span>
-            <div class="sales-time">Hace un momento</div>
-        </div>
+    <div class="cta">
+      <a class="btn" href="#comprar">Comprar cartones</a>
+      <a class="btn secondary" target="_blank"
+         href="https://wa.me/584XXXXXXXXX?text=Hola%20quiero%20comprar%20cartones%20Calipso%20Bingo">
+        WhatsApp
+      </a>
     </div>
+  </section>
+
+  <!-- CONFIANZA -->
+  <section class="trust">
+    <p>🔒 Proceso transparente · 📱 Confirmación directa · 📄 Reglas claras</p>
+  </section>
+
+  <!-- CÓMO FUNCIONA -->
+  <section>
+    <h2>¿Cómo funciona?</h2>
+    <ol>
+      <li>Selecciona la cantidad de cartones.</li>
+      <li>Realiza el pago según las instrucciones.</li>
+      <li>Envía tu comprobante.</li>
+      <li>Recibe confirmación y tus números.</li>
+    </ol>
+  </section>
+
+  <!-- COMPRAR -->
+  <section id="comprar">
+    <h2>Compra tus cartones</h2>
+    <form id="buyForm">
+      <label>
+        Cantidad de cartones
+        <input type="number" id="cantidad" min="1" value="1" required />
+      </label>
+
+      <label>
+        Teléfono
+        <input type="tel" id="telefono" placeholder="Ej: 0412XXXXXXX" required />
+      </label>
+
+      <p>Total: <strong id="total">$0</strong></p>
+      <button type="submit">Solicitar compra</button>
+    </form>
+  </section>
+
+  <!-- MIS COMPRAS -->
+  <section id="mis-compras">
+    <h2>Consultar mis cartones</h2>
+    <form id="searchForm">
+      <input type="tel" id="searchPhone" placeholder="Ingresa tu teléfono" required />
+      <button type="submit">Buscar</button>
+    </form>
+    <div id="ordersResult"></div>
+  </section>
+
+  <!-- RESULTADOS -->
+  <section id="resultados">
+    <h2>Resultados</h2>
+    <p>Los resultados oficiales se publicarán aquí el día del sorteo.</p>
+  </section>
+
+  <!-- VENDEDOR -->
+  <section id="vendedor">
+    <h2>Sé Vendedor</h2>
+    <p>Gana comisiones vendiendo cartones de Calipso Bingo.</p>
+    <a href="mailto:calipsobingo@gmail.com">✉️ Contactar por email</a>
+  </section>
+
+  <!-- LEGALES -->
+  <section>
+    <h2>Información Legal</h2>
+    <p>Evento recreativo y promocional, válido solo para mayores de 18 años.</p>
+    <p>Los cartones son digitales, personales y no reembolsables.</p>
+    <p>El sorteo será transmitido públicamente en la fecha anunciada.</p>
+    <p>La organización se reserva el derecho de validación.</p>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>© 2026 Calipso Bingo. Todos los derechos reservados.</p>
+  <p>Desarrollado por Calipso Digital</p>
+</footer>
+
+<!-- ===============================
+     JAVASCRIPT (EMBEBIDO)
+=============================== -->
+<script>
+  const PRICE_PER_CARD = 5;
+  const EVENT_DATE = new Date("2026-01-15T20:00:00");
+
+  function updateCountdown() {
+    const now = Date.now();
+    const diff = EVENT_DATE - now;
+    if (diff <= 0) return;
+
+    document.getElementById("days").textContent =
+      Math.floor(diff / (1000 * 60 * 60 * 24));
+    document.getElementById("hours").textContent =
+      Math.floor((diff / (1000 * 60 * 60)) % 24);
+    document.getElementById("minutes").textContent =
+      Math.floor((diff / (1000 * 60)) % 60);
+  }
+
+  setInterval(updateCountdown, 60000);
+  updateCountdown();
+
+  const cantidad = document.getElementById("cantidad");
+  const total = document.getElementById("total");
+
+  function updateTotal() {
+    total.textContent = "$" + (cantidad.value || 0) * PRICE_PER_CARD;
+  }
+
+  cantidad.addEventListener("input", updateTotal);
+  updateTotal();
+
+  document.getElementById("buyForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    alert("Solicitud enviada. Recibirás confirmación por WhatsApp o teléfono.");
+    e.target.reset();
+    updateTotal();
+  });
+
+  document.getElementById("searchForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const phone = document.getElementById("searchPhone").value;
+    document.getElementById("ordersResult").innerHTML = `
+      <p>📱 Teléfono: <strong>${phone}</strong></p>
+      <p>🎟️ Cartones asignados: <strong>3</strong></p>
+      <p>✅ Estado: Confirmado</p>
+    `;
+  });
+</script>
 
-    <div id="cartonModal" class="modal">
-        <div class="modal-content">
-            <div class="carton-modal-header modal-header">
-                <div>
-                    <h3 style="margin:0; font-size: 18px;">Selecciona tu Cartón</h3>
-                    <small style="opacity: 0.8" id="modalInstruction">Selecciona los cartones que deseas comprar</small>
-                </div>
-                <span style="font-size: 24px; cursor: pointer;" id="closeModal">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="search-actions-container">
-                    <input type="text" class="search-bar" id="searchInput" placeholder="🔍 Buscar número (ej: 5) o terminal (ej: 5)...">
-                    <button class="btn-reset-selection" id="btnResetSelection" title="Revertir selección / Borrar todo">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </div>
-                
-                <div id="selectionSummary" class="selected-summary-box">
-                    Cartones seleccionados: <span id="selectionList" class="selected-tags">-</span>
-                </div>
-
-                <div class="carton-grid" id="cartonGrid">
-                    <p style="text-align:center;">Cargando...</p>
-                </div>
-            </div>
-            <div class="carton-modal-footer modal-footer">
-                <button class="continue-btn" id="continueBtn">Confirmar Selección</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="paymentModal" class="modal"><div class="modal-content"><div class="payment-modal-header"><h3>Proceso de compra</h3><span class="close-payment" id="closePaymentModal">&times;</span></div><div class="timer-banner"><i class="far fa-clock"></i> Tienes <strong id="paymentTimer">05:00</strong> para completar el pago.</div><div class="modal-body payment-body"><p class="payment-instructions">Asegúrate de pagar el monto exacto...</p><div class="payment-details-list"><div class="payment-detail-row"><span class="detail-label">Monto exacto:</span><span class="detail-value"><span id="paymentAmountDisplay" class="copy-text">Bs 0,00</span><i class="far fa-copy copy-icon" title="Copiar"></i></span></div><div class="payment-detail-row"><span class="detail-label">Banco:</span><span class="detail-value"><span class="copy-text">Banesco (0134)</span><i class="far fa-copy copy-icon" title="Copiar"></i></span></div><div class="payment-detail-row"><span class="detail-label">Teléfono:</span><span class="detail-value"><span class="copy-text">04248991277</span><i class="far fa-copy copy-icon" title="Copiar"></i></span></div><div class="payment-detail-row"><span class="detail-label">Cédula:</span><span class="detail-value"><span class="copy-text">V10069692</span><i class="far fa-copy copy-icon" title="Copiar"></i></span></div><div class="payment-detail-row" style="border-bottom: none; padding-top: 15px;"><span class="detail-label">Cartones:</span><span class="detail-value" id="selectedCartonesList" style="word-break: break-all; text-align: right;">-</span></div></div><div class="payment-input-group"><label class="payment-label">Últimos 6 dígitos de la referencia:</label>
-    <input type="text" id="referenciaInput" class="payment-input" placeholder="Ej: 123456" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-    <div id="referenciaError" class="error-message">La referencia debe tener 4 dígitos o más.</div>
-    </div><div class="payment-input-group"><label class="payment-label">Comprobante de pago:</label><input type="file" id="comprobanteInput" style="display: none;" accept="image/*"><button class="upload-btn" id="triggerUploadBtn"><i class="fas fa-file-upload"></i> Subir comprobante de pago</button></div></div><div class="payment-footer"><button class="reservar-btn" id="finalReserveBtn">RESERVAR CARTONES</button></div></div></div>
-    
-    <div id="singleCardModal" class="modal" style="background-color: rgba(0,0,0,0.85);"><div class="modal-content"><div class="modal-header"><div>Proceso de compra</div><span style="font-size: 20px; cursor: pointer; color:white;" id="closeSingleCardModal">&times;</span></div><div class="modal-body"><p id="previewMaxText">Selecciona tus cartones (Máximo: 1)</p><img src="Logo-oficial.png" alt="Vista Previa Cartón" class="single-card-image" id="singleCardImage" onerror="this.src='https://via.placeholder.com/400x500?text=Bingo+Card'"><p id="previewStatusText">Confirma si deseas elegir este cartón</p><div class="single-card-actions" id="previewActionButtons"></div><button class="btn-continue-preview" id="btnContinuePreview">CONTINUAR</button></div></div></div>
-
-    <div id="searchModal" class="modal">
-        <div class="modal-content">
-            <div class="carton-modal-header modal-header">
-                <div><h3 style="margin:0; font-size: 18px;">Buscar mis Cartones</h3></div>
-                <span style="font-size: 24px; cursor: pointer;" id="closeSearchModal">&times;</span>
-            </div>
-            <div class="modal-body">
-                <p style="font-size:13px; color:#666; margin-bottom:10px;">Ingresa el número de teléfono con el que realizaste la compra para ver tus cartones.</p>
-                <div class="styled-search-wrapper">
-                    <div class="prefix-section">
-                        <img src="https://flagcdn.com/w40/ve.png" alt="VE">
-                        <i class="fas fa-caret-down" style="font-size:10px; color:#666;"></i>
-                        <span style="font-weight:600; margin-left:2px;">+58</span>
-                    </div>
-                    <input type="tel" id="inputSearchPhone" class="styled-input" placeholder="412-1234567" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                    <button id="btnSearchAction" class="styled-search-btn">Buscar</button>
-                </div>
-                <div class="search-results-container" id="searchResultsContainer"></div>
-                <button class="btn-back-home" id="btnBackFromSearch"><i class="fas fa-arrow-left"></i> VOLVER A INICIO</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="toast" class="toast-notification">¡Copiado al portapapeles!</div>
-
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBtj_J5wQ4y-U3UDwwphud9Wir1n7WcI2s",
-            authDomain: "calipsobingo-f532b.firebaseapp.com",
-            databaseURL: "https://calipsobingo-f532b-default-rtdb.firebaseio.com",
-            projectId: "calipsobingo-f532b",
-            storageBucket: "calipsobingo-f532b.firebasestorage.app",
-            messagingSenderId: "196074596826",
-            appId: "1:196074596826:web:db6280789eb0d51ddd38e3",
-            measurementId: "G-M9XK1H641N"
-        };
-        
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const cartonesRef = database.ref('cartones');
-        const configRef = database.ref('configuracion'); 
-
-        let configSorteo = {
-            precioBase: 50.00,
-            promo4: 180.00,
-            promo8: 360.00,
-            promo12: 520.00,
-            totalCartones: 1000
-        };
-
-        // Variable global para contar vendidos
-        let cantidadVendidos = 0;
-
-        function cerrarModalPago() {
-            document.getElementById('paymentModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        function forceDownload(url, fileName) {
-            fetch(url).then(r => r.blob()).then(blob => {
-                const link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.download = fileName;
-                link.click();
-            }).catch(() => {
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = fileName;
-                link.target = '_blank';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // CONFETI Y SPLASH SCREEN
-            var duration = 2000;
-            var end = Date.now() + duration;
-            (function frame() {
-                confetti({
-                    particleCount: 3,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0 },
-                    zIndex: 10000
-                });
-                confetti({
-                    particleCount: 3,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1 },
-                    zIndex: 10000
-                });
-                if (Date.now() < end) {
-                    requestAnimationFrame(frame);
-                }
-            }());
-
-            setTimeout(function() {
-                const loader = document.getElementById('splash-screen');
-                if(loader) {
-                    loader.classList.add('hidden');
-                    setTimeout(() => loader.style.display = 'none', 500);
-                }
-            }, 2000);
-
-            // --- LÓGICA DE NOTIFICACIONES DE ACTIVIDAD (SOCIAL PROOF) ---
-            const nombresEjemplo = ["María G.", "Pedro R.", "Ana L.", "Carlos D.", "Luisa M.", "José A.", "Elena T.", "Wilmer M.", "Andrea S.", "Ricardo V."];
-            const accionesEjemplo = [
-                "está eligiendo sus números 🎱", 
-                "está revisando el cartón #777 👀", 
-                "agregó 4 cartones al carrito 🛒", 
-                "está completando el pago 💸", 
-                "está viendo la promoción x12 🔥",
-                "acaba de entrar a la tienda 🏃",
-                "está buscando su número de la suerte 🍀"
-            ];
-            const notificacion = document.getElementById('salesNotification');
-            const notifyName = document.getElementById('notifyName');
-            const notifyAction = document.getElementById('notifyAction');
-
-            function mostrarNotificacion() {
-                const nombreRandom = nombresEjemplo[Math.floor(Math.random() * nombresEjemplo.length)];
-                const accionRandom = accionesEjemplo[Math.floor(Math.random() * accionesEjemplo.length)];
-
-                notifyName.textContent = nombreRandom;
-                notifyAction.textContent = accionRandom;
-
-                notificacion.classList.add('active');
-
-                setTimeout(() => {
-                    notificacion.classList.remove('active');
-                }, 4000);
-            }
-
-            setTimeout(() => {
-                mostrarNotificacion();
-                setInterval(() => {
-                    if(Math.random() > 0.6) { 
-                        mostrarNotificacion();
-                    }
-                }, 8000); 
-            }, 3000);
-
-            const menuToggle = document.getElementById('mobile-menu');
-            const navLinks = document.querySelector('.nav-links');
-            if(menuToggle) {
-                menuToggle.addEventListener('click', () => {
-                    menuToggle.classList.toggle('is-active');
-                    navLinks.classList.toggle('active');
-                });
-            }
-
-            const quantityInput = document.getElementById('quantity');
-            const decreaseBtn = document.getElementById('decrease');
-            const increaseBtn = document.getElementById('increase');
-            const totalPriceEl = document.getElementById('totalPrice');
-            const savingsDisplay = document.getElementById('savingsDisplay');
-            const buyingBtn = document.getElementById('comprarBtn');
-            const nameInput = document.getElementById('nombreCliente');
-            const phoneInput = document.getElementById('telefonoCliente');
-            
-            const cartonModal = document.getElementById('cartonModal');
-            const closeModal = document.getElementById('closeModal');
-            const continueBtn = document.getElementById('continueBtn');
-            const cartonGrid = document.getElementById('cartonGrid');
-            const searchInput = document.getElementById('searchInput');
-            const modalInstruction = document.getElementById('modalInstruction');
-            
-            // Botón nuevo para resetear selección
-            const btnResetSelection = document.getElementById('btnResetSelection');
-            
-            const paymentModal = document.getElementById('paymentModal');
-            const closePaymentModal = document.getElementById('closePaymentModal');
-            const paymentAmountDisplay = document.getElementById('paymentAmountDisplay');
-            const selectedCartonesList = document.getElementById('selectedCartonesList');
-            const finalReserveBtn = document.getElementById('finalReserveBtn');
-            const referenciaInput = document.getElementById('referenciaInput');
-            const referenciaError = document.getElementById('referenciaError');
-            const triggerUploadBtn = document.getElementById('triggerUploadBtn');
-            const comprobanteInput = document.getElementById('comprobanteInput');
-            
-            const singleCardModal = document.getElementById('singleCardModal');
-            const closeSingleCardModal = document.getElementById('closeSingleCardModal');
-            const btnContinuePreview = document.getElementById('btnContinuePreview');
-            const previewMaxText = document.getElementById('previewMaxText');
-            const previewStatusText = document.getElementById('previewStatusText');
-            const previewActionButtons = document.getElementById('previewActionButtons');
-
-            const lblTitulo = document.getElementById('lblTitulo');
-            const lblSubtitulo = document.getElementById('lblSubtitulo');
-            const lblPrecioTag = document.getElementById('lblPrecioTag');
-            const lblPromoText = document.getElementById('lblPromoText');
-            const txtDisponibles = document.getElementById('txtDisponibles');
-
-            const btnOpenSearch = document.getElementById('btnOpenSearch');
-            const searchModal = document.getElementById('searchModal');
-            const closeSearchModal = document.getElementById('closeSearchModal');
-            const btnSearchAction = document.getElementById('btnSearchAction');
-            const inputSearchPhone = document.getElementById('inputSearchPhone');
-            const searchResultsContainer = document.getElementById('searchResultsContainer');
-            const btnBackFromSearch = document.getElementById('btnBackFromSearch');
-            const navMisCompras = document.getElementById('navMisCompras'); 
-            
-            let maxSelections = 1;
-            let currentPreviewCardNumber = null;
-
-            configRef.on('value', (snapshot) => {
-                const config = snapshot.val();
-                if (config) {
-                    configSorteo.precioBase = parseFloat(config.precioBase) || 50;
-                    configSorteo.promo4 = parseFloat(config.promo4) || 180;
-                    configSorteo.promo8 = parseFloat(config.promo8) || 360;
-                    configSorteo.promo12 = parseFloat(config.promo12) || 520;
-                    configSorteo.totalCartones = parseInt(config.totalCartones) || 1000;
-
-                    if(lblTitulo) lblTitulo.textContent = config.titulo || "Gran Sorteo";
-                    if(lblSubtitulo) lblSubtitulo.textContent = config.fecha || "Muy Pronto";
-                    if(lblPrecioTag) lblPrecioTag.textContent = "Valor: Bs. " + configSorteo.precioBase.toFixed(2).replace('.', ',');
-                    
-                    if(lblPromoText) {
-                        lblPromoText.innerHTML = `<strong>PROMOCIÓN:</strong> 4×Bs ${configSorteo.promo4} · 8×Bs ${configSorteo.promo8} · 12×Bs ${configSorteo.promo12}`;
-                    }
-
-                    // Actualizar contador al cargar config
-                    actualizarContadorDisponibles();
-                    updateTotalPrice();
-                }
-            });
-            
-            // LISTENER DE VENTAS EN TIEMPO REAL
-            cartonesRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                let cont = 0;
-                if (data) {
-                     Object.keys(data).forEach(key => {
-                         if(data[key].estado === 'vendido') cont++;
-                     });
-                }
-                cantidadVendidos = cont;
-                actualizarContadorDisponibles();
-            });
-
-            function actualizarContadorDisponibles() {
-                if(txtDisponibles) {
-                    let restantes = configSorteo.totalCartones - cantidadVendidos;
-                    if (restantes < 0) restantes = 0;
-                    txtDisponibles.textContent = restantes + " Cartones Disponibles";
-                }
-            }
-
-            const fechaMeta = new Date(2026, 0, 31, 20, 0, 0).getTime();
-            const x = setInterval(function() {
-                const now = new Date().getTime();
-                const distance = fechaMeta - now;
-
-                if (distance < 0) {
-                    clearInterval(x);
-                    const msg = "<div style='background:white; color:#d32f2f; padding:10px; border-radius:8px; font-weight:bold;'>¡EL SORTEO HA COMENZADO! 🎱</div>";
-                    if(document.getElementById("countdownBox")) document.getElementById("countdownBox").innerHTML = msg;
-                    if(document.getElementById("countdownBoxMobile")) document.getElementById("countdownBoxMobile").innerHTML = msg;
-                    return;
-                }
-
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                if(document.getElementById("cdDays")) {
-                    document.getElementById("cdDays").innerText = days < 10 ? "0" + days : days;
-                    document.getElementById("cdHours").innerText = hours < 10 ? "0" + hours : hours;
-                    document.getElementById("cdMinutes").innerText = minutes < 10 ? "0" + minutes : minutes;
-                    document.getElementById("cdSeconds").innerText = seconds < 10 ? "0" + seconds : seconds;
-                }
-
-                if(document.getElementById("cdDaysM")) {
-                    document.getElementById("cdDaysM").innerText = days < 10 ? "0" + days : days;
-                    document.getElementById("cdHoursM").innerText = hours < 10 ? "0" + hours : hours;
-                    document.getElementById("cdMinutesM").innerText = minutes < 10 ? "0" + minutes : minutes;
-                    document.getElementById("cdSecondsM").innerText = seconds < 10 ? "0" + seconds : seconds;
-                }
-            }, 1000);
-
-            triggerUploadBtn.addEventListener('click', function() {
-                comprobanteInput.click();
-            });
-
-            comprobanteInput.addEventListener('change', function() {
-                if(this.files && this.files[0]) {
-                    triggerUploadBtn.innerHTML = `<i class="fas fa-check"></i> Archivo listo`;
-                    triggerUploadBtn.style.backgroundColor = "#2E8B57";
-                    triggerUploadBtn.style.color = "white";
-                }
-            });
-
-            const openSearch = () => {
-                searchModal.style.display = 'block';
-                searchResultsContainer.innerHTML = '';
-                inputSearchPhone.value = '';
-                if (navLinks.classList.contains('active')) {
-                    menuToggle.classList.remove('is-active');
-                    navLinks.classList.remove('active');
-                }
-            };
-
-            btnOpenSearch.addEventListener('click', openSearch);
-            if (navMisCompras) {
-                navMisCompras.addEventListener('click', (e) => {
-                    e.preventDefault(); 
-                    openSearch();
-                });
-            }
-
-            closeSearchModal.addEventListener('click', () => searchModal.style.display = 'none');
-            btnBackFromSearch.addEventListener('click', () => searchModal.style.display = 'none');
-
-            btnSearchAction.addEventListener('click', () => {
-                const phoneToSearch = inputSearchPhone.value.trim();
-                if (!phoneToSearch) { alert("Ingresa un número de teléfono"); return; }
-
-                searchResultsContainer.innerHTML = '<p style="text-align:center;">Buscando...</p>';
-
-                cartonesRef.once('value').then(snapshot => {
-                    const data = snapshot.val() || {};
-                    let foundCards = [];
-                    let buyerName = "";
-                    let purchaseDate = "";
-                    let verifiedStatus = false;
-
-                    Object.keys(data).forEach(key => {
-                        const carton = data[key];
-                        if (carton.telefono === phoneToSearch && carton.estado === 'vendido') {
-                            foundCards.push(key);
-                            if (carton.verificado === true) {
-                                verifiedStatus = true;
-                            }
-                            if(!buyerName) {
-                                buyerName = carton.nombre;
-                                purchaseDate = new Date(carton.fecha).toLocaleString();
-                            }
-                        }
-                    });
-
-                    searchResultsContainer.innerHTML = '';
-
-                    if (foundCards.length > 0) {
-                        const summaryDiv = document.createElement('div');
-                        summaryDiv.className = 'user-summary-box';
-                        
-                        let badgeHtml = '';
-                        if (verifiedStatus) {
-                            badgeHtml = '<span class="status-badge" style="background-color: #2e7d32; color: white;">VERIFICADO ✅</span>';
-                        } else {
-                            badgeHtml = '<span class="status-badge" style="background-color: #ffc107; color: black;">PENDIENTE ⏳</span>';
-                        }
-
-                        summaryDiv.innerHTML = `
-                            <div class="user-summary-row"><span><strong>Comprador:</strong></span> <span>${buyerName}</span></div>
-                            <div class="user-summary-row"><span><strong>Fecha Compra:</strong></span> <span>${purchaseDate}</span></div>
-                            <div class="user-summary-row"><span><strong>Estado:</strong></span> ${badgeHtml}</div>
-                        `;
-                        searchResultsContainer.appendChild(summaryDiv);
-
-                        const title = document.createElement('h5');
-                        title.innerText = "Tus Cartones:";
-                        title.style.margin = "10px 0 5px 0";
-                        title.style.fontSize = "14px";
-                        searchResultsContainer.appendChild(title);
-
-                        foundCards.forEach(key => {
-                            const div = document.createElement('div');
-                            div.className = 'found-carton-row';
-                            div.innerHTML = `
-                                <span class="found-carton-info">Cartón #${key}</span>
-                                <button class="btn-ver-carton" style="width:auto; padding:5px 15px;" onclick="forceDownload('cartones/${key}.jpg', 'Carton-${key}.jpg')">
-                                    <i class="fas fa-download"></i> Descargar
-                                </button>
-                            `;
-                            searchResultsContainer.appendChild(div);
-                        });
-                    } else {
-                        searchResultsContainer.innerHTML = '<p style="text-align:center; color:red; margin-top:20px;">No se encontraron cartones asociados a este número.</p>';
-                    }
-                });
-            });
-
-            function generateCartons() {
-                cartonGrid.innerHTML = '<p style="width:100%; text-align:center;">Cargando...</p>';
-                cartonesRef.once('value').then((snapshot) => {
-                    const data = snapshot.val() || {};
-                    cartonGrid.innerHTML = ''; 
-                    const randomOption = document.createElement('div');
-                    randomOption.className = 'carton-item';
-                    randomOption.style.borderColor = '#FF8C42';
-                    randomOption.style.color = '#FF8C42';
-                    randomOption.setAttribute('data-number', 'azar');
-                    randomOption.innerHTML = `<div class="carton-number"><i class="fas fa-random"></i></div><div class="carton-action">Azar</div>`;
-                    
-                    randomOption.addEventListener('click', function() {
-                        document.querySelectorAll('.carton-item.selected').forEach(item => {
-                            item.classList.remove('selected');
-                            if(item.querySelector('.fa-random')) { item.style.backgroundColor = 'white'; item.style.color = '#FF8C42'; }
-                        });
-                        const availableItems = Array.from(document.querySelectorAll('.carton-item:not([data-number="azar"]):not(.sold)'));
-                        for (let i = availableItems.length - 1; i > 0; i--) {
-                            const j = Math.floor(Math.random() * (i + 1));
-                            [availableItems[i], availableItems[j]] = [availableItems[j], availableItems[i]];
-                        }
-                        for(let i=0; i < maxSelections; i++) {
-                            if(availableItems[i]) availableItems[i].classList.add('selected');
-                        }
-                        updateSelectionText(); // Update box after random pick
-                    });
-                    cartonGrid.appendChild(randomOption);
-
-                    const fragment = document.createDocumentFragment();
-                    for (let i = 1; i <= configSorteo.totalCartones; i++) {
-                        const cartonItem = document.createElement('div');
-                        cartonItem.className = 'carton-item';
-                        cartonItem.setAttribute('data-number', i);
-                        cartonItem.id = `carton-${i}`;
-                        const estado = (data[i] && data[i].estado) ? data[i].estado : 'disponible';
-                        
-                        if (estado === 'vendido') {
-                            cartonItem.classList.add('sold');
-                            cartonItem.innerHTML = `<div class="carton-number">${i}</div><div style="font-size:9px; color:#666;">VENDIDO</div>`;
-                        } else {
-                            cartonItem.innerHTML = `<div class="carton-number">${i}</div><button class="btn-ver-carton" type="button">VER</button>`;
-                            cartonItem.addEventListener('click', function(e) {
-                                if(e.target.classList.contains('btn-ver-carton')) return;
-                                selectCarton.call(this);
-                            });
-                            const verBtn = cartonItem.querySelector('.btn-ver-carton');
-                            verBtn.addEventListener('click', function(e) {
-                                e.stopPropagation();
-                                openSinglePreview(i);
-                            });
-                        }
-                        fragment.appendChild(cartonItem);
-                    }
-                    cartonGrid.appendChild(fragment);
-                });
-            }
-
-            // NUEVA FUNCIÓN: RESETEAR SELECCIÓN
-            if(btnResetSelection) {
-                btnResetSelection.addEventListener('click', function() {
-                    document.querySelectorAll('.carton-item.selected').forEach(item => {
-                        item.classList.remove('selected');
-                        // Restaurar color del botón "Azar" si estaba marcado
-                        if(item.querySelector('.fa-random')) { 
-                            item.style.backgroundColor = 'white'; 
-                            item.style.color = '#FF8C42'; 
-                        }
-                    });
-                    updateSelectionText(); // Limpia el texto resumen
-                });
-            }
-
-            searchInput.addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase().trim();
-                const items = cartonGrid.getElementsByClassName('carton-item');
-                
-                Array.from(items).forEach(item => {
-                    const number = item.getAttribute('data-number');
-                    if (number === 'azar') {
-                        item.style.display = 'flex';
-                        return;
-                    }
-                    if (searchTerm === "" || number === searchTerm || number.endsWith(searchTerm)) {
-                        item.style.display = 'flex';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-            });
-
-            finalReserveBtn.addEventListener('click', function() {
-                const referencia = referenciaInput.value.trim();
-                
-                // VALIDACIÓN DE REFERENCIA (SIN ALERT)
-                if (referencia === "" || referencia.length < 4) {
-                    referenciaInput.classList.add('input-error');
-                    referenciaError.style.display = 'block'; // MOSTRAR MENSAJE ROJO
-                    return; 
-                } else {
-                    referenciaInput.classList.remove('input-error');
-                    referenciaError.style.display = 'none';
-                }
-
-                finalReserveBtn.disabled = true;
-                finalReserveBtn.innerText = "Procesando...";
-
-                const selectedItems = document.querySelectorAll('.carton-item.selected');
-                const selectedNumbers = Array.from(selectedItems).map(item => item.getAttribute('data-number'));
-
-                const userData = {
-                    nombre: nameInput.value,
-                    telefono: phoneInput.value,
-                    referencia: referencia,
-                    estado: 'vendido', 
-                    fecha: new Date().toISOString()
-                };
-
-                const updates = {};
-                selectedNumbers.forEach(num => {
-                    if(num !== 'azar') { updates['/cartones/' + num] = userData; }
-                });
-
-                database.ref().update(updates).then(() => {
-                    localStorage.setItem('cartonesSeleccionados', JSON.stringify(selectedNumbers));
-                    localStorage.setItem('compraReferencia', referencia);
-                    localStorage.setItem('autoWhatsApp', 'true');
-                    localStorage.setItem('nombreComprador', nameInput.value); 
-                    cerrarModalPago();
-                    setTimeout(() => { window.location.href = 'compra-exitosa.html'; }, 500);
-                }).catch((error) => {
-                    alert("Error al reservar: " + error.message);
-                    finalReserveBtn.disabled = false;
-                });
-            });
-
-            // LIMPIAR ERROR AL ESCRIBIR
-            referenciaInput.addEventListener('input', function() {
-                if(this.value.length >= 4) {
-                    referenciaInput.classList.remove('input-error');
-                    referenciaError.style.display = 'none';
-                }
-            });
-
-            window.openSinglePreview = function(numero) {
-                currentPreviewCardNumber = numero;
-                const cartonElement = document.getElementById(`carton-${numero}`);
-                const isSelected = cartonElement.classList.contains('selected');
-                previewMaxText.textContent = `Selecciona tus cartones (Máximo: ${maxSelections})`;
-                const imagenCarton = document.getElementById('singleCardImage');
-                imagenCarton.src = `cartones/${numero}.jpg`;
-                imagenCarton.onerror = function() { this.src = 'Logo-oficial.png'; };
-
-                if (isSelected) {
-                    previewStatusText.textContent = "Este cartón ya lo seleccionaste";
-                    previewStatusText.style.color = "#333";
-                    previewActionButtons.innerHTML = `<button class="btn-preview-action btn-remove" onclick="handlePreviewAction('deselect')">NO LO QUIERO <i class="fas fa-times"></i></button><button class="btn-preview-action btn-dont-want" onclick="handlePreviewAction('back')"><i class="fas fa-arrow-left"></i> VOLVER ATRÁS</button>`;
-                } else {
-                    previewStatusText.textContent = "Confirma si deseas elegir este cartón";
-                    previewStatusText.style.color = "#666";
-                    previewActionButtons.innerHTML = `<button class="btn-preview-action btn-want" onclick="handlePreviewAction('select')">LO QUIERO <i class="fas fa-check"></i></button><button class="btn-preview-action btn-dont-want" onclick="handlePreviewAction('close')">NO LO QUIERO <i class="fas fa-times"></i></button>`;
-                }
-                singleCardModal.style.display = 'block';
-            };
-
-            window.handlePreviewAction = function(action) {
-                if (currentPreviewCardNumber !== null) {
-                    const cartonElement = document.getElementById(`carton-${currentPreviewCardNumber}`);
-                    if (action === 'select') { if (cartonElement) selectCarton.call(cartonElement); singleCardModal.style.display = 'none'; } 
-                    else if (action === 'deselect') { if (cartonElement && cartonElement.classList.contains('selected')) selectCarton.call(cartonElement); singleCardModal.style.display = 'none'; }
-                    else { singleCardModal.style.display = 'none'; }
-                }
-            };
-            
-            function selectCarton() {
-                const selectedItems = document.querySelectorAll('.carton-item.selected');
-                if (this.classList.contains('selected')) {
-                    this.classList.remove('selected');
-                    if(this.querySelector('.fa-random')) { this.style.backgroundColor = 'white'; this.style.color = '#FF8C42'; }
-                    updateSelectionText(); // Update after deselect
-                    return;
-                }
-                if (selectedItems.length >= maxSelections) {
-                    if (maxSelections === 1) {
-                        selectedItems[0].classList.remove('selected');
-                        if(selectedItems[0].querySelector('.fa-random')) { selectedItems[0].style.backgroundColor = 'white'; selectedItems[0].style.color = '#FF8C42'; }
-                    } else {
-                        alert(`Solo puedes seleccionar ${maxSelections}. Desmarca uno.`);
-                        return;
-                    }
-                }
-                this.classList.add('selected');
-                if(this.querySelector('.fa-random')) { this.style.backgroundColor = '#FF8C42'; this.style.color = 'white'; }
-                updateSelectionText(); // Update after select
-            }
-
-            // NEW HELPER FUNCTION TO UPDATE SUMMARY BOX
-            function updateSelectionText() {
-                const selected = document.querySelectorAll('.carton-item.selected');
-                // Filter out the random button itself which has data-number="azar"
-                const nums = Array.from(selected)
-                    .map(el => el.getAttribute('data-number'))
-                    .filter(num => num !== 'azar');
-                
-                const summaryBox = document.getElementById('selectionSummary');
-                const summaryList = document.getElementById('selectionList');
-
-                if(nums.length > 0) {
-                    summaryBox.style.display = 'block';
-                    summaryList.textContent = nums.join(', ');
-                } else {
-                    summaryBox.style.display = 'none';
-                }
-            }
-            
-            function updateTotalPrice() { 
-                const quantity = parseInt(quantityInput.value); 
-                const standardTotal = quantity * configSorteo.precioBase;
-                let finalTotal = 0;
-                let remaining = quantity;
-
-                if (remaining >= 12) {
-                    const sets12 = Math.floor(remaining / 12);
-                    finalTotal += sets12 * configSorteo.promo12;
-                    remaining %= 12;
-                }
-                if (remaining >= 8) {
-                    const sets8 = Math.floor(remaining / 8);
-                    finalTotal += sets8 * configSorteo.promo8;
-                    remaining %= 8;
-                }
-                if (remaining >= 4) {
-                    const sets4 = Math.floor(remaining / 4);
-                    finalTotal += sets4 * configSorteo.promo4;
-                    remaining %= 4;
-                }
-                finalTotal += remaining * configSorteo.precioBase;
-
-                totalPriceEl.textContent = 'Bs ' + finalTotal.toFixed(2).replace('.', ','); 
-                
-                const savings = standardTotal - finalTotal;
-                if (savings > 0) {
-                    savingsDisplay.style.display = 'block';
-                    savingsDisplay.innerHTML = `Estás ahorrando <span style="color:#FFD54F">Bs ${savings.toFixed(2).replace('.', ',')}</span> 🥳`;
-                } else {
-                    savingsDisplay.style.display = 'none';
-                }
-
-                maxSelections = quantity; 
-                modalInstruction.textContent = `Debes seleccionar exactamente ${maxSelections} cartón(es)`; 
-            }
-
-            decreaseBtn.addEventListener('click', function() { 
-                let value = parseInt(quantityInput.value); 
-                if (value > 1) { 
-                    quantityInput.value = value - 1; 
-                    updateTotalPrice(); 
-                } 
-            });
-            
-            increaseBtn.addEventListener('click', function() { 
-                let value = parseInt(quantityInput.value); 
-                if (value < 20) { 
-                    quantityInput.value = value + 1; 
-                    updateTotalPrice(); 
-                } 
-            });
-            
-            buyingBtn.addEventListener('click', function() {
-                let error = false;
-                if (nameInput.value.trim() === '') { nameInput.classList.add('input-error'); error = true; }
-                if (phoneInput.value.trim() === '') { phoneInput.classList.add('input-error'); error = true; }
-                if (error) { alert('Complete sus datos'); return; }
-                document.querySelectorAll('.carton-item.selected').forEach(item => item.classList.remove('selected'));
-                // Clear selection summary on open
-                document.getElementById('selectionSummary').style.display = 'none';
-                
-                cartonModal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-                generateCartons(); 
-            });
-
-            closeModal.addEventListener('click', () => { cartonModal.style.display = 'none'; document.body.style.overflow = 'auto'; });
-            closePaymentModal.addEventListener('click', () => { cerrarModalPago(); });
-            closeSingleCardModal.addEventListener('click', () => singleCardModal.style.display = 'none');
-            btnContinuePreview.addEventListener('click', () => singleCardModal.style.display = 'none');
-            
-            continueBtn.addEventListener('click', function() {
-                const selectedItems = document.querySelectorAll('.carton-item.selected');
-                if (selectedItems.length === maxSelections) {
-                    cartonModal.style.display = 'none';
-                    
-                    let totalAmount = 0;
-                    let remaining = maxSelections;
-                    
-                    if (remaining >= 12) {
-                        const sets12 = Math.floor(remaining / 12);
-                        totalAmount += sets12 * configSorteo.promo12;
-                        remaining %= 12;
-                    }
-                    if (remaining >= 8) {
-                        const sets8 = Math.floor(remaining / 8);
-                        totalAmount += sets8 * configSorteo.promo8;
-                        remaining %= 8;
-                    }
-                    if (remaining >= 4) {
-                        const sets4 = Math.floor(remaining / 4);
-                        totalAmount += sets4 * configSorteo.promo4;
-                        remaining %= 4;
-                    }
-                    totalAmount += remaining * configSorteo.precioBase;
-
-                    const selectedNumbers = Array.from(selectedItems).map(item => item.getAttribute('data-number')).join(', ');
-                    paymentAmountDisplay.textContent = 'Bs ' + totalAmount.toFixed(2).replace('.', ',');
-                    selectedCartonesList.textContent = selectedNumbers;
-                    paymentModal.style.display = 'block';
-                } else { alert(`Faltan seleccionar cartones.`); }
-            });
-        });
-    </script>
 </body>
 </html>

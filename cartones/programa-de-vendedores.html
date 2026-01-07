@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Términos del Plan de Promotores - Calipso Bingo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #1a5e3a;
+            --secondary-green: #2E8B57;
+            --accent-orange: #FF6B35;
+            --accent-yellow: #FFD700;
+            --bg-color: #F4F7F6;
+            --text-dark: #2c3e50;
+            --white: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            font-size: 14px;
+            background-image: radial-gradient(#2E8B57 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
+            background-color: #f0fdf4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-decoration: none;
+        }
+        
+        .logo img {
+            height: 36px;
+            border-radius: 50%;
+            background: white;
+            padding: 2px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Botones Navbar */
+        .btn-nav-action {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            text-decoration: none;
+            transition: transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-vendedor {
+            background-color: transparent;
+            color: var(--white);
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+        
+        .btn-vendedor:hover {
+            border-color: var(--white);
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .btn-soporte {
+            background-color: var(--accent-orange);
+            color: white;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .btn-soporte:hover {
+            background-color: #e55a2b;
+            transform: translateY(-2px);
+        }
+
+        /* Estilos de Contenido Legal */
+        .policy-container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        .paper-card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border-top: 6px solid var(--primary-green);
+        }
+
+        .page-title {
+            text-align: center;
+            color: var(--primary-green);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .last-update {
+            text-align: center;
+            color: #777;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .policy-section {
+            margin-bottom: 30px;
+        }
+
+        .policy-section h2 {
+            color: var(--secondary-green);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--accent-orange);
+            padding-left: 12px;
+        }
+
+        .policy-section p {
+            margin-bottom: 15px;
+            text-align: justify;
+            color: #444;
+        }
+
+        .policy-section ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .policy-section li {
+            margin-bottom: 8px;
+            color: #444;
+        }
+        
+        .policy-section strong {
+            color: var(--primary-green);
+        }
+
+        /* WhatsApp Flotante */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: #25D366;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            text-decoration: none;
+            z-index: 1000;
+            transition: transform 0.3s;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        /* Footer */
+        .main-footer {
+            background-color: #124029;
+            color: #e0e0e0;
+            padding: 30px 20px 20px;
+            margin-top: 30px;
+            border-top: 5px solid var(--accent-orange);
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .footer-social-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 13px;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+
+        .social-icons a {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .social-icons a:hover {
+            background: var(--accent-orange);
+            transform: translateY(-3px);
+        }
+
+        .footer-legal-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 13px;
+            margin: 5px 0;
+        }
+
+        .footer-legal-links a {
+            color: #a0c4b3;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-legal-links a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .footer-separator {
+            color: #406856;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 15px;
+            font-size: 12px;
+            color: #88a697;
+        }
+        
+        .developer-credit {
+            margin-top: 5px;
+            font-size: 11px;
+            opacity: 0.7;
+        }
+
+        .developer-credit i {
+            color: var(--accent-orange);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar { justify-content: center; }
+            .nav-links { display: none; }
+            .paper-card { padding: 25px 15px; }
+            .page-title { font-size: 1.8rem; }
+            .footer-legal-links { flex-direction: column; gap: 10px; }
+            .footer-separator { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <img src="Logo-oficial.png" alt="Bingo Logo">
+            Calipso Bingo
+        </a>
+        <div class="nav-links">
+            <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+            <a href="#">Mis compras</a>
+            <a href="#">Resultados</a>
+            <a href="#" class="btn-nav-action btn-vendedor">SE PROMOTOR</a>
+            <a href="https://wa.me/584248991277" class="btn-nav-action btn-soporte"><i class="fab fa-whatsapp"></i> SOPORTE</a>
+        </div>
+    </nav>
+
+    <div class="policy-container">
+        <div class="paper-card">
+            <h1 class="page-title">Términos del Plan de Promotores</h1>
+            <div class="last-update">Última actualización: Enero 2026</div>
+
+            <div class="policy-section">
+                <h2>1. Definiciones</h2>
+                <ul>
+                    <li><strong>Operadora Calipso Bingo C.A.:</strong> Entidad mercantil responsable de la <strong>Plataforma Digital "Calipso Bingo"</strong>.</li>
+                    <li><strong>Plataforma Calipso Bingo:</strong> Sitio web de juegos de bingo en línea disponible en la dirección https://calipsobingo.com.</li>
+                    <li><strong>Plan de Promotores:</strong> Sistema a través del cual personas naturales pueden comercializar y distribuir boletos de Calipso Bingo, recibiendo una compensación económica por cada transacción exitosa.</li>
+                    <li><strong>Promotor o Distribuidor:</strong> Persona natural mayor de edad aceptada oficialmente por Calipso Bingo para formar parte del Plan de Promotores.</li>
+                    <li><strong>Usuario Final:</strong> Persona que adquiere boletos para intervenir en los juegos de la Plataforma Calipso Bingo.</li>
+                </ul>
+            </div>
+
+            <div class="policy-section">
+                <h2>2. Adhesión a las Condiciones</h2>
+                <p>Al completar el registro como Promotor y ser incorporado al Plan de Promotores de Calipso Bingo, el usuario manifiesta:</p>
+                <ul>
+                    <li>Haber revisado, comprendido y consentido íntegramente estos <strong>Términos del Plan de Promotores</strong>.</li>
+                    <li>Aceptar también las <strong>Condiciones Generales de Uso</strong> de Calipso Bingo, las cuales regirán en todo aspecto no previsto específicamente en el presente acuerdo.</li>
+                </ul>
+            </div>
+
+            <div class="policy-section">
+                <h2>3. Carácter del vínculo</h2>
+                <p>El Promotor desempeña sus funciones como colaborador independiente de Calipso Bingo. De ningún modo se interpretará que existe:</p>
+                <ul>
+                    <li>Vínculo de dependencia laboral.</li>
+                    <li>Relación societaria, de mandato, concesión o representación legal.</li>
+                </ul>
+                <p>El Promotor asumirá de forma exclusiva todas las responsabilidades tributarias, fiscales y de seguridad social que puedan originarse de los ingresos percibidos.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2>4. Inscripción y condiciones para el Promotor</h2>
+                <p>Para ingresar al Plan de Promotores, el solicitante debe cumplir con los siguientes requisitos:</p>
+                <ul>
+                    <li>Ser mayor de dieciocho (18) años.</li>
+                    <li>Suministrar información personal exacta y completa (nombre, identificación oficial, contacto telefónico, datos para el cobro de comisiones, etc.).</li>
+                    <li>Aceptar los presentes Términos y las Condiciones Generales de la Plataforma.</li>
+                </ul>
+                <p>Calipso Bingo C.A. mantiene la facultad de aprobar o denegar cualquier solicitud de ingreso al Plan, sin necesidad de explicar su determinación.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2>5. Funciones del Promotor</h2>
+                <p>El Promotor cuenta con autorización para:</p>
+                <ul>
+                    <li>Difundir información sobre los juegos activos de Calipso Bingo.</li>
+                    <li>Ofrecer boletos a Usuarios Finales utilizando las herramientas, enlaces, códigos o métodos proporcionados por Calipso Bingo.</li>
+                </ul>
+                <p>El Promotor <strong>NO</strong> tiene autorización para:</p>
+                <ul>
+                    <li>Alterar los valores oficiales de los boletos.</li>
+                    <li>Otorgar rebajas, bonificaciones u otros incentivos no autorizados por Calipso Bingo.</li>
+                    <li>Crear sorteos alternativos empleando la marca, logotipos o recursos de Calipso Bingo.</li>
+                    <li>Formular promesas, avales o compromisos en nombre de Calipso Bingo sin autorización escrita.</li>
+                </ul>
+            </div>
+
+            <div class="policy-section">
+                <h2>6. Transacciones válidas y registro de comisiones</h2>
+                <p>Se considerará válida una transacción cuando cumpla con todas estas condiciones:</p>
+                <ul>
+                    <li>El Usuario Final complete el pago total mediante los sistemas oficiales de Calipso Bingo.</li>
+                    <li>El pago sea confirmado y aprobado por Calipso Bingo.</li>
+                    <li>Se asignen boletos al Usuario Final según las normas del juego.</li>
+                    <li>La venta quede correctamente vinculada al Promotor, mediante un identificador, enlace de referencia, registro manual u otro sistema establecido por Calipso Bingo.</li>
+                </ul>
+                <p>Únicamente las transacciones válidas generarán el derecho a comisión.</p>
+                <p>Calipso Bingo C.A. podrá corregir, ajustar o cancelar transacciones y comisiones en situaciones como:</p>
+                <ul>
+                    <li>Reversiones, rechazos o disputas de pagos.</li>
+                    <li>Errores administrativos identificables.</li>
+                    <li>Detección de conductas fraudulentas, abusivas o contrarias a estos Términos.</li>
+                </ul>
+            </div>
+
+            <div class="policy-section">
+                <h2>7. Retribuciones y método de pago</h2>
+                <p>El Promotor recibirá una retribución por cada transacción válida gestionada. El porcentaje, montos y estructura de la retribución serán informados mediante los canales oficiales (documentación, comunicaciones internas, panel de control, etc.).</p>
+                <p>El pago de las comisiones se realizará semanalmente, o con la periodicidad que en el futuro se establezca y comunique a los Promotores.</p>
+                <p>Los desembolsos se efectuarán por los medios convenidos (ej. transferencia electrónica, pago móvil) usando la información bancaria proporcionada por el Promotor.</p>
+                <p>El Promotor dispondrá de un máximo de cinco (5) días corridos, contados desde la fecha de pago, para reportar cualquier discrepancia en los montos liquidados. Transcurrido este plazo sin reclamación, se entenderá que los valores abonados son aceptados.</p>
+                <p>Calipso Bingo C.A. podrá suspender total o parcialmente el pago de comisiones si existen:</p>
+                <ul>
+                    <li>Investigaciones por posibles irregularidades o incumplimientos.</li>
+                    <li>Inconsistencias significativas en las transacciones registradas.</li>
+                </ul>
+                <p>De confirmarse irregularidades, Calipso Bingo podrá retener o cancelar las comisiones correspondientes.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2>8. Empleo de la marca e identidad corporativa</h2>
+                <p>Calipso Bingo concede al Promotor una licencia limitada, no exclusiva y revocable para emplear la marca "Calipso Bingo" y sus elementos gráficos, exclusivamente para fines promocionales dentro del Plan.</p>
+                <p>El Promotor se obliga a:</p>
+                <ul>
+                    <li>Emplear únicamente los materiales oficiales proporcionados por Calipso Bingo o aquellos autorizados expresamente.</li>
+                    <li>No alterar colores, diseños o logotipos sin aprobación previa por escrito.</li>
+                </ul>
+                <p>Se prohíbe terminantemente:</p>
+                <ul>
+                    <li>Crear páginas, perfiles o sitios que simulen ser oficiales de Calipso Bingo sin autorización.</li>
+                    <li>Usar la marca para actividades ajenas a los sorteos o que infrinjan la ley.</li>
+                </ul>
+                <p>Ante un uso indebido, Calipso Bingo podrá revocar inmediatamente la participación del Promotor y ejercer las acciones legales correspondientes.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2>9. Atención al Usuario Final y normas de conducta</h2>
+                <p>El Promotor se compromete a:</p>
+                <ul>
+                    <li>Proporcionar información precisa, clara y no engañosa sobre los juegos.</li>
+                    <li>Respetar la dignidad y privacidad de los Usuarios Finales.</li>
+                    <li>Derivar a los canales oficiales de Calipso Bingo las consultas, quejas o situaciones que superen sus facultades.</li>
+                </ul>
+                <p>Se prohíbe expresamente:</p>
+                <ul>
+                    <li>Garantizar resultados o premios.</li>
+                    <li>Ocultar información relevante sobre las reglas de participación.</li>
+                    <li>Utilizar métodos de presión, hostigamiento o envío masivo no solicitado para la venta de boletos.</li>
+                </ul>
+            </div>
+
+            <div class="policy-section">
+                <h2>10. Información personal y confidencialidad</h2>
+                <p>Los datos de los Usuarios Finales registrados o que adquieran boletos en la Plataforma son propiedad de Calipso Bingo.</p>
+                <p>El Promotor que, en razón de su actividad, acceda a datos personales de Usuarios Finales, se obliga a:</p>
+                <ul>
+                    <li>Utilizarlos solo para fines relacionados con el Plan de Promotores.</li>
+                    <li>No copiarlos, almacenarlos con otros propósitos, comercializarlos ni divulgarlos a terceros sin autorización expresa de Calipso Bingo.</li>
+                    <li>Mantener estricta confidencialidad sobre la información a la que acceda.</li>
+                </ul>
+                <p>El manejo inapropiado de datos personales podrá causar la exclusión inmediata del Plan y dar lugar a acciones legales. Para más detalles sobre el tratamiento de datos, consulte la Política de Privacidad.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2>11. Vigencia y conclusión del Plan</h2>
+                <p>El Plan de Promotores tiene vigencia indefinida, pudiendo Calipso Bingo modificarlo, interrumpirlo o finalizarlo en cualquier momento, notificando a los Promotores por los medios habituales.</p>
+                <p>Calipso Bingo C.A. podrá dar por terminada la participación de un Promotor, con efecto inmediato, en caso de:</p>
+                <ul>
+                    <li>Incumplimiento de estos Términos o de las Condiciones Generales.</li>
+                    <li>Prácticas fraudulentas o intento de fraude.</li>
+                    <li>Dañar la imagen o prestigio de Calipso Bingo con sus actos o declaraciones.</li>
+                </ul>
+                <p>El Promotor también podrá renunciar al Plan en cualquier momento, mediante notificación escrita a Calipso Bingo. En tal caso, se liquidarán las comisiones derivadas de transacciones válidas realizadas hasta la fecha de terminación, conforme a las reglas aplicables.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2>12. Exención de responsabilidad</h2>
+                <p>Calipso Bingo no garantiza al Promotor un volumen mínimo de ventas ni un nivel específico de ingresos.</p>
+                <p>En ningún caso Calipso Bingo será responsable ante el Promotor por:</p>
+                <ul>
+                    <li>Pérdida de oportunidades comerciales.</li>
+                    <li>Ganancias no obtenidas.</li>
+                    <li>Cualquier otro perjuicio indirecto o consecuencial derivado de su participación en el Plan de Promotores.</li>
+                </ul>
+            </div>
+
+            <div class="policy-section">
+                <h2>13. Actualización de los Términos del Plan</h2>
+                <p>Calipso Bingo C.A. podrá actualizar estos Términos del Plan de Promotores en cualquier momento. Los cambios serán comunicados por canales oficiales y entrarán en vigor desde su publicación.</p>
+                <p>La continuación del Promotor en el Plan después de la notificación de modificaciones implicará la aceptación de los nuevos términos.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2>14. Legislación y jurisdicción aplicables</h2>
+                <p>Estos Términos del Plan de Promotores se rigen por la legislación de la República Bolivariana de Venezuela.</p>
+                <p>Cualquier discrepancia relacionada con la interpretación o cumplimiento de estos Términos será resuelta ante los tribunales competentes de El Callao, Estado Bolívar, Venezuela, renunciando las partes a cualquier otra jurisdicción que pudiera corresponderles.</p>
+            </div>
+            
+            <div class="policy-section">
+                <h2>15. Contacto</h2>
+                <p>Para cualquier consulta relacionada con el Plan de Promotores, puede contactarnos a través de:</p>
+                <ul>
+                    <li><strong>Correo electrónico:</strong> soporte@calipsobingo.com</li>
+                    <li><strong>WhatsApp:</strong> +58 424 8991277</li>
+                    <li><strong>Sitio web:</strong> https://calipsobingo.com</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-social-title">Síguenos en nuestras redes:</div>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/calipso_bingo?igsh=ZHllOHZmY3NkN2pr"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-legal-links">
+                <a href="terminos-y-condiciones.html">Términos y condiciones</a>
+                <span class="footer-separator">|</span>
+                <a href="politica-de-privacidad.html">Declaración de privacidad</a>
+                <span class="footer-separator">|</span>
+                <a href="programa-de-vendedores.html">Términos del programa de vendedores</a>
+            </div>
+
+            <div class="footer-bottom">
+                <p>Copyright © 2026 Calipso Bingo. Todos los derechos reservados.</p>
+                <div class="developer-credit">
+                    Sitio web desarrollado por <strong>Wilmer Martínez Tritton</strong>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <a href="https://wa.me/584248991277" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+</body>
+</html>

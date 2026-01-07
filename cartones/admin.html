@@ -21,6 +21,11 @@
         .prize-card.grand-prize { background: linear-gradient(135deg, #FF6B35, #e55a2b); border: none; transform: scale(1.05); box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4); }
         .prize-amount { font-size: 20px; font-weight: 800; display: block; margin-top: 5px; }
         .input-promedio { width: 80px; text-align: center; font-weight: bold; border-radius: 5px; border: none; padding: 2px; }
+        
+        /* BARRA DE PROGRESO */
+        .progress-container { margin-bottom: 20px; }
+        .progress { height: 10px; border-radius: 5px; background-color: #e9ecef; }
+        .progress-bar { background-color: #1a5e3a; transition: width 0.5s ease; }
     </style>
 </head>
 <body>
@@ -123,24 +128,31 @@
             </div>
         </div>
 
-        <div class="row mb-4">
+        <div class="row mb-2">
             <div class="col-md-4">
-                <div class="card bg-white p-3 shadow-sm text-center border-0">
+                <div class="card bg-white p-3 shadow-sm text-center border-0 h-100">
                     <h6 class="text-muted text-uppercase small">Total Vendidos</h6>
-                    <h2 class="text-success fw-bold" id="totalVendidos">0</h2>
+                    <h2 class="text-success fw-bold m-0" id="totalVendidos">0</h2>
+                    <small class="fw-bold text-muted" id="lblPorcentaje" style="font-size: 14px;">0%</small>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card bg-white p-3 shadow-sm text-center border-0">
+                <div class="card bg-white p-3 shadow-sm text-center border-0 h-100">
                     <h6 class="text-muted text-uppercase small">Recaudación Total (Est.)</h6>
                     <h2 class="text-primary fw-bold" id="totalDinero">Bs 0,00</h2>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card bg-white p-3 shadow-sm text-center border-0">
+                <div class="card bg-white p-3 shadow-sm text-center border-0 h-100">
                     <h6 class="text-muted text-uppercase small">Disponibles</h6>
                     <h2 class="text-secondary fw-bold" id="totalDisponibles">...</h2>
                 </div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress">
+                <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%"></div>
             </div>
         </div>
 
@@ -297,9 +309,19 @@
 
         // --- FUNCIONES MATEMÁTICAS ---
         window.recalcularPremios = function() {
+            // Actualizar contadores numéricos
             document.getElementById('totalVendidos').textContent = totalVendidosCount;
             document.getElementById('totalDisponibles').textContent = totalCartonesGlobal - totalVendidosCount;
             
+            // --- NUEVO: CÁLCULO DE PORCENTAJE ---
+            let porcentaje = 0;
+            if (totalCartonesGlobal > 0) {
+                porcentaje = (totalVendidosCount / totalCartonesGlobal) * 100;
+            }
+            document.getElementById('lblPorcentaje').textContent = porcentaje.toFixed(1) + '% Vendido';
+            document.getElementById('progressBar').style.width = porcentaje + '%';
+            
+            // Cálculos de dinero
             const precioPromedio = parseFloat(document.getElementById('inputPrecioPromedio').value) || precioBaseActual;
             const recaudadoTotal = totalVendidosCount * precioPromedio;
             document.getElementById('totalDinero').textContent = 'Bs ' + recaudadoTotal.toLocaleString('es-VE', {minimumFractionDigits: 2});
@@ -336,26 +358,18 @@
             }
         }
 
-        // --- FUNCIÓN EXCEL SIMPLIFICADA (SOLO CARTÓN Y NOMBRE EN ORDEN NUMÉRICO) ---
+        // --- FUNCIÓN EXCEL SIMPLIFICADA ---
         window.descargarExcel = function() {
             let csvContent = "data:text/csv;charset=utf-8,";
-            // Encabezados Simplificados
             csvContent += "Carton;Nombre del Cliente\r\n";
 
             if(todosLosDatos) {
-                // 1. Convertir objeto a array de objetos
                 const lista = Object.keys(todosLosDatos).map(key => ({ id: parseInt(key), ...todosLosDatos[key] }));
-                
-                // 2. Ordenar numéricamente por ID de Cartón (1, 2, 3...)
                 lista.sort((a, b) => a.id - b.id);
 
-                // 3. Generar filas
                 lista.forEach(item => {
                     if(item.estado === 'vendido') {
-                        // Limpiar comas para no romper el CSV
                         const nombreLimpio = (item.nombre || "Sin Nombre").replace(/;/g, " ");
-                        
-                        // Solo Cartón y Nombre
                         const fila = `${item.id};${nombreLimpio}`;
                         csvContent += fila + "\r\n";
                     }

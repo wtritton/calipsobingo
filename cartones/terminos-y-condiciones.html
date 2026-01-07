@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Términos y Condiciones - Calipso Bingo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #1a5e3a; /* Verde más profundo y elegante */
+            --secondary-green: #2E8B57; /* Tu verde original */
+            --accent-orange: #FF6B35; /* Naranja más vibrante */
+            --accent-yellow: #FFD700;
+            --bg-color: #F4F7F6;
+            --text-dark: #2c3e50;
+            --white: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            font-size: 14px;
+            /* Patrón de fondo sutil */
+            background-image: radial-gradient(#2E8B57 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
+            background-color: #f0fdf4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Navbar Mejorado */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-decoration: none;
+        }
+        
+        .logo img {
+            height: 36px;
+            border-radius: 50%;
+            background: white;
+            padding: 2px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* Botones de Navegación */
+        .btn-nav-action {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            text-decoration: none;
+            transition: transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-vendedor {
+            background-color: transparent;
+            color: var(--white);
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+        
+        .btn-vendedor:hover {
+            border-color: var(--white);
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .btn-soporte {
+            background-color: var(--accent-orange);
+            color: white;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .btn-soporte:hover {
+            background-color: #e55a2b;
+            transform: translateY(-2px);
+        }
+        
+        /* Layout de Contenido Legal */
+        .container {
+            max-width: 900px; /* Ancho más enfocado para lectura */
+            margin: 30px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            color: var(--primary-green);
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .legal-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .legal-section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        .legal-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .section-title {
+            color: var(--primary-green);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-number {
+            background: var(--accent-orange);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .legal-text {
+            color: #444;
+            line-height: 1.8;
+            font-size: 15px;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .legal-list {
+            list-style-type: none;
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .legal-list li {
+            position: relative;
+            margin-bottom: 8px;
+            padding-left: 20px;
+        }
+
+        .legal-list li::before {
+            content: "•";
+            color: var(--secondary-green);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .contact-box {
+            background-color: #f0fdf4;
+            border: 2px dashed var(--secondary-green);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .contact-box strong {
+            color: var(--primary-green);
+        }
+
+        /* Footer Styles (Idéntico al index) */
+        .main-footer {
+            background-color: #124029;
+            color: #e0e0e0;
+            padding: 30px 20px 20px;
+            margin-top: 30px;
+            border-top: 5px solid var(--accent-orange);
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .footer-social-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 13px;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+
+        .social-icons a {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .social-icons a:hover {
+            background: var(--accent-orange);
+            transform: translateY(-3px);
+        }
+
+        .footer-legal-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 13px;
+            margin: 5px 0;
+        }
+
+        .footer-legal-links a {
+            color: #a0c4b3;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-legal-links a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .footer-separator {
+            color: #406856;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 15px;
+            font-size: 12px;
+            color: #88a697;
+        }
+
+        .developer-credit {
+            margin-top: 5px;
+            font-size: 11px;
+            opacity: 0.7;
+        }
+
+        .developer-credit i {
+            color: var(--accent-orange);
+        }
+
+        /* WhatsApp Flotante */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: #25D366;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            text-decoration: none;
+            z-index: 1000;
+            transition: transform 0.3s;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        @media (max-width: 850px) {
+            .nav-links {
+                display: none;
+            }
+            .navbar {
+                justify-content: center;
+            }
+            .legal-card {
+                padding: 20px;
+            }
+            .page-title {
+                font-size: 1.8rem;
+            }
+            .footer-legal-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .footer-separator {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <img src="Logo-oficial.png" alt="Bingo Logo">
+            Calipso Bingo
+        </a>
+        <div class="nav-links">
+            <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+            <a href="#">Mis compras</a>
+            <a href="#">Resultados</a>
+            <a href="#" class="btn-nav-action btn-vendedor">SE VENDEDOR</a>
+            <a href="https://wa.me/584248991277" class="btn-nav-action btn-soporte"><i class="fab fa-whatsapp"></i> SOPORTE</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Términos y Condiciones Generales</h1>
+            <p class="page-subtitle">Última actualización: Enero 2026</p>
+        </div>
+
+        <div class="legal-card">
+            
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">1</span>
+                    Presentación del Servicio
+                </div>
+                <p class="legal-text">
+                    El portal digital <strong>https://calipsobingo.com</strong> y el entorno en línea conocido como “Calipso Bingo” (en lo sucesivo, el “Sitio” o “Calipso Bingo”) son administrados por <strong>Calipso Bingo Centro de Apuestas C.A.</strong>, entidad constituida conforme a las leyes de la República Bolivariana de Venezuela, identificada con el RIF J-xxxxxxxxx, con domicilio principal en El Tigre, Estado Anzoátegui.
+                </p>
+                <p class="legal-text">
+                    El acceso, navegación, registro, uso del Sitio y la participación en las dinámicas o actividades promocionadas implican la aceptación plena, expresa e incondicional de los presentes Términos y Condiciones Generales. En caso de desacuerdo con cualquiera de sus disposiciones, el usuario deberá abstenerse de utilizar el Sitio.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">2</span>
+                    Adhesión a las Condiciones
+                </div>
+                <p class="legal-text">
+                    Al utilizar el Sitio, adquirir participaciones, intervenir en dinámicas o emplear cualquier herramienta disponible, el usuario declara haber leído, comprendido y aceptado íntegramente estos Términos y Condiciones, así como la Política de Privacidad y cualquier reglamentación específica aplicable a promociones o dinámicas particulares.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">3</span>
+                    Condiciones para Participar
+                </div>
+                <p class="legal-text">
+                    Solo podrán participar personas naturales mayores de dieciocho (18) años, sin distinción de nacionalidad, siempre que la legislación vigente en su lugar de residencia no restrinja este tipo de actividades recreativas. Al participar, el usuario declara y garantiza que:
+                </p>
+                <ul class="legal-list">
+                    <li>Ha alcanzado la mayoría de edad legal.</li>
+                    <li>Posee plena capacidad jurídica para obligarse.</li>
+                    <li>Los datos suministrados (nombre, identificación, teléfono, correo electrónico u otros) son veraces, exactos y actualizados.</li>
+                </ul>
+                <p class="legal-text">
+                    Calipso Bingo Centro de Apuestas C.A. se reserva el derecho de solicitar documentación oficial para verificar la identidad y edad del participante en cualquier momento.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">4</span>
+                    Registro de Usuarios y Exactitud de la Información
+                </div>
+                <p class="legal-text">
+                    Para acceder a determinadas funcionalidades del Sitio, podrá requerirse el registro del usuario. Este se compromete a:
+                </p>
+                <ul class="legal-list">
+                    <li>No suplantar la identidad de terceros.</li>
+                    <li>No crear cuentas falsas o duplicadas.</li>
+                    <li>Mantener actualizada su información personal.</li>
+                </ul>
+                <p class="legal-text">
+                    Calipso Bingo no será responsable por el uso no autorizado de cuentas, credenciales o por daños derivados de información incorrecta o incompleta proporcionada por el usuario.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">5</span>
+                    Naturaleza del Servicio
+                </div>
+                <p class="legal-text">
+                    Calipso Bingo opera como una plataforma de entretenimiento recreativo, destinada a la organización y coordinación de dinámicas de bingo y juegos afines.
+                </p>
+                <p class="legal-text">
+                    En ningún caso constituye un sistema de inversión, ahorro, financiamiento, crédito o producto financiero. La participación se materializa mediante la adquisición de participaciones digitales, que otorgan únicamente el derecho a intervenir en una dinámica específica bajo las reglas establecidas.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">6</span>
+                    Obtención y Asignación de Participaciones
+                </div>
+                <p class="legal-text">
+                    Se entiende por participación el derecho digital asignado al usuario para intervenir en una dinámica determinada. Al adquirir una participación, el usuario podrá seleccionar su número serial (cuando esté disponible) o recibirlo de forma automática. Una vez confirmado el pago:
+                </p>
+                <ul class="legal-list">
+                    <li>El participante podrá descargar sus participaciones desde el Sitio.</li>
+                    <li>Acceder a ellas en la sección “Mis Participaciones Adquiridas”.</li>
+                    <li>Solicitar asistencia a través del canal oficial de WhatsApp.</li>
+                </ul>
+                <p class="legal-text">
+                    Es responsabilidad del participante verificar y conservar sus participaciones antes del inicio de la dinámica.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">7</span>
+                    Pagos, Comprobantes y Política de Devoluciones
+                </div>
+                <p class="legal-text">
+                    El usuario es responsable de realizar los pagos exclusivamente por los canales oficiales y de enviar comprobantes legibles y verificables. La adquisición se considerará válida únicamente tras la confirmación expresa de Calipso Bingo.
+                </p>
+                <p class="legal-text">
+                    Una vez confirmado el pago y asignadas las participaciones, no se realizarán devoluciones, salvo en caso de cancelación definitiva de la dinámica imputable a Calipso Bingo y que no sea reprogramada.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">8</span>
+                    Normativa de las Dinámicas y Determinación de Ganadores
+                </div>
+                <p class="legal-text">
+                    Cada dinámica contará con reglas específicas publicadas previamente. Los sorteos podrán realizarse mediante transmisiones públicas en vivo u otros métodos verificables.
+                </p>
+                <p class="legal-text">
+                    Los ganadores serán determinados conforme a las combinaciones premiadas y el orden de acierto establecido. En caso de empate, se aplicarán las normas particulares previstas. Las decisiones de Calipso Bingo serán definitivas e inapelables.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">9</span>
+                    Comunicación y Publicación de Resultados
+                </div>
+                <p class="legal-text">
+                    Los resultados podrán anunciarse durante transmisiones en vivo, en el Sitio, redes sociales o mediante contacto directo. El usuario es responsable de consultar los resultados oficiales, sin que la falta de consulta genere responsabilidad alguna para la organización.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">10</span>
+                    Modalidad de Entrega de Premios
+                </div>
+                <ul class="legal-list">
+                    <li><strong>Premios en moneda nacional:</strong> Se abonarán mediante transferencia o pago móvil en un plazo máximo de setenta y dos (72) horas posteriores a la verificación.</li>
+                    <li><strong>Premios físicos:</strong> Deberán ser reclamados personalmente por el ganador, previa identificación válida.</li>
+                </ul>
+                <p class="legal-text">
+                    Si el premio no es reclamado dentro de un plazo de diez (10) días hábiles, se considerará renunciado sin derecho a compensación.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">11</span>
+                    Cesión de Derechos de Imagen
+                </div>
+                <p class="legal-text">
+                    Al aceptar un premio, el ganador autoriza a Calipso Bingo a utilizar su nombre, imagen y voz en material promocional y publicitario, sin derecho a compensación adicional y por tiempo indefinido.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">12</span>
+                    Conductas Prohibidas
+                </div>
+                <p class="legal-text">
+                    Se prohíbe proporcionar información falsa, manipular resultados, crear múltiples cuentas con fines fraudulentos o utilizar el Sitio para actividades ilícitas. Ante la detección de fraude, Calipso Bingo podrá suspender cuentas, invalidar participaciones y ejercer las acciones legales correspondientes.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">13</span>
+                    Modificaciones e Interrupciones del Servicio
+                </div>
+                <p class="legal-text">
+                    Calipso Bingo podrá modificar, suspender o reprogramar dinámicas por causas de fuerza mayor o caso fortuito. En caso de cancelación definitiva imputable a la organización, se procederá a la reprogramación o devolución correspondiente.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">14</span>
+                    Limitación de Responsabilidad
+                </div>
+                <p class="legal-text">
+                    Calipso Bingo no será responsable por fallos de conectividad, servicios de terceros, errores humanos involuntarios razonables, ni por información incorrecta suministrada por el usuario. Tampoco responderá por daños indirectos, lucro cesante o pérdidas consecuenciales.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">15</span>
+                    Propiedad Intelectual
+                </div>
+                <p class="legal-text">
+                    Todos los elementos del Sitio (textos, diseños, logotipos, software) son propiedad exclusiva de Calipso Bingo Centro de Apuestas C.A. y están protegidos por la legislación venezolana vigente.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">16</span>
+                    Privacidad y Tratamiento de Datos
+                </div>
+                <p class="legal-text">
+                    El tratamiento de los datos personales se rige por la Política de Privacidad. El usuario podrá ejercer sus derechos de acceso, rectificación, oposición y supresión mediante los canales oficiales de soporte.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">17</span>
+                    Entretenimiento Responsable
+                </div>
+                <p class="legal-text">
+                    La participación está orientada exclusivamente al esparcimiento. Calipso Bingo no otorga créditos ni financiamiento y se reserva el derecho de limitar la participación ante indicios de conducta de juego problemático.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">18</span>
+                    Vigencia y Actualización
+                </div>
+                <p class="legal-text">
+                    Calipso Bingo podrá actualizar estos Términos en cualquier momento. Las modificaciones entrarán en vigor desde su publicación en el Sitio.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">19</span>
+                    Ley Aplicable y Jurisdicción
+                </div>
+                <p class="legal-text">
+                    Estos Términos se rigen por las leyes de la República Bolivariana de Venezuela. Para cualquier controversia, las partes se someten a los tribunales competentes del domicilio principal del operador.
+                </p>
+            </div>
+
+            <div class="legal-section">
+                <div class="section-title">
+                    <span class="section-number">20</span>
+                    Información de Contacto
+                </div>
+                <p class="legal-text">
+                    Para consultas relacionadas con estos Términos y Condiciones Generales, puede ponerse en contacto con nuestro equipo a través de los canales oficiales de soporte.
+                </p>
+                <div class="contact-box">
+                    <p><i class="fas fa-envelope"></i> <strong>calipsobingo@gmail.com</strong></p>
+                    <p style="margin-top:10px;"><i class="fab fa-whatsapp"></i> <strong>+58 424 8991277</strong></p>
+                    <p style="margin-top:10px;"><i class="fas fa-globe"></i> <strong>https://calipsobingo.com</strong></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-social-title">Síguenos en nuestras redes:</div>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/calipso_bingo?igsh=ZHllOHZmY3NkN2pr"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-legal-links">
+                <a href="terminos-y-condiciones.html">Términos y condiciones</a>
+                <span class="footer-separator">|</span>
+                <a href="politica-de-privacidad.html">Declaración de privacidad</a>
+                <span class="footer-separator">|</span>
+                <a href="programa-de-vendedores.html">Términos del programa de vendedores</a>
+            </div>
+
+            <div class="footer-bottom">
+                <p>Copyright © 2026 Calipso Bingo. Todos los derechos reservados.</p>
+                <div class="developer-credit">
+                    Sitio web desarrollado por </i> <strong>Wilmer Martínez Tritton</strong>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <a href="https://wa.me/584248991277" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+</body>
+</html>
