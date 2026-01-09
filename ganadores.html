@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ganadones - Calipso Bingo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-green: #1a5e3a;
+            --secondary-green: #2E8B57;
+            --accent-orange: #FF6B35;
+            --bg-color: #F4F7F6;
+            --text-dark: #2c3e50;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body {
+            background-color: #f0fdf4;
+            color: var(--text-dark);
+            background-image: radial-gradient(#2E8B57 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100;
+        }
+        .logo { display: flex; align-items: center; gap: 10px; color: white; font-weight: bold; font-size: 1.1rem; text-decoration: none; }
+        .logo img { height: 36px; border-radius: 50%; background: white; padding: 2px; }
+        .nav-links { display: flex; gap: 15px; align-items: center; }
+        .nav-links a { color: rgba(255,255,255,0.9); text-decoration: none; font-weight: 500; padding: 6px 10px; border-radius: 20px; font-size: 13px; transition: all 0.3s ease; }
+        .btn-soporte { background-color: var(--accent-orange); color: white; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 12px; display: flex; align-items: center; gap: 5px; }
+
+        /* Estructura */
+        .container { 
+            max-width: 1400px; margin: 30px auto; padding: 0 20px; flex: 1;
+            display: flex; justify-content: center; align-items: flex-start; gap: 30px;
+        }
+        .center-card-wrapper { flex: 1; max-width: 1200px; width: 100%; }
+        
+        /* Tarjeta Principal */
+        .card { background: white; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.05); }
+        .card-header { background: var(--primary-green); color: white; padding: 30px 20px; text-align: center; }
+        .card-body { padding: 30px; background-color: #f8f9fa; }
+
+        h1 { font-size: 32px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        
+        /* BOTONES DE FECHAS */
+        .dates-container { margin-top: 15px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+        .date-chip {
+            background: white; border: 2px solid var(--accent-orange); color: var(--text-dark);
+            padding: 8px 20px; border-radius: 25px; cursor: pointer; font-weight: bold;
+            transition: all 0.3s ease; font-size: 14px;
+        }
+        .date-chip:hover, .date-chip.active {
+            background: var(--accent-orange); color: white; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        /* Búsqueda Manual */
+        .manual-search-toggle { margin-top: 25px; font-size: 14px; color: #c2c1c1; cursor: pointer; text-decoration: underline; }
+        .search-date-container { 
+            display: none; /* Oculto por defecto */
+            margin-top: 15px; background: white; padding: 10px 25px; border-radius: 50px; 
+            border: 2px solid var(--accent-orange); align-items: center; gap: 10px; width: fit-content; margin-left: auto; margin-right: auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .search-label { color: var(--text-dark); font-weight: bold; font-size: 14px; text-transform: uppercase; }
+        .date-input { border: none; outline: none; font-size: 16px; color: #333; font-family: inherit; cursor: pointer; background: transparent; }
+        
+        /* GRID DE 3 COLUMNAS */
+        .winners-grid { display: grid; gap: 25px; margin-top: 30px; grid-template-columns: 1fr; }
+        @media (min-width: 768px) { .winners-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { .winners-grid { grid-template-columns: repeat(3, 1fr); } }
+
+        /* Tarjeta de Ganador */
+        .winner-card-item {
+            background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease; border: 1px solid #e0e0e0; display: flex; flex-direction: column;
+            animation: fadeIn Up 0.6s ease-out;
+        }
+        .winner-card-item:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+        .winner-prize-header {
+            background: linear-gradient(135deg, #FF6B35, #e55a2b); color: white; padding: 12px; text-align: center;
+            font-weight: 800; text-transform: uppercase; font-size: 15px; letter-spacing: 1px;
+        }
+        .carton-image-container {
+            width: 100%; height: 280px; background-color: #f4f4f4; display: flex; align-items: center;
+            justify-content: center; border-bottom: 1px solid #eee; position: relative; padding: 10px;
+        }
+        .carton-img { max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1)); }
+        .winner-info { padding: 20px; text-align: center; background: white; }
+        .winner-carton-number { font-size: 26px; color: var(--primary-green); font-weight: 900; margin-bottom: 5px; }
+        .winner-name { color: #555; font-size: 18px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        
+        .empty-state { text-align: center; padding: 50px; grid-column: 1 / -1; color: #888; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Footer Completo */
+        .main-footer { 
+            background-color: #124029; 
+            color: #e0e0e0; 
+            padding: 40px 20px 20px; 
+            margin-top: auto; 
+            border-top: 5px solid var(--accent-orange); 
+            width: 100%; 
+            z-index: 10;
+        }
+        .footer-content { max-width: 1000px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; gap: 20px; }
+        .footer-social-title { font-weight: 700; margin-bottom: 10px; color: white; text-transform: uppercase; letter-spacing: 1px; font-size: 13px; }
+        .social-icons { display: flex; justify-content: center; gap: 15px; margin-bottom: 5px; }
+        .social-icons a { color: white; background: rgba(255,255,255,0.1); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s; text-decoration: none; font-size: 16px; }
+        .social-icons a:hover { background: var(--accent-orange); transform: translateY(-3px); }
+        .footer-legal-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; font-size: 13px; margin: 10px 0; }
+        .footer-legal-links a { color: #a0c4b3; text-decoration: none; transition: color 0.2s; }
+        .footer-legal-links a:hover { color: white; text-decoration: underline; }
+        .footer-separator { color: #406856; }
+        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 12px; color: #88a697; }
+        .developer-credit { margin-top: 5px; font-size: 11px; opacity: 0.7; }
+        
+        .whatsapp-float { position: fixed; bottom: 25px; right: 25px; background-color: #25D366; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); text-decoration: none; z-index: 1000; transition: transform 0.3s; }
+        .whatsapp-float:hover { transform: scale(1.1) }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <img src="Logo-oficial.png" alt="Bingo Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3210/3210086.png'">
+            Calipso Bingo
+        </a>
+        <div class="nav-links">
+            <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+            <a href="https://wa.me/584248991277" target="_blank" class="btn-soporte"><i class="fab fa-whatsapp"></i> Soporte</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="center-card-wrapper">
+            <div class="card">
+                <div class="card-header">
+                    <h1>🏆 Resultados Oficiales 🏆</h1>
+                    <p style="margin:0; opacity: 0.9;">Selecciona una fecha para ver los ganadores:</p>
+                    
+                    <div id="datesContainer" class="dates-container">
+                        <span style="font-size:12px; opacity:0.7;">Cargando fechas disponibles...</span>
+                    </div>
+
+                    <div class="manual-search-toggle" onclick="toggleManualSearch()">
+                        <i class="fas fa-search"></i> ¿No encuentras la fecha? Buscar manualmente
+                    </div>
+                    
+                    <div id="manualSearchBox" class="search-date-container">
+                        <span class="search-label">📅 Seleccionar Fecha:</span>
+                        <input type="date" id="dateSearchInput" class="date-input" onchange="buscarResultadosManual()">
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div style="text-align: center; margin-bottom: 10px;">
+                        <h3 id="tituloFechaVisible" style="color: var(--primary-green); margin-top:10px;">
+                            <i class="fas fa-arrow-up"></i> Selecciona una fecha arriba
+                        </h3>
+                    </div>
+
+                    <div id="winnersGrid" class="winners-grid">
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-social-title">Síguenos en nuestras redes:</div>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/profile.php?id=61586188498729"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/calipso_bingo?igsh=ZHllOHZmY3NkN2pr"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://wa.me/584248991277" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="footer-legal-links">
+                <a href="terminos-y-condiciones.html">Términos y condiciones</a>
+                <span class="footer-separator">|</span>
+                <a href="politica-de-privacidad.html">Declaración de privacidad</a>
+                <span class="footer-separator">|</span>
+                <a href="programa-de-vendedores.html">Términos del programa de vendedores</a>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright © 2026 Calipso Bingo. Todos los derechos reservados.</p>
+                <div class="developer-credit">
+                    Sitio web desarrollado por <strong>Wilmer Martínez Tritton</strong>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <a href="https://wa.me/584248991277" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtj_J5wQ4y-U3UDwwphud9Wir1n7WcI2s",
+            authDomain: "calipsobingo-f532b.firebaseapp.com",
+            databaseURL: "https://calipsobingo-f532b-default-rtdb.firebaseio.com",
+            projectId: "calipsobingo-f532b",
+            storageBucket: "calipsobingo-f532b.firebasestorage.app",
+            messagingSenderId: "196074596826",
+            appId: "1:196074596826:web:db6280789eb0d51ddd38e3",
+            measurementId: "G-M9XK1H641N"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        
+        let todosLosGanadoresData = [];
+        let fechasDisponibles = [];
+
+        // 1. INICIAR
+        db.ref('resultados/ganadores').on('value', (snapshot) => {
+            const data = snapshot.val();
+            const datesContainer = document.getElementById('datesContainer');
+            
+            if (data) {
+                todosLosGanadoresData = Object.values(data);
+                
+                const todasLasFechas = todosLosGanadoresData.map(g => g.fecha ? g.fecha.trim() : "Sin Fecha");
+                fechasDisponibles = [...new Set(todasLasFechas)];
+                
+                datesContainer.innerHTML = "";
+                fechasDisponibles.forEach(fecha => {
+                    const btn = document.createElement('div');
+                    btn.className = 'date-chip';
+                    btn.innerHTML = `<i class="far fa-calendar-check"></i> ${fecha}`;
+                    btn.onclick = () => filtrarPorTextoExacto(fecha, btn);
+                    datesContainer.appendChild(btn);
+                });
+
+                if(fechasDisponibles.length > 0) {
+                    const ultimaFecha = fechasDisponibles[fechasDisponibles.length - 1];
+                    filtrarPorTextoExacto(ultimaFecha, datesContainer.lastChild);
+                }
+
+            } else {
+                todosLosGanadoresData = [];
+                datesContainer.innerHTML = "<span style='color:red;'>No hay sorteos registrados aún.</span>";
+                mostrarVacio("La base de datos está vacía.");
+            }
+        });
+
+        function filtrarPorTextoExacto(fechaTexto, elementoBtn) {
+            document.querySelectorAll('.date-chip').forEach(b => b.classList.remove('active'));
+            if(elementoBtn) elementoBtn.classList.add('active');
+
+            const gridContainer = document.getElementById('winnersGrid');
+            gridContainer.innerHTML = ""; 
+            document.getElementById('tituloFechaVisible').innerText = `Resultados del Sorteo: ${fechaTexto}`;
+
+            const ganadoresDelDia = todosLosGanadoresData.filter(g => g.fecha.trim() === fechaTexto);
+            
+            if (ganadoresDelDia.length === 0) {
+                mostrarVacio(`Error: Aunque la fecha existe, no se encontraron datos.`);
+                return;
+            }
+
+            ganadoresDelDia.reverse();
+            lanzarConfeti(); 
+            renderizarTarjetas(ganadoresDelDia);
+        }
+
+        function toggleManualSearch() {
+            const box = document.getElementById('manualSearchBox');
+            box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        // --- SOLUCIÓN DE BÚSQUEDA MANUAL ---
+        function buscarResultadosManual() {
+            const fechaInput = document.getElementById('dateSearchInput').value; // YYYY-MM-DD
+            if(!fechaInput) return;
+
+            // 1. DESGLOSAR LA FECHA ELEGIDA
+            const partes = fechaInput.split("-");
+            const anio = partes[0];
+            const mesNum = parseInt(partes[1]); // 1
+            const diaNum = parseInt(partes[2]); // 8
+
+            // 2. OBTENER EL NOMBRE DEL MES
+            const meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+            const nombreMes = meses[mesNum - 1]; // "enero"
+
+            // 3. GENERAR EL FORMATO DE TEXTO (ej: "8 de enero")
+            const textoFechaSimple = `${diaNum} de ${nombreMes}`; // "8 de enero"
+            const textoFechaConCero = `0${diaNum} de ${nombreMes}`; // "08 de enero" (por si acaso)
+            
+            // Otras variantes comunes
+            const formatoSlash = `${(diaNum < 10 ? '0' : '') + diaNum}/${(mesNum < 10 ? '0' : '') + mesNum}/${anio}`; // 08/01/2026
+            const formatoISO = fechaInput; // 2026-01-08
+
+            console.log("Buscando variaciones:", textoFechaSimple, formatoSlash, formatoISO);
+
+            document.getElementById('tituloFechaVisible').innerText = `Resultados para: ${textoFechaSimple} (${anio})`;
+            document.getElementById('winnersGrid').innerHTML = "";
+
+            // 4. FILTRAR BUSCANDO CUALQUIER COINCIDENCIA (Case Insensitive)
+            const ganadoresDelDia = todosLosGanadoresData.filter(g => {
+                if(!g.fecha) return false;
+                const f = g.fecha.toLowerCase().trim(); // Convertir a minúsculas
+                
+                // Comprobamos si la fecha guardada contiene "8 de enero" o es igual a las otras
+                return f.includes(textoFechaSimple.toLowerCase()) || 
+                       f === formatoSlash || 
+                       f === formatoISO;
+            });
+
+            if (ganadoresDelDia.length > 0) {
+                ganadoresDelDia.reverse();
+                renderizarTarjetas(ganadoresDelDia);
+                lanzarConfeti();
+            } else {
+                mostrarVacio(`No se encontraron ganadores para "<b>${textoFechaSimple}</b>". <br>Prueba seleccionando uno de los botones de arriba.`);
+            }
+        }
+
+        function renderizarTarjetas(listaGanadores) {
+            const gridContainer = document.getElementById('winnersGrid');
+            listaGanadores.forEach(ganador => {
+                const rutaImagen = `cartones/${ganador.carton}.jpg`;
+                const imagenBackup = `https://placehold.co/400x500/1a5e3a/ffffff?text=Carton+${ganador.carton}\\n(Sin+Foto)`;
+
+                const tarjetaHtml = `
+                    <div class="winner-card-item">
+                        <div class="winner-prize-header">
+                            <i class="fas fa-trophy"></i> ${ganador.premio}
+                        </div>
+                        <div class="carton-image-container">
+                            <img src="${rutaImagen}" class="carton-img" alt="Cartón ${ganador.carton}" onerror="this.onerror=null; this.src='${imagenBackup}';">
+                        </div>
+                        <div class="winner-info">
+                            <div class="winner-carton-number">Cartón #${ganador.carton}</div>
+                            <div class="winner-name"><i class="fas fa-user-circle"></i> ${ganador.nombre}</div>
+                        </div>
+                    </div>
+                `;
+                gridContainer.innerHTML += tarjetaHtml;
+            });
+        }
+
+        function mostrarVacio(mensaje) {
+            document.getElementById('winnersGrid').innerHTML = `<div class="empty-state"><i class="fas fa-search fa-3x mb-3" style="color:#ccc"></i><br><h4 style="color:#666">Sin Resultados</h4><p>${mensaje}</p></div>`;
+        }
+
+        function lanzarConfeti() {
+            confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+        }
+    </script>
+</body>
+</html>

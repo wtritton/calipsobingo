@@ -10,17 +10,23 @@
         body { background-color: #f4f6f9; font-family: 'Segoe UI', sans-serif; }
         .navbar { background: #1a5e3a !important; }
         .card-config { border-left: 5px solid #ffc107; }
+        .card-winners { border-left: 5px solid #0d6efd; } 
         .btn-action { margin: 0 2px; }
-        .row-verificado { background-color: #d1e7dd !important; } /* Fila Verde */
+        .row-verificado { background-color: #d1e7dd !important; }
         .badge-verificado { background-color: #198754; }
         .badge-pendiente { background-color: #ffc107; color: #000; }
         
-        /* ESTILOS PARA CALCULADORA DE PREMIOS */
+        /* ESTILOS CALCULADORA */
         .prizes-panel { background-color: #2c3e50; color: white; padding: 20px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .prize-card { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
         .prize-card.grand-prize { background: linear-gradient(135deg, #FF6B35, #e55a2b); border: none; transform: scale(1.05); box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4); }
         .prize-amount { font-size: 20px; font-weight: 800; display: block; margin-top: 5px; }
         .input-promedio { width: 80px; text-align: center; font-weight: bold; border-radius: 5px; border: none; padding: 2px; }
+        
+        /* BARRA DE PROGRESO */
+        .progress-container { margin-bottom: 20px; }
+        .progress { height: 10px; border-radius: 5px; background-color: #e9ecef; }
+        .progress-bar { background-color: #1a5e3a; transition: width 0.5s ease; }
     </style>
 </head>
 <body>
@@ -31,6 +37,9 @@
             <div class="d-flex gap-2">
                 <a href="index.html" class="btn btn-outline-light btn-sm" target="_blank">
                     <i class="fas fa-external-link-alt"></i> Ver Tienda
+                </a>
+                <a href="resultados.html" class="btn btn-outline-warning btn-sm" target="_blank">
+                    <i class="fas fa-trophy"></i> Ver Resultados
                 </a>
                 <button class="btn btn-warning btn-sm fw-bold" onclick="window.location.href='index.html'">Salir</button>
             </div>
@@ -51,32 +60,78 @@
                 </div>
             </div>
             <div class="row g-3">
-                <div class="col-6 col-md-3">
-                    <div class="prize-card">
-                        <small class="text-uppercase text-white-50">1ª Tanda (10%)</small>
-                        <span class="prize-amount" id="prizeT1">Bs 0</span>
+                <div class="col-6 col-md-3"><div class="prize-card"><small class="text-uppercase text-white-50">1ª Tanda (10%)</small><span class="prize-amount" id="prizeT1">Bs 0</span></div></div>
+                <div class="col-6 col-md-3"><div class="prize-card"><small class="text-uppercase text-white-50">2ª Tanda (10%)</small><span class="prize-amount" id="prizeT2">Bs 0</span></div></div>
+                <div class="col-6 col-md-3"><div class="prize-card"><small class="text-uppercase text-white-50">3ª Tanda (15%)</small><span class="prize-amount" id="prizeT3">Bs 0</span></div></div>
+                <div class="col-6 col-md-3"><div class="prize-card grand-prize"><small class="text-uppercase fw-bold">👑 CARTÓN LLENO (35%)</small><span class="prize-amount" id="prizeT4">Bs 0</span></div></div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-4 card-winners">
+            <div class="card-header bg-primary text-white fw-bold d-flex justify-content-between align-items-center">
+                <span><i class="fas fa-trophy"></i> REGISTRO DE GANADORES</span>
+                <span class="badge bg-warning text-dark shadow-sm">
+                    <i class="far fa-calendar-alt"></i> Sorteo: <span id="badgeFechaActiva">Cargando...</span>
+                </span>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small mb-3">Elige el premio y escribe el número de cartón. <strong>Se guardará con la fecha mostrada arriba.</strong></p>
+                
+                <div class="row g-2 align-items-end mb-4 p-3 bg-light rounded border">
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small">1. Selecciona Premio</label>
+                        <select id="selectTipoPremio" class="form-select form-select-sm" onchange="actualizarMontoPremio()">
+                            <option value="">-- Manual --</option>
+                            <option value="t1">1ª Tanda (10%)</option>
+                            <option value="t2">2ª Tanda (10%)</option>
+                            <option value="t3">3ª Tanda (15%)</option>
+                            <option value="t4">👑 CARTÓN LLENO (35%)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold small">2. Nº Cartón</label>
+                        <input type="number" id="winCarton" class="form-control form-control-sm" placeholder="Ej: 154" onchange="buscarDueño()">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small">Monto / Premio</label>
+                        <input type="text" id="winPremio" class="form-control form-control-sm" placeholder="Se llena solo...">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small">Ganador (Cliente)</label>
+                        <input type="text" id="winNombre" class="form-control form-control-sm" placeholder="Se busca solo..." readonly style="background-color: #e9ecef;">
+                    </div>
+                    <div class="col-md-1">
+                        <button onclick="agregarGanador()" class="btn btn-success btn-sm w-100 fw-bold" title="Guardar Ganador"><i class="fas fa-plus"></i></button>
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <div class="prize-card">
-                        <small class="text-uppercase text-white-50">2ª Tanda (10%)</small>
-                        <span class="prize-amount" id="prizeT2">Bs 0</span>
+
+                <div>
+                    <h6 class="text-muted border-bottom pb-2">📋 Lista de Ganadores Publicada</h6>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Fecha Sorteo</th>
+                                    <th>Cartón</th>
+                                    <th>Premio</th>
+                                    <th>Nombre del Ganador</th>
+                                    <th style="width: 50px;">Borrar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableWinners">
+                                </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <div class="prize-card">
-                        <small class="text-uppercase text-white-50">3ª Tanda (15%)</small>
-                        <span class="prize-amount" id="prizeT3">Bs 0</span>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="prize-card grand-prize">
-                        <small class="text-uppercase fw-bold">👑 CARTÓN LLENO (35%)</small>
-                        <span class="prize-amount" id="prizeT4">Bs 0</span>
-                    </div>
+
+                <div class="mt-3 text-end">
+                    <button class="btn btn-outline-danger btn-sm" onclick="resetearGanadores()">
+                        <i class="fas fa-trash"></i> BORRAR TODOS LOS GANADORES
+                    </button>
                 </div>
             </div>
         </div>
+
 
         <div class="card shadow-sm mb-4 card-config">
             <div class="card-header bg-white fw-bold">
@@ -84,97 +139,54 @@
             </div>
             <div class="card-body">
                 <div class="row g-3">
-                    <div class="col-md-5">
-                        <label class="form-label">Título del Evento</label>
-                        <input type="text" id="confTitulo" class="form-control" placeholder="Cargando...">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Subtítulo (Fecha)</label>
-                        <input type="text" id="confFecha" class="form-control">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold text-dark">📦 Cantidad Cartones</label>
-                        <input type="number" id="confTotalCartones" class="form-control" placeholder="Ej: 1000">
-                    </div>
+                    <div class="col-md-4"><label class="form-label">Título del Evento</label><input type="text" id="confTitulo" class="form-control" placeholder="Cargando..."></div>
                     
                     <div class="col-md-3">
-                        <label class="form-label fw-bold text-success">Precio Base (1)</label>
-                        <input type="number" id="confPrecioBase" class="form-control" step="0.01">
+                        <label class="form-label fw-bold text-danger">Fecha Sorteo</label>
+                        <input type="text" id="confFecha" class="form-control" placeholder="Ej: 28 de Enero 2026">
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold text-primary">Promo x 4</label>
-                        <input type="number" id="confPromo4" class="form-control" step="0.01">
+
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold text-danger">Hora</label>
+                        <input type="text" id="confHora" class="form-control" placeholder="Ej: 08:00 PM">
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold text-primary">Promo x 8</label>
-                        <input type="number" id="confPromo8" class="form-control" step="0.01">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold text-primary">Promo x 12</label>
-                        <input type="number" id="confPromo12" class="form-control" step="0.01">
-                    </div>
+
+                    <div class="col-md-3"><label class="form-label fw-bold text-dark">📦 Cantidad Cartones</label><input type="number" id="confTotalCartones" class="form-control" placeholder="Ej: 1000"></div>
+                    
+                    <div class="col-md-3"><label class="form-label fw-bold text-success">Precio Base (1)</label><input type="number" id="confPrecioBase" class="form-control" step="0.01"></div>
+                    <div class="col-md-3"><label class="form-label fw-bold text-primary">Promo x 4</label><input type="number" id="confPromo4" class="form-control" step="0.01"></div>
+                    <div class="col-md-3"><label class="form-label fw-bold text-primary">Promo x 8</label><input type="number" id="confPromo8" class="form-control" step="0.01"></div>
+                    <div class="col-md-3"><label class="form-label fw-bold text-primary">Promo x 12</label><input type="number" id="confPromo12" class="form-control" step="0.01"></div>
 
                     <div class="col-12 text-end">
-                        <button class="btn btn-success fw-bold px-4" onclick="guardarConfiguracion()">
-                            <i class="fas fa-save"></i> ACTUALIZAR DATOS
-                        </button>
+                        <button class="btn btn-success fw-bold px-4" onclick="guardarConfiguracion()"><i class="fas fa-save"></i> ACTUALIZAR DATOS</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row mb-4">
-            <div class="col-md-4">
-                <div class="card bg-white p-3 shadow-sm text-center border-0">
-                    <h6 class="text-muted text-uppercase small">Total Vendidos</h6>
-                    <h2 class="text-success fw-bold" id="totalVendidos">0</h2>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card bg-white p-3 shadow-sm text-center border-0">
-                    <h6 class="text-muted text-uppercase small">Recaudación Total (Est.)</h6>
-                    <h2 class="text-primary fw-bold" id="totalDinero">Bs 0,00</h2>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card bg-white p-3 shadow-sm text-center border-0">
-                    <h6 class="text-muted text-uppercase small">Disponibles</h6>
-                    <h2 class="text-secondary fw-bold" id="totalDisponibles">...</h2>
-                </div>
-            </div>
+        <div class="row mb-2">
+            <div class="col-md-4"><div class="card bg-white p-3 shadow-sm text-center border-0 h-100"><h6 class="text-muted text-uppercase small">Total Vendidos</h6><h2 class="text-success fw-bold m-0" id="totalVendidos">0</h2><small class="fw-bold text-muted" id="lblPorcentaje" style="font-size: 14px;">0%</small></div></div>
+            <div class="col-md-4"><div class="card bg-white p-3 shadow-sm text-center border-0 h-100"><h6 class="text-muted text-uppercase small">Recaudación Total (Est.)</h6><h2 class="text-primary fw-bold" id="totalDinero">Bs 0,00</h2></div></div>
+            <div class="col-md-4"><div class="card bg-white p-3 shadow-sm text-center border-0 h-100"><h6 class="text-muted text-uppercase small">Disponibles</h6><h2 class="text-secondary fw-bold" id="totalDisponibles">...</h2></div></div>
         </div>
+
+        <div class="progress-container"><div class="progress"><div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%"></div></div></div>
 
         <div class="row mb-3">
             <div class="col-12 d-flex justify-content-between">
-                <button class="btn btn-success fw-bold" onclick="descargarExcel()">
-                    <i class="fas fa-file-excel"></i> DESCARGAR LISTA SIMPLIFICADA
-                </button>
-
-                <button class="btn btn-outline-danger btn-sm" onclick="reiniciarJuego()">
-                    <i class="fas fa-trash-alt"></i> BORRAR TODO Y REINICIAR
-                </button>
+                <button class="btn btn-success fw-bold" onclick="descargarExcel()"><i class="fas fa-file-excel"></i> DESCARGAR LISTA SIMPLIFICADA</button>
+                <button class="btn btn-outline-danger btn-sm" onclick="reiniciarVentas()"><i class="fas fa-trash-alt"></i> BORRAR VENTAS (RESET TOTAL)</button>
             </div>
         </div>
 
         <div class="card shadow-sm">
-            <div class="card-header bg-dark text-white fw-bold">
-                <i class="fas fa-list"></i> Gestión de Ventas
-            </div>
+            <div class="card-header bg-dark text-white fw-bold"><i class="fas fa-list"></i> Gestión de Ventas</div>
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-hover mb-0 align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Cartón #</th>
-                                <th>Cliente</th>
-                                <th>Teléfono / Referencia</th>
-                                <th>Estado</th>
-                                <th class="text-end">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaCuerpo">
-                            <tr><td colspan="5" class="text-center p-4 text-muted">Cargando datos...</td></tr>
-                        </tbody>
+                        <thead class="table-light"><tr><th>Cartón #</th><th>Cliente</th><th>Teléfono / Referencia</th><th>Estado</th><th class="text-end">Acciones</th></tr></thead>
+                        <tbody id="tablaCuerpo"><tr><td colspan="5" class="text-center p-4 text-muted">Cargando datos...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -203,18 +215,139 @@
         const database = firebase.database();
         const cartonesRef = database.ref('cartones');
         const configRef = database.ref('configuracion');
+        const resultadosRef = database.ref('resultados'); 
 
         let precioBaseActual = 50;
         let totalCartonesGlobal = 1000;
         let totalVendidosCount = 0;
         let todosLosDatos = {}; 
+        let valoresPremios = { t1: "Bs 0", t2: "Bs 0", t3: "Bs 0", t4: "Bs 0" };
 
+        // ==========================================
+        // LÓGICA DE REGISTRO AUTOMÁTICO
+        // ==========================================
+        
+        // 1. ESCUCHAR GANADORES
+        resultadosRef.on('value', (snapshot) => {
+            const data = snapshot.val() || {};
+            const tbodyWin = document.getElementById('tableWinners');
+            tbodyWin.innerHTML = '';
+            
+            if(data.ganadores) {
+                Object.entries(data.ganadores).forEach(([key, g]) => {
+                    const tr = `<tr>
+                        <td class="small text-muted fw-bold">${g.fecha || '-'}</td>
+                        <td class="fw-bold text-center fs-5">#${g.carton}</td>
+                        <td>${g.premio}</td>
+                        <td>${g.nombre}</td>
+                        <td class="text-center"><button class="btn btn-sm btn-outline-danger" onclick="borrarGanador('${key}')"><i class="fas fa-trash"></i></button></td>
+                    </tr>`;
+                    tbodyWin.innerHTML += tr;
+                });
+            } else {
+                tbodyWin.innerHTML = '<tr><td colspan="5" class="text-center text-muted small p-3">No hay ganadores registrados todavía.</td></tr>';
+            }
+        });
+
+        window.actualizarMontoPremio = function() {
+            const seleccion = document.getElementById('selectTipoPremio').value;
+            const inputPremio = document.getElementById('winPremio');
+            
+            if(seleccion && valoresPremios[seleccion]) {
+                let etiqueta = "";
+                if(seleccion === 't1') etiqueta = "1ª Tanda";
+                if(seleccion === 't2') etiqueta = "2ª Tanda";
+                if(seleccion === 't3') etiqueta = "3ª Tanda";
+                if(seleccion === 't4') etiqueta = "CARTÓN LLENO";
+                
+                inputPremio.value = `${etiqueta} - ${valoresPremios[seleccion]}`;
+            } else {
+                inputPremio.value = "";
+            }
+        }
+
+        window.buscarDueño = function() {
+            const numeroCarton = document.getElementById('winCarton').value;
+            const inputNombre = document.getElementById('winNombre');
+            
+            if(!numeroCarton) return;
+
+            inputNombre.value = "Buscando...";
+            inputNombre.style.backgroundColor = "#fff3cd"; 
+
+            cartonesRef.child(numeroCarton).once('value').then((snapshot) => {
+                const datos = snapshot.val();
+                if(datos && datos.estado === 'vendido') {
+                    inputNombre.value = datos.nombre || "Sin Nombre Registrado";
+                    inputNombre.style.backgroundColor = "#d1e7dd"; 
+                } else {
+                    inputNombre.value = "⚠️ CARTÓN NO VENDIDO O LIBRE";
+                    inputNombre.style.backgroundColor = "#f8d7da"; 
+                }
+            });
+        }
+
+        window.agregarGanador = function() {
+            const c = document.getElementById('winCarton').value;
+            const p = document.getElementById('winPremio').value;
+            const n = document.getElementById('winNombre').value;
+            const fechaMaestra = document.getElementById('confFecha').value;
+            
+            if (!fechaMaestra || fechaMaestra.trim() === "") {
+                alert("⛔ ERROR CRÍTICO: \n\nDebes escribir la 'Fecha Sorteo' en el panel de Configuración (abajo) antes de registrar ganadores.");
+                document.getElementById('confFecha').focus();
+                return;
+            }
+            
+            if(c && p && n && !n.includes("NO VENDIDO")) {
+                resultadosRef.child('ganadores').push({ 
+                    carton: c, 
+                    premio: p, 
+                    nombre: n,
+                    fecha: fechaMaestra
+                });
+                
+                document.getElementById('winCarton').value = '';
+                document.getElementById('winPremio').value = '';
+                document.getElementById('winNombre').value = '';
+                document.getElementById('selectTipoPremio').value = '';
+                document.getElementById('winNombre').style.backgroundColor = "#e9ecef";
+            } else { 
+                alert("⚠️ Verifica los datos. Asegúrate de que el cartón esté vendido y tenga premio."); 
+            }
+        }
+
+        window.borrarGanador = function(key) {
+            if(confirm('¿Eliminar este ganador de la lista?')) {
+                resultadosRef.child('ganadores').child(key).remove();
+            }
+        }
+
+        window.resetearGanadores = function() {
+            if(confirm("⚠️ ¿Seguro que quieres borrar TODOS los ganadores?")) {
+                resultadosRef.child('ganadores').remove();
+            }
+        }
+        
         // --- CARGAR CONFIGURACIÓN ---
         configRef.on('value', (snapshot) => {
             const config = snapshot.val();
             if (config) {
                 document.getElementById('confTitulo').value = config.titulo || '';
-                document.getElementById('confFecha').value = config.fecha || '';
+                
+                const fechaCargada = config.fecha || '';
+                document.getElementById('confFecha').value = fechaCargada;
+                document.getElementById('confHora').value = config.hora || ''; // CARGAR HORA
+
+                const badgeFecha = document.getElementById('badgeFechaActiva');
+                if(fechaCargada) {
+                    badgeFecha.textContent = fechaCargada;
+                    badgeFecha.className = "badge bg-warning text-dark shadow-sm";
+                } else {
+                    badgeFecha.textContent = "SIN FECHA DEFINIDA";
+                    badgeFecha.className = "badge bg-danger text-white shadow-sm";
+                }
+
                 document.getElementById('confTotalCartones').value = config.totalCartones || 1000;
                 document.getElementById('confPrecioBase').value = config.precioBase || 0;
                 document.getElementById('confPromo4').value = config.promo4 || 0;
@@ -223,26 +356,22 @@
                 
                 precioBaseActual = parseFloat(config.precioBase) || 0;
                 totalCartonesGlobal = parseInt(config.totalCartones) || 1000;
-                
                 recalcularPremios();
             }
         });
 
-        // --- GUARDAR CONFIGURACIÓN ---
         window.guardarConfiguracion = function() {
             const datos = {
                 titulo: document.getElementById('confTitulo').value,
                 fecha: document.getElementById('confFecha').value,
+                hora: document.getElementById('confHora').value, // GUARDAR HORA
                 totalCartones: parseInt(document.getElementById('confTotalCartones').value),
                 precioBase: parseFloat(document.getElementById('confPrecioBase').value),
                 promo4: parseFloat(document.getElementById('confPromo4').value),
                 promo8: parseFloat(document.getElementById('confPromo8').value),
                 promo12: parseFloat(document.getElementById('confPromo12').value)
             };
-
-            configRef.set(datos)
-                .then(() => alert("✅ Configuración guardada correctamente."))
-                .catch((error) => alert("❌ Error: " + error.message));
+            configRef.set(datos).then(() => alert("✅ Configuración guardada. Fecha y Hora actualizadas."));
         };
 
         // --- GESTIÓN DE VENTAS ---
@@ -260,7 +389,6 @@
                 lista.forEach(item => {
                     if (item.estado === 'vendido') { 
                         totalVendidosCount++;
-                        
                         const esVerificado = item.verificado === true;
                         const claseFila = esVerificado ? 'row-verificado' : '';
                         const badgeEstado = esVerificado 
@@ -276,16 +404,12 @@
                         tr.innerHTML = `
                             <td><strong>#${item.id}</strong></td>
                             <td>${item.nombre}</td>
-                            <td>
-                                <small class="d-block text-muted">${item.telefono}</small>
-                                <span class="fw-bold text-primary">Ref: ${item.referencia}</span>
-                            </td>
+                            <td><small class="d-block text-muted">${item.telefono}</small><span class="fw-bold text-primary">Ref: ${item.referencia}</span></td>
                             <td>${badgeEstado}</td>
                             <td class="text-end">
                                 ${botonAccion}
                                 <button class="btn btn-outline-danger btn-sm btn-action" title="Eliminar" onclick="liberar('${item.id}')"><i class="fas fa-times"></i></button>
-                            </td>
-                        `;
+                            </td>`;
                         tabla.appendChild(tr);
                     }
                 });
@@ -295,73 +419,58 @@
             recalcularPremios();
         });
 
-        // --- FUNCIONES MATEMÁTICAS ---
         window.recalcularPremios = function() {
             document.getElementById('totalVendidos').textContent = totalVendidosCount;
             document.getElementById('totalDisponibles').textContent = totalCartonesGlobal - totalVendidosCount;
+            let porcentaje = totalCartonesGlobal > 0 ? (totalVendidosCount / totalCartonesGlobal) * 100 : 0;
+            document.getElementById('lblPorcentaje').textContent = porcentaje.toFixed(1) + '% Vendido';
+            document.getElementById('progressBar').style.width = porcentaje + '%';
             
             const precioPromedio = parseFloat(document.getElementById('inputPrecioPromedio').value) || precioBaseActual;
             const recaudadoTotal = totalVendidosCount * precioPromedio;
             document.getElementById('totalDinero').textContent = 'Bs ' + recaudadoTotal.toLocaleString('es-VE', {minimumFractionDigits: 2});
 
-            // Distribución: 30% Ganancia, 70% Premios
             const ganancia = recaudadoTotal * 0.30;
-            const t1 = recaudadoTotal * 0.10;
-            const t2 = recaudadoTotal * 0.10;
-            const t3 = recaudadoTotal * 0.15;
-            const t4 = recaudadoTotal * 0.35;
+            const t1 = (recaudadoTotal * 0.10).toLocaleString('es-VE', {minimumFractionDigits: 2});
+            const t2 = (recaudadoTotal * 0.10).toLocaleString('es-VE', {minimumFractionDigits: 2});
+            const t3 = (recaudadoTotal * 0.15).toLocaleString('es-VE', {minimumFractionDigits: 2});
+            const t4 = (recaudadoTotal * 0.35).toLocaleString('es-VE', {minimumFractionDigits: 2});
+
+            valoresPremios.t1 = "Bs " + t1;
+            valoresPremios.t2 = "Bs " + t2;
+            valoresPremios.t3 = "Bs " + t3;
+            valoresPremios.t4 = "Bs " + t4;
 
             document.getElementById('lblGanancia').textContent = 'Bs ' + ganancia.toLocaleString('es-VE', {minimumFractionDigits: 2});
-            document.getElementById('prizeT1').textContent = 'Bs ' + t1.toLocaleString('es-VE', {minimumFractionDigits: 2});
-            document.getElementById('prizeT2').textContent = 'Bs ' + t2.toLocaleString('es-VE', {minimumFractionDigits: 2});
-            document.getElementById('prizeT3').textContent = 'Bs ' + t3.toLocaleString('es-VE', {minimumFractionDigits: 2});
-            document.getElementById('prizeT4').textContent = 'Bs ' + t4.toLocaleString('es-VE', {minimumFractionDigits: 2});
+            document.getElementById('prizeT1').textContent = valoresPremios.t1;
+            document.getElementById('prizeT2').textContent = valoresPremios.t2;
+            document.getElementById('prizeT3').textContent = valoresPremios.t3;
+            document.getElementById('prizeT4').textContent = valoresPremios.t4;
+            
+            actualizarMontoPremio();
         }
 
-        window.toggleVerificado = function(id, estado) {
-            cartonesRef.child(id).update({ verificado: estado });
-        }
-
-        window.liberar = function(id) {
-            if(confirm('¿Eliminar venta del cartón #' + id + '? Quedará libre de nuevo.')) {
-                cartonesRef.child(id).remove();
+        window.toggleVerificado = function(id, estado) { cartonesRef.child(id).update({ verificado: estado }); }
+        window.liberar = function(id) { if(confirm('¿Eliminar venta del cartón #' + id + '?')) cartonesRef.child(id).remove(); }
+        
+        window.reiniciarVentas = function() {
+            if(confirm("⚠️ ¿Estás seguro de borrar TODAS las ventas? (Se perderán los clientes)")) {
+                if(prompt("Escribe BORRAR para confirmar") === "BORRAR") cartonesRef.remove();
             }
         }
 
-        window.reiniciarJuego = function() {
-            if(confirm("⚠️ ¿Estás seguro de borrar TODAS las ventas?")) {
-                if(prompt("Escribe BORRAR para confirmar") === "BORRAR") {
-                    cartonesRef.remove();
-                }
-            }
-        }
-
-        // --- FUNCIÓN EXCEL SIMPLIFICADA (SOLO CARTÓN Y NOMBRE EN ORDEN NUMÉRICO) ---
         window.descargarExcel = function() {
-            let csvContent = "data:text/csv;charset=utf-8,";
-            // Encabezados Simplificados
-            csvContent += "Carton;Nombre del Cliente\r\n";
-
+            let csvContent = "data:text/csv;charset=utf-8,Carton;Nombre del Cliente\r\n";
             if(todosLosDatos) {
-                // 1. Convertir objeto a array de objetos
                 const lista = Object.keys(todosLosDatos).map(key => ({ id: parseInt(key), ...todosLosDatos[key] }));
-                
-                // 2. Ordenar numéricamente por ID de Cartón (1, 2, 3...)
                 lista.sort((a, b) => a.id - b.id);
-
-                // 3. Generar filas
                 lista.forEach(item => {
                     if(item.estado === 'vendido') {
-                        // Limpiar comas para no romper el CSV
                         const nombreLimpio = (item.nombre || "Sin Nombre").replace(/;/g, " ");
-                        
-                        // Solo Cartón y Nombre
-                        const fila = `${item.id};${nombreLimpio}`;
-                        csvContent += fila + "\r\n";
+                        csvContent += `${item.id};${nombreLimpio}\r\n`;
                     }
                 });
             }
-
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);

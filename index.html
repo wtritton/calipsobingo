@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <meta name="description" content="Participa en el Gran Sorteo Calipso Bingo. Compra tus cartones de la suerte, aprovecha nuestras promociones y gana grandes premios. ¡Juega y gana con Calipso Bingo!">
+    <meta name="description" content="Participa en el Gran Sorteo Calipso Bingo. Compra tus cartones de la suerte, aprovecha nuestras promociones y gana grandes premios.">
     <meta property="og:title" content="Calipso Bingo - Venta de Cartones">
     <meta property="og:description" content="Participa en el Gran Sorteo Calipso Bingo. Compra tus cartones de la suerte y gana.">
     <meta property="og:image" content="https://calipsobingo1.vercel.app/Logo-oficial.png">
@@ -386,7 +386,7 @@
         <div class="nav-links">
             <a href="#"><i class="fas fa-home"></i> Inicio</a>
             <a href="#" id="navMisCompras">Mis compras</a>
-            <a href="#">Resultados</a>
+            <a href="ganadores.html">Ganadores</a>
             <a href="#" class="btn-nav-action btn-vendedor">SE VENDEDOR</a>
             <a href="https://wa.me/584248991277?text=Hola,%20necesito%20soporte" target="_blank" class="btn-nav-action btn-soporte"><i class="fab fa-whatsapp"></i> SOPORTE</a>
         </div>
@@ -630,11 +630,13 @@
             promo4: 180.00,
             promo8: 360.00,
             promo12: 520.00,
-            totalCartones: 1000
+            totalCartones: 1000,
+            fecha: "",
+            hora: ""
         };
 
-        // Variable global para contar vendidos
         let cantidadVendidos = 0;
+        let countdownInterval;
 
         function cerrarModalPago() {
             document.getElementById('paymentModal').style.display = 'none';
@@ -656,6 +658,92 @@
                 link.click();
                 document.body.removeChild(link);
             });
+        }
+
+        // --- FUNCIÓN ROBUSTA DE CUENTA REGRESIVA ---
+        function actualizarCuentaRegresiva(fechaTexto, horaTexto) {
+            if (countdownInterval) clearInterval(countdownInterval);
+
+            // Intentamos parsear la fecha
+            // Formatos posibles de 'fechaTexto': "2026-01-31" o "31 de Enero 2026" o "31 de Enero"
+            
+            let targetDate;
+            let targetYear = new Date().getFullYear();
+            let targetMonth = 0;
+            let targetDay = 1;
+
+            // 1. Intentar parsear "28 de Enero 2026"
+            const dateMatch = fechaTexto.toLowerCase().match(/(\d+)\s+de\s+([a-z]+)(?:\s+(\d{4}))?/);
+            const meses = { "enero":0, "febrero":1, "marzo":2, "abril":3, "mayo":4, "junio":5, "julio":6, "agosto":7, "septiembre":8, "octubre":9, "noviembre":10, "diciembre":11 };
+
+            if (dateMatch) {
+                targetDay = parseInt(dateMatch[1]);
+                targetMonth = meses[dateMatch[2]];
+                if (dateMatch[3]) targetYear = parseInt(dateMatch[3]);
+            } else {
+                // 2. Intentar parsear ISO "2026-01-28"
+                const d = new Date(fechaTexto);
+                if (!isNaN(d.getTime())) {
+                    targetDay = d.getUTCDate(); // Usar UTC para evitar cambios de zona horaria al parsear string simple
+                    targetMonth = d.getUTCMonth();
+                    targetYear = d.getUTCFullYear();
+                }
+            }
+
+            // 3. Parsear Hora "08:00 PM"
+            let targetHour = 20; // Default 8 PM
+            let targetMinute = 0;
+
+            if (horaTexto) {
+                const timeMatch = horaTexto.match(/(\d+):(\d+)\s*(AM|PM|am|pm)?/i);
+                if (timeMatch) {
+                    let h = parseInt(timeMatch[1]);
+                    let m = parseInt(timeMatch[2]);
+                    let amp = timeMatch[3] ? timeMatch[3].toUpperCase() : null;
+
+                    if (amp === "PM" && h < 12) h += 12;
+                    if (amp === "AM" && h === 12) h = 0;
+                    
+                    targetHour = h;
+                    targetMinute = m;
+                }
+            }
+
+            // Crear objeto fecha final
+            const fechaMeta = new Date(targetYear, targetMonth, targetDay, targetHour, targetMinute, 0).getTime();
+
+            // Iniciar intervalo
+            countdownInterval = setInterval(function() {
+                const now = new Date().getTime();
+                const distance = fechaMeta - now;
+
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    const msg = "<div style='background:white; color:#d32f2f; padding:10px; border-radius:8px; font-weight:bold;'>¡EL SORTEO HA COMENZADO! 🎱</div>";
+                    if(document.getElementById("countdownBox")) document.getElementById("countdownBox").innerHTML = msg;
+                    if(document.getElementById("countdownBoxMobile")) document.getElementById("countdownBoxMobile").innerHTML = msg;
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                if(document.getElementById("cdDays")) {
+                    document.getElementById("cdDays").innerText = days < 10 ? "0" + days : days;
+                    document.getElementById("cdHours").innerText = hours < 10 ? "0" + hours : hours;
+                    document.getElementById("cdMinutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+                    document.getElementById("cdSeconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+                }
+
+                if(document.getElementById("cdDaysM")) {
+                    document.getElementById("cdDaysM").innerText = days < 10 ? "0" + days : days;
+                    document.getElementById("cdHoursM").innerText = hours < 10 ? "0" + hours : hours;
+                    document.getElementById("cdMinutesM").innerText = minutes < 10 ? "0" + minutes : minutes;
+                    document.getElementById("cdSecondsM").innerText = seconds < 10 ? "0" + seconds : seconds;
+                }
+            }, 1000);
         }
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -753,7 +841,6 @@
             const searchInput = document.getElementById('searchInput');
             const modalInstruction = document.getElementById('modalInstruction');
             
-            // Botón nuevo para resetear selección
             const btnResetSelection = document.getElementById('btnResetSelection');
             
             const paymentModal = document.getElementById('paymentModal');
@@ -799,17 +886,24 @@
                     configSorteo.promo8 = parseFloat(config.promo8) || 360;
                     configSorteo.promo12 = parseFloat(config.promo12) || 520;
                     configSorteo.totalCartones = parseInt(config.totalCartones) || 1000;
+                    configSorteo.fecha = config.fecha || "Muy Pronto";
+                    configSorteo.hora = config.hora || "";
 
                     if(lblTitulo) lblTitulo.textContent = config.titulo || "Gran Sorteo";
-                    if(lblSubtitulo) lblSubtitulo.textContent = config.fecha || "Muy Pronto";
+                    
+                    // --- AQUÍ COMBINAMOS FECHA Y HORA ---
+                    const textoFecha = configSorteo.fecha;
+                    const textoHora = configSorteo.hora ? " - " + configSorteo.hora : "";
+                    if(lblSubtitulo) lblSubtitulo.textContent = textoFecha + textoHora;
+
                     if(lblPrecioTag) lblPrecioTag.textContent = "Valor: Bs. " + configSorteo.precioBase.toFixed(2).replace('.', ',');
                     
                     if(lblPromoText) {
                         lblPromoText.innerHTML = `<strong>PROMOCIÓN:</strong> 4×Bs ${configSorteo.promo4} · 8×Bs ${configSorteo.promo8} · 12×Bs ${configSorteo.promo12}`;
                     }
 
-                    // Actualizar contador al cargar config
                     actualizarContadorDisponibles();
+                    actualizarCuentaRegresiva(configSorteo.fecha, configSorteo.hora); // PASAMOS LA HORA TAMBIEN
                     updateTotalPrice();
                 }
             });
@@ -819,9 +913,9 @@
                 const data = snapshot.val();
                 let cont = 0;
                 if (data) {
-                     Object.keys(data).forEach(key => {
-                         if(data[key].estado === 'vendido') cont++;
-                     });
+                      Object.keys(data).forEach(key => {
+                          if(data[key].estado === 'vendido') cont++;
+                      });
                 }
                 cantidadVendidos = cont;
                 actualizarContadorDisponibles();
@@ -834,39 +928,6 @@
                     txtDisponibles.textContent = restantes + " Cartones Disponibles";
                 }
             }
-
-            const fechaMeta = new Date(2026, 0, 31, 20, 0, 0).getTime();
-            const x = setInterval(function() {
-                const now = new Date().getTime();
-                const distance = fechaMeta - now;
-
-                if (distance < 0) {
-                    clearInterval(x);
-                    const msg = "<div style='background:white; color:#d32f2f; padding:10px; border-radius:8px; font-weight:bold;'>¡EL SORTEO HA COMENZADO! 🎱</div>";
-                    if(document.getElementById("countdownBox")) document.getElementById("countdownBox").innerHTML = msg;
-                    if(document.getElementById("countdownBoxMobile")) document.getElementById("countdownBoxMobile").innerHTML = msg;
-                    return;
-                }
-
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                if(document.getElementById("cdDays")) {
-                    document.getElementById("cdDays").innerText = days < 10 ? "0" + days : days;
-                    document.getElementById("cdHours").innerText = hours < 10 ? "0" + hours : hours;
-                    document.getElementById("cdMinutes").innerText = minutes < 10 ? "0" + minutes : minutes;
-                    document.getElementById("cdSeconds").innerText = seconds < 10 ? "0" + seconds : seconds;
-                }
-
-                if(document.getElementById("cdDaysM")) {
-                    document.getElementById("cdDaysM").innerText = days < 10 ? "0" + days : days;
-                    document.getElementById("cdHoursM").innerText = hours < 10 ? "0" + hours : hours;
-                    document.getElementById("cdMinutesM").innerText = minutes < 10 ? "0" + minutes : minutes;
-                    document.getElementById("cdSecondsM").innerText = seconds < 10 ? "0" + seconds : seconds;
-                }
-            }, 1000);
 
             triggerUploadBtn.addEventListener('click', function() {
                 comprobanteInput.click();
