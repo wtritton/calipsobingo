@@ -27,6 +27,9 @@
         .progress-container { margin-bottom: 20px; }
         .progress { height: 10px; border-radius: 5px; background-color: #e9ecef; }
         .progress-bar { background-color: #1a5e3a; transition: width 0.5s ease; }
+
+        /* BUSCADOR TABLA */
+        .search-panel { background: white; padding: 15px; border-bottom: 1px solid #eee; }
     </style>
 </head>
 <body>
@@ -38,8 +41,8 @@
                 <a href="index.html" class="btn btn-outline-light btn-sm" target="_blank">
                     <i class="fas fa-external-link-alt"></i> Ver Tienda
                 </a>
-                <a href="resultados.html" class="btn btn-outline-warning btn-sm" target="_blank">
-                    <i class="fas fa-trophy"></i> Ver Resultados
+                <a href="ganadones.html" class="btn btn-outline-warning btn-sm" target="_blank">
+                    <i class="fas fa-trophy"></i> Ver Ganadores
                 </a>
                 <button class="btn btn-warning btn-sm fw-bold" onclick="window.location.href='index.html'">Salir</button>
             </div>
@@ -75,7 +78,7 @@
                 </span>
             </div>
             <div class="card-body">
-                <p class="text-muted small mb-3">Elige el premio y escribe el número de cartón. <strong>Se guardará con la fecha mostrada arriba.</strong></p>
+                <p class="text-muted small mb-3">Los ganadores que registres aquí quedarán guardados bajo la fecha: <strong><span id="txtFechaConfirmacion">...</span></strong></p>
                 
                 <div class="row g-2 align-items-end mb-4 p-3 bg-light rounded border">
                     <div class="col-md-3">
@@ -132,10 +135,9 @@
             </div>
         </div>
 
-
         <div class="card shadow-sm mb-4 card-config">
             <div class="card-header bg-white fw-bold">
-                <i class="fas fa-edit"></i> Configuración General
+                <i class="fas fa-edit"></i> Configuración del Sorteo
             </div>
             <div class="card-body">
                 <div class="row g-3">
@@ -143,15 +145,15 @@
                     
                     <div class="col-md-3">
                         <label class="form-label fw-bold text-danger">Fecha Sorteo</label>
-                        <input type="text" id="confFecha" class="form-control" placeholder="Ej: 28 de Enero 2026">
+                        <input type="text" id="confFecha" class="form-control" placeholder="Ej: 8 de Enero 2026">
                     </div>
 
                     <div class="col-md-2">
-                        <label class="form-label fw-bold text-danger">Hora</label>
+                        <label class="form-label fw-bold text-danger">Hora Sorteo</label>
                         <input type="text" id="confHora" class="form-control" placeholder="Ej: 08:00 PM">
                     </div>
 
-                    <div class="col-md-3"><label class="form-label fw-bold text-dark">📦 Cantidad Cartones</label><input type="number" id="confTotalCartones" class="form-control" placeholder="Ej: 1000"></div>
+                    <div class="col-md-3"><label class="form-label fw-bold text-dark">📦 Total Cartones</label><input type="number" id="confTotalCartones" class="form-control" placeholder="Ej: 1000"></div>
                     
                     <div class="col-md-3"><label class="form-label fw-bold text-success">Precio Base (1)</label><input type="number" id="confPrecioBase" class="form-control" step="0.01"></div>
                     <div class="col-md-3"><label class="form-label fw-bold text-primary">Promo x 4</label><input type="number" id="confPromo4" class="form-control" step="0.01"></div>
@@ -182,6 +184,25 @@
 
         <div class="card shadow-sm">
             <div class="card-header bg-dark text-white fw-bold"><i class="fas fa-list"></i> Gestión de Ventas</div>
+            
+            <div class="search-panel">
+                <div class="row g-2">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                            <input type="text" id="buscadorVentas" class="form-control border-start-0" placeholder="Buscar por cliente, teléfono, referencia o # cartón..." onkeyup="filtrarTabla()">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="filtroEstado" class="form-select" onchange="filtrarTabla()">
+                            <option value="todos">Todos los Estados</option>
+                            <option value="pendientes">⏳ Solo Pendientes</option>
+                            <option value="verificados">✅ Solo Verificados</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-hover mb-0 align-middle">
@@ -197,8 +218,9 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
-        const password = prompt("Ingrese contraseña de administrador:");
-        if (password !== "admin123") { window.location.href = "index.html"; }
+        // CONTRASEÑA OFUSCADA (admin123 en Base64)
+        const pass = prompt("Ingrese contraseña de administrador:");
+        if (btoa(pass) !== "YWRtaW4xMjM=") { window.location.href = "index.html"; }
 
         const firebaseConfig = {
             apiKey: "AIzaSyBtj_J5wQ4y-U3UDwwphud9Wir1n7WcI2s",
@@ -222,6 +244,10 @@
         let totalVendidosCount = 0;
         let todosLosDatos = {}; 
         let valoresPremios = { t1: "Bs 0", t2: "Bs 0", t3: "Bs 0", t4: "Bs 0" };
+        
+        // Variables para notificación
+        let primeraCarga = true; 
+        let totalVentasAnterior = 0;
 
         // ==========================================
         // LÓGICA DE REGISTRO AUTOMÁTICO
@@ -294,7 +320,7 @@
             const fechaMaestra = document.getElementById('confFecha').value;
             
             if (!fechaMaestra || fechaMaestra.trim() === "") {
-                alert("⛔ ERROR CRÍTICO: \n\nDebes escribir la 'Fecha Sorteo' en el panel de Configuración (abajo) antes de registrar ganadores.");
+                alert("⛔ ERROR: Debes escribir la 'Fecha Sorteo' en Configuración antes de registrar ganadores.");
                 document.getElementById('confFecha').focus();
                 return;
             }
@@ -337,14 +363,19 @@
                 
                 const fechaCargada = config.fecha || '';
                 document.getElementById('confFecha').value = fechaCargada;
-                document.getElementById('confHora').value = config.hora || ''; // CARGAR HORA
+                document.getElementById('confHora').value = config.hora || '';
 
+                // Actualizar Badges
                 const badgeFecha = document.getElementById('badgeFechaActiva');
+                const txtFechaConfirmacion = document.getElementById('txtFechaConfirmacion');
+                
                 if(fechaCargada) {
                     badgeFecha.textContent = fechaCargada;
+                    txtFechaConfirmacion.textContent = fechaCargada;
                     badgeFecha.className = "badge bg-warning text-dark shadow-sm";
                 } else {
-                    badgeFecha.textContent = "SIN FECHA DEFINIDA";
+                    badgeFecha.textContent = "SIN FECHA";
+                    txtFechaConfirmacion.textContent = "SIN FECHA";
                     badgeFecha.className = "badge bg-danger text-white shadow-sm";
                 }
 
@@ -364,14 +395,14 @@
             const datos = {
                 titulo: document.getElementById('confTitulo').value,
                 fecha: document.getElementById('confFecha').value,
-                hora: document.getElementById('confHora').value, // GUARDAR HORA
+                hora: document.getElementById('confHora').value,
                 totalCartones: parseInt(document.getElementById('confTotalCartones').value),
                 precioBase: parseFloat(document.getElementById('confPrecioBase').value),
                 promo4: parseFloat(document.getElementById('confPromo4').value),
                 promo8: parseFloat(document.getElementById('confPromo8').value),
                 promo12: parseFloat(document.getElementById('confPromo12').value)
             };
-            configRef.set(datos).then(() => alert("✅ Configuración guardada. Fecha y Hora actualizadas."));
+            configRef.set(datos).then(() => alert("✅ Configuración y Hora actualizadas correctamente."));
         };
 
         // --- GESTIÓN DE VENTAS ---
@@ -395,6 +426,10 @@
                             ? '<span class="badge badge-verificado"><i class="fas fa-check-circle"></i> Verificado</span>' 
                             : '<span class="badge badge-pendiente"><i class="fas fa-clock"></i> Pendiente</span>';
 
+                        // Botón de WhatsApp
+                        let mensajeWS = `Hola ${item.nombre}, te escribo de Calipso Bingo referente a tu cartón #${item.id}...`;
+                        let linkWS = `https://wa.me/58${item.telefono}?text=${encodeURIComponent(mensajeWS)}`;
+                        
                         const botonAccion = esVerificado
                             ? `<button class="btn btn-warning btn-sm btn-action" title="Desmarcar" onclick="toggleVerificado('${item.id}', false)"><i class="fas fa-undo"></i></button>`
                             : `<button class="btn btn-success btn-sm btn-action" title="Confirmar Pago" onclick="toggleVerificado('${item.id}', true)"><i class="fas fa-check"></i></button>`;
@@ -404,20 +439,59 @@
                         tr.innerHTML = `
                             <td><strong>#${item.id}</strong></td>
                             <td>${item.nombre}</td>
-                            <td><small class="d-block text-muted">${item.telefono}</small><span class="fw-bold text-primary">Ref: ${item.referencia}</span></td>
+                            <td>
+                                <small class="d-block text-muted">${item.telefono}</small>
+                                <span class="fw-bold text-primary">Ref: ${item.referencia}</span>
+                            </td>
                             <td>${badgeEstado}</td>
                             <td class="text-end">
+                                <a href="${linkWS}" target="_blank" class="btn btn-success btn-sm btn-action" title="Chat WhatsApp"><i class="fab fa-whatsapp"></i></a>
                                 ${botonAccion}
                                 <button class="btn btn-outline-danger btn-sm btn-action" title="Eliminar" onclick="liberar('${item.id}')"><i class="fas fa-times"></i></button>
                             </td>`;
                         tabla.appendChild(tr);
                     }
                 });
+
+                // SONIDO DE NUEVA VENTA
+                if (!primeraCarga && totalVendidosCount > totalVentasAnterior) {
+                    const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3'); 
+                    audio.volume = 0.5;
+                    audio.play().catch(e => console.log("Audio bloqueado por navegador"));
+                }
+                totalVentasAnterior = totalVendidosCount;
+                primeraCarga = false;
+
             } else {
                 tabla.innerHTML = '<tr><td colspan="5" class="text-center p-4 text-muted">No hay ventas registradas.</td></tr>';
             }
             recalcularPremios();
+            filtrarTabla(); // Aplicar filtros si hay búsqueda activa
         });
+
+        // FUNCION DE BUSQUEDA
+        function filtrarTabla() {
+            const texto = document.getElementById('buscadorVentas').value.toLowerCase();
+            const filtro = document.getElementById('filtroEstado').value;
+            const filas = document.querySelectorAll('#tablaCuerpo tr');
+
+            filas.forEach(fila => {
+                // Verificar si es una fila de datos (tiene celdas)
+                if(fila.cells.length < 2) return;
+
+                const textoFila = fila.innerText.toLowerCase();
+                const esVerificado = fila.querySelector('.badge-verificado') !== null;
+                const esPendiente = fila.querySelector('.badge-pendiente') !== null;
+                
+                let cumpleFiltro = true;
+
+                if (filtro === 'pendientes' && !esPendiente) cumpleFiltro = false;
+                if (filtro === 'verificados' && !esVerificado) cumpleFiltro = false;
+                if (cumpleFiltro && !textoFila.includes(texto)) cumpleFiltro = false;
+
+                fila.style.display = cumpleFiltro ? '' : 'none';
+            });
+        }
 
         window.recalcularPremios = function() {
             document.getElementById('totalVendidos').textContent = totalVendidosCount;

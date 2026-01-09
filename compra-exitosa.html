@@ -55,7 +55,7 @@
         .btn-nav-action { padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 12px; text-decoration: none; transition: transform 0.2s; display: inline-flex; align-items: center; gap: 5px; }
         .btn-vendedor { background-color: transparent; color: var(--white); border: 2px solid rgba(255,255,255,0.5); }
         .btn-vendedor:hover { border-color: var(--white); background: rgba(255,255,255,0.1); }
-        .btn-soporte { background-color: var(--accent-orange); color: white; border: none; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .btn-soporte { background-color: var(--accent-orange); color: white; border: none; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer; }
         .btn-soporte:hover { background-color: #e55a2b; transform: translateY(-2px); }
 
         /* Menu Hamburguesa */
@@ -222,17 +222,21 @@
         }
         .btn-comprar:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4); }
 
+        /* Footer */
         .main-footer { background-color: #124029; color: #e0e0e0; padding: 30px 20px 20px; margin-top: 30px; border-top: 5px solid var(--accent-orange); width: 100%; }
         .footer-content { max-width: 1000px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; gap: 20px; }
         .footer-social-title { font-weight: 700; margin-bottom: 10px; color: white; text-transform: uppercase; font-size: 13px; }
         .social-icons { display: flex; justify-content: center; gap: 15px; }
-        .social-icons a { color: white; background: rgba(255,255,255,0.1); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s; text-decoration: none; font-size: 14px; }
+        .social-icons a { color: white; background: rgba(255,255,255,0.1); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s; text-decoration: none; font-size: 14px; cursor: pointer; }
         .social-icons a:hover { background: var(--accent-orange); transform: translateY(-3px); }
         .footer-legal-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; font-size: 13px; }
         .footer-legal-links a { color: #a0c4b3; text-decoration: none; }
         .footer-legal-links a:hover { color: white; text-decoration: underline; }
         .footer-separator { color: #406856; }
         .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; font-size: 12px; color: #88a697; }
+
+        .whatsapp-float { position: fixed; bottom: 25px; right: 25px; background-color: #25D366; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); text-decoration: none; z-index: 1000; transition: transform 0.3s; cursor: pointer; }
+        .whatsapp-float:hover { transform: scale(1.1) rotate(10deg); }
 
         @media (max-width: 850px) {
             .menu-toggle { display: block; }
@@ -266,9 +270,9 @@
         <div class="nav-links">
             <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
             <a href="#">Mis compras</a>
-            <a href="#">Resultados</a>
+            <a href="ganadores.html">Ganadores</a>
             <a href="#" class="btn-nav-action btn-vendedor">SE VENDEDOR</a>
-            <a href="https://wa.me/584248991277" target="_blank" class="btn-nav-action btn-soporte"><i class="fab fa-whatsapp"></i> SOPORTE</a>
+            <a href="javascript:void(0)" onclick="irAWhatsapp('Hola, necesito soporte con mi compra')" class="btn-nav-action btn-soporte"><i class="fab fa-whatsapp"></i> SOPORTE</a>
         </div>
     </nav>
 
@@ -296,7 +300,7 @@
                     </p>
                 </div>
 
-                <a href="#" target="_blank" class="btn-whatsapp-notify" id="btnNotifyWhatsapp">
+                <a href="javascript:void(0)" class="btn-whatsapp-notify" id="btnNotifyWhatsapp">
                     <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> NOTIFICAR PAGO
                 </a>
 
@@ -319,7 +323,7 @@
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://www.instagram.com/calipso_bingo?igsh=ZHllOHZmY3NkN2pr"><i class="fab fa-instagram"></i></a>
                     <a href="#"><i class="fab fa-tiktok"></i></a>
-                    <a href="https://wa.me/584248991277" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a href="javascript:void(0)" onclick="irAWhatsapp('Hola, vengo de la web de compra exitosa')"><i class="fab fa-whatsapp"></i></a>
                 </div>
             </div>
 
@@ -340,7 +344,25 @@
         </div>
     </footer>
 
+    <a href="javascript:void(0)" onclick="irAWhatsapp('Hola, tengo una duda sobre mi compra')" class="whatsapp-float"><i class="fab fa-whatsapp"></i></a>
+
     <script>
+        // --- FUNCIÓN UNIVERSAL DE WHATSAPP ---
+        function irAWhatsapp(mensaje) {
+            const telefono = "584248991277";
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            
+            let url = "";
+            if (isMobile) {
+                // Móvil: usa api.whatsapp.com (más universal hoy en día) o wa.me
+                url = `https://api.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
+            } else {
+                // PC: FUERZA WEB.WHATSAPP.COM para evitar errores de app de escritorio
+                url = `https://web.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
+            }
+            window.open(url, '_blank');
+        }
+
         // Menú Hamburguesa
         const menuToggle = document.getElementById('mobile-menu');
         const navLinks = document.querySelector('.nav-links');
@@ -351,7 +373,6 @@
             });
         }
 
-        // Función Forzar Descarga
         function forceDownload(url, fileName) {
             fetch(url)
                 .then(response => response.blob())
@@ -377,20 +398,14 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // EFECTO CONFETI AUTOMÁTICO
+            // CONFETI
             var duration = 3 * 1000;
             var animationEnd = Date.now() + duration;
             var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
             function randomInRange(min, max) { return Math.random() * (max - min) + min; }
-
             var interval = setInterval(function() {
                 var timeLeft = animationEnd - Date.now();
-
-                if (timeLeft <= 0) {
-                    return clearInterval(interval);
-                }
-
+                if (timeLeft <= 0) return clearInterval(interval);
                 var particleCount = 50 * (timeLeft / duration);
                 confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
                 confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
@@ -399,7 +414,8 @@
             // Recuperar datos
             const cartonesData = localStorage.getItem('cartonesSeleccionados');
             const referenciaData = localStorage.getItem('compraReferencia') || 'N/A';
-            const nombreCliente = localStorage.getItem('nombreComprador') || 'Amigo'; // Nuevo: Recuperar nombre (si no existe, usa "Amigo")
+            const nombreCliente = localStorage.getItem('nombreComprador') || 'Amigo'; 
+            
             const container = document.getElementById('cartonesContainer');
             const btnNotify = document.getElementById('btnNotifyWhatsapp');
 
@@ -407,16 +423,13 @@
                 const listaCartones = JSON.parse(cartonesData);
                 container.innerHTML = '';
 
-                // 1. Generar Lista de Cartones
                 if (listaCartones.length > 0) {
                     listaCartones.forEach(numero => {
                         const row = document.createElement('div');
                         row.className = 'carton-row';
-                        
                         let displayText = `Cartón #${numero}`;
                         let imageUrl = `cartones/${numero}.jpg`; 
                         let fileName = `Carton-${numero}.jpg`;
-
                         const isRandom = (numero === 'Azar' || numero === 'azar');
                         if (isRandom) { displayText = 'Cartón al Azar'; }
                         
@@ -427,20 +440,18 @@
                             btnHtml = `<button class="download-btn" onclick="forceDownload('${imageUrl}', '${fileName}')"><i class="fas fa-download"></i> Descargar</button>`;
                         }
                         
-                        row.innerHTML = `
-                            <span class="carton-name"><i class="fas fa-ticket-alt"></i> ${displayText}</span>
-                            ${btnHtml}
-                        `;
+                        row.innerHTML = `<span class="carton-name"><i class="fas fa-ticket-alt"></i> ${displayText}</span>${btnHtml}`;
                         container.appendChild(row);
                     });
 
-                    // 2. Configurar Botón WhatsApp con Mensaje Personalizado
+                    // CONFIGURAR BOTÓN NOTIFICAR PAGO
                     const numerosString = listaCartones.join(', ');
-                    
                     const mensaje = `Hola Calipso Bingo! 🎱\n\nSoy *${nombreCliente}* y he realizado el pago de mis cartones.\n\n🆔 *Referencia:* ${referenciaData}\n🎫 *Cartones:* ${numerosString}\n\nQuedo atento a la confirmación.`;
                     
-                    const mensajeEncoded = encodeURIComponent(mensaje);
-                    btnNotify.href = `https://wa.me/584248991277?text=${mensajeEncoded}`;
+                    // Asignar evento al clic del botón
+                    btnNotify.onclick = function() {
+                        irAWhatsapp(mensaje);
+                    };
 
                 } else {
                     container.innerHTML = '<p style="text-align:center; color:#666;">No se encontraron cartones seleccionados.</p>';
