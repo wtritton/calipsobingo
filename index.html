@@ -151,8 +151,8 @@
         .country-code { background-color: #eee; color: #555; padding: 0 12px; border-radius: 8px; display: flex; align-items: center; font-weight: bold; border: 2px solid #eee; font-size: 13px; }
         .btn-comprar { background: linear-gradient(to right, #FF6B35, #FF8C42); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: 800; cursor: pointer; width: 100%; margin-top: 5px; box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3); transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px; }
         .btn-comprar:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4); }
-        .consultar-btn { background-color: white; color: #666; border: 2px solid #eee; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s; }
-        .consultar-btn:hover { border-color: #ccc; background-color: #f9f9f9; }
+        .consultar-btn { background-color: #FFD54F; color: #666; border: 2px solid #eee; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s; }
+        .consultar-btn:hover { border-color: #ccc; background-color: #fac410; }
         .character-image { max-width: 100%; height: auto; max-height: 440px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15)); animation: float 6s ease-in-out infinite; position: relative; }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
         
@@ -261,7 +261,7 @@
         .footer-content { max-width: 1000px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; gap: 20px; }
         .footer-social-title { font-weight: 700; margin-bottom: 10px; color: white; text-transform: uppercase; letter-spacing: 1px; font-size: 13px; }
         .social-icons { display: flex; justify-content: center; gap: 15px; margin-bottom: 5px; }
-        .social-icons a { color: white; background: rgba(255,255,255,0.1); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s; text-decoration: none; font-size: 14px; cursor: pointer; }
+        .social-icons a { color: white; background: rgba(255,255,255,0.1); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s; text-decoration: none; font-size: 14px; cursor: pointer;}
         .social-icons a:hover { background: var(--accent-orange); transform: translateY(-3px); }
         .footer-legal-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; font-size: 13px; margin: 5px 0; }
         .footer-legal-links a { color: #a0c4b3; text-decoration: none; transition: color 0.2s; }
@@ -642,6 +642,9 @@
         // --- FUNCIÓN ROBUSTA DE CUENTA REGRESIVA ---
         function actualizarCuentaRegresiva(fechaTexto, horaTexto) {
             if (countdownInterval) clearInterval(countdownInterval);
+
+            // Intentamos parsear la fecha
+            // Formatos posibles de 'fechaTexto': "2026-01-31" o "31 de Enero 2026" o "31 de Enero"
             
             let targetDate;
             let targetYear = new Date().getFullYear();
@@ -660,7 +663,7 @@
                 // 2. Intentar parsear ISO "2026-01-28"
                 const d = new Date(fechaTexto);
                 if (!isNaN(d.getTime())) {
-                    targetDay = d.getUTCDate();
+                    targetDay = d.getUTCDate(); // Usar UTC para evitar cambios de zona horaria al parsear string simple
                     targetMonth = d.getUTCMonth();
                     targetYear = d.getUTCFullYear();
                 }
@@ -685,8 +688,10 @@
                 }
             }
 
+            // Crear objeto fecha final
             const fechaMeta = new Date(targetYear, targetMonth, targetDay, targetHour, targetMinute, 0).getTime();
 
+            // Iniciar intervalo
             countdownInterval = setInterval(function() {
                 const now = new Date().getTime();
                 const distance = fechaMeta - now;
@@ -856,15 +861,22 @@
                 const config = snapshot.val();
                 if (config) {
                     configSorteo.precioBase = parseFloat(config.precioBase) || 50;
-                    configSorteo.promo4 = parseFloat(config.promo4) || 180;
-                    configSorteo.promo8 = parseFloat(config.promo8) || 360;
-                    configSorteo.promo12 = parseFloat(config.promo12) || 520;
                     configSorteo.totalCartones = parseInt(config.totalCartones) || 1000;
                     configSorteo.fecha = config.fecha || "Muy Pronto";
                     configSorteo.hora = config.hora || "";
 
+                    // CÁLCULO AUTOMÁTICO DE PROMOCIONES (Marketing)
+                    // 4 cartones: 10% descuento (factor 0.9)
+                    // 8 cartones: 12.5% descuento (factor 0.875)
+                    // 12 cartones: 15% descuento (factor 0.85)
+                    
+                    configSorteo.promo4 = Math.round((configSorteo.precioBase * 4) * 0.90);
+                    configSorteo.promo8 = Math.round((configSorteo.precioBase * 8) * 0.875);
+                    configSorteo.promo12 = Math.round((configSorteo.precioBase * 12) * 0.85);
+
                     if(lblTitulo) lblTitulo.textContent = config.titulo || "Gran Sorteo";
                     
+                    // --- AQUÍ COMBINAMOS FECHA Y HORA ---
                     const textoFecha = configSorteo.fecha;
                     const textoHora = configSorteo.hora ? " - " + configSorteo.hora : "";
                     if(lblSubtitulo) lblSubtitulo.textContent = textoFecha + textoHora;
@@ -876,11 +888,12 @@
                     }
 
                     actualizarContadorDisponibles();
-                    actualizarCuentaRegresiva(configSorteo.fecha, configSorteo.hora);
+                    actualizarCuentaRegresiva(configSorteo.fecha, configSorteo.hora); // PASAMOS LA HORA TAMBIEN
                     updateTotalPrice();
                 }
             });
             
+            // LISTENER DE VENTAS EN TIEMPO REAL
             cartonesRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 let cont = 0;
@@ -1062,10 +1075,12 @@
                 });
             }
 
+            // NUEVA FUNCIÓN: RESETEAR SELECCIÓN
             if(btnResetSelection) {
                 btnResetSelection.addEventListener('click', function() {
                     document.querySelectorAll('.carton-item.selected').forEach(item => {
                         item.classList.remove('selected');
+                        // Restaurar color del botón "Azar" si estaba marcado
                         if(item.querySelector('.fa-random')) { 
                             item.style.backgroundColor = 'white'; 
                             item.style.color = '#FF8C42'; 
@@ -1096,9 +1111,10 @@
             finalReserveBtn.addEventListener('click', function() {
                 const referencia = referenciaInput.value.trim();
                 
+                // VALIDACIÓN DE REFERENCIA (SIN ALERT)
                 if (referencia === "" || referencia.length < 4) {
                     referenciaInput.classList.add('input-error');
-                    referenciaError.style.display = 'block'; 
+                    referenciaError.style.display = 'block'; // MOSTRAR MENSAJE ROJO
                     return; 
                 } else {
                     referenciaInput.classList.remove('input-error');
@@ -1137,6 +1153,7 @@
                 });
             });
 
+            // LIMPIAR ERROR AL ESCRIBIR
             referenciaInput.addEventListener('input', function() {
                 if(this.value.length >= 4) {
                     referenciaInput.classList.remove('input-error');
@@ -1196,8 +1213,10 @@
                 updateSelectionText(); // Update after select
             }
 
+            // NEW HELPER FUNCTION TO UPDATE SUMMARY BOX
             function updateSelectionText() {
                 const selected = document.querySelectorAll('.carton-item.selected');
+                // Filter out the random button itself which has data-number="azar"
                 const nums = Array.from(selected)
                     .map(el => el.getAttribute('data-number'))
                     .filter(num => num !== 'azar');
@@ -1219,6 +1238,7 @@
                 let finalTotal = 0;
                 let remaining = quantity;
 
+                // --- LÓGICA DE PRECIO AUTOMÁTICO (MARKETING) ---
                 if (remaining >= 12) {
                     const sets12 = Math.floor(remaining / 12);
                     finalTotal += sets12 * configSorteo.promo12;
@@ -1272,6 +1292,7 @@
                 if (phoneInput.value.trim() === '') { phoneInput.classList.add('input-error'); error = true; }
                 if (error) { alert('Complete sus datos'); return; }
                 document.querySelectorAll('.carton-item.selected').forEach(item => item.classList.remove('selected'));
+                // Clear selection summary on open
                 document.getElementById('selectionSummary').style.display = 'none';
                 
                 cartonModal.style.display = 'block';
@@ -1292,6 +1313,7 @@
                     let totalAmount = 0;
                     let remaining = maxSelections;
                     
+                    // --- RECALCULAR TOTAL PARA EL MODAL DE PAGO ---
                     if (remaining >= 12) {
                         const sets12 = Math.floor(remaining / 12);
                         totalAmount += sets12 * configSorteo.promo12;

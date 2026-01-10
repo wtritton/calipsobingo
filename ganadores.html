@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ganadones - Calipso Bingo</title>
+    <title>Ganadores - Calipso Bingo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
@@ -38,7 +38,10 @@
         .logo img { height: 36px; border-radius: 50%; background: white; padding: 2px; }
         .nav-links { display: flex; gap: 15px; align-items: center; }
         .nav-links a { color: rgba(255,255,255,0.9); text-decoration: none; font-weight: 500; padding: 6px 10px; border-radius: 20px; font-size: 13px; transition: all 0.3s ease; }
-        .btn-soporte { background-color: var(--accent-orange); color: white; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 12px; display: flex; align-items: center; gap: 5px; }
+        
+        /* Botón Soporte Navbar */
+        .btn-soporte { background-color: var(--accent-orange); color: white !important; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 12px; display: flex; align-items: center; gap: 5px; border: none; cursor: pointer; }
+        .btn-soporte:hover { background-color: #e55a2b; transform: translateY(-2px); }
 
         /* Estructura */
         .container { 
@@ -49,34 +52,35 @@
         
         /* Tarjeta Principal */
         .card { background: white; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.05); }
-        .card-header { background: var(--primary-green); color: white; padding: 30px 20px; text-align: center; }
+        .card-header { background: var(--primary-green); color: white; padding: 40px 20px; text-align: center; }
         .card-body { padding: 30px; background-color: #f8f9fa; }
 
-        h1 { font-size: 32px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        h1 { font-size: 32px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
         
-        /* BOTONES DE FECHAS */
-        .dates-container { margin-top: 15px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-        .date-chip {
-            background: white; border: 2px solid var(--accent-orange); color: var(--text-dark);
-            padding: 8px 20px; border-radius: 25px; cursor: pointer; font-weight: bold;
-            transition: all 0.3s ease; font-size: 14px;
-        }
-        .date-chip:hover, .date-chip.active {
-            background: var(--accent-orange); color: white; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
-        }
-
-        /* Búsqueda Manual */
-        .manual-search-toggle { margin-top: 25px; font-size: 14px; color: #c2c1c1; cursor: pointer; text-decoration: underline; }
-        .search-date-container { 
-            display: none; /* Oculto por defecto */
-            margin-top: 15px; background: white; padding: 10px 25px; border-radius: 50px; 
-            border: 2px solid var(--accent-orange); align-items: center; gap: 10px; width: fit-content; margin-left: auto; margin-right: auto;
+        /* ESTILO SELECT (DROPDOWN) DE FECHAS */
+        .select-container { margin-top: 25px; display: flex; justify-content: center; }
+        .date-select {
+            width: 100%; max-width: 500px;
+            padding: 15px 20px;
+            font-size: 18px;
+            border-radius: 8px;
+            border: 2px solid var(--accent-orange);
+            background-color: white;
+            color: #333;
+            font-weight: bold;
+            cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            outline: none;
+            text-align: center;
+            appearance: none; /* Quita la flecha por defecto en algunos navegadores para estilizar mejor */
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FF6B35%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px top 50%;
+            background-size: 16px auto;
         }
-        .search-label { color: var(--text-dark); font-weight: bold; font-size: 14px; text-transform: uppercase; }
-        .date-input { border: none; outline: none; font-size: 16px; color: #333; font-family: inherit; cursor: pointer; background: transparent; }
-        
-        /* GRID DE 3 COLUMNAS */
+        .date-select:focus { border-color: #e55a2b; }
+
+        /* GRID DE GANADORES */
         .winners-grid { display: grid; gap: 25px; margin-top: 30px; grid-template-columns: 1fr; }
         @media (min-width: 768px) { .winners-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 1024px) { .winners-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -85,7 +89,7 @@
         .winner-card-item {
             background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.08);
             transition: transform 0.3s ease; border: 1px solid #e0e0e0; display: flex; flex-direction: column;
-            animation: fadeIn Up 0.6s ease-out;
+            animation: fadeInUp 0.6s ease-out;
         }
         .winner-card-item:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
         .winner-prize-header {
@@ -117,7 +121,7 @@
         .footer-content { max-width: 1000px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; gap: 20px; }
         .footer-social-title { font-weight: 700; margin-bottom: 10px; color: white; text-transform: uppercase; letter-spacing: 1px; font-size: 13px; }
         .social-icons { display: flex; justify-content: center; gap: 15px; margin-bottom: 5px; }
-        .social-icons a { color: white; background: rgba(255,255,255,0.1); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s; text-decoration: none; font-size: 16px; }
+        .social-icons a { color: white; background: rgba(255,255,255,0.1); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s; text-decoration: none; font-size: 16px; cursor: pointer;}
         .social-icons a:hover { background: var(--accent-orange); transform: translateY(-3px); }
         .footer-legal-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; font-size: 13px; margin: 10px 0; }
         .footer-legal-links a { color: #a0c4b3; text-decoration: none; transition: color 0.2s; }
@@ -126,7 +130,7 @@
         .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 12px; color: #88a697; }
         .developer-credit { margin-top: 5px; font-size: 11px; opacity: 0.7; }
         
-        .whatsapp-float { position: fixed; bottom: 25px; right: 25px; background-color: #25D366; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); text-decoration: none; z-index: 1000; transition: transform 0.3s; }
+        .whatsapp-float { position: fixed; bottom: 25px; right: 25px; background-color: #25D366; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); text-decoration: none; z-index: 1000; transition: transform 0.3s; cursor: pointer;}
         .whatsapp-float:hover { transform: scale(1.1) }
     </style>
 </head>
@@ -139,7 +143,7 @@
         </a>
         <div class="nav-links">
             <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
-            <a href="https://wa.me/584248991277" target="_blank" class="btn-soporte"><i class="fab fa-whatsapp"></i> Soporte</a>
+            <a href="javascript:void(0)" onclick="abrirSoporte('Hola, necesito soporte con los ganadores')" class="btn-soporte"><i class="fab fa-whatsapp"></i> Soporte</a>
         </div>
     </nav>
 
@@ -147,28 +151,20 @@
         <div class="center-card-wrapper">
             <div class="card">
                 <div class="card-header">
-                    <h1>🏆 Resultados Oficiales 🏆</h1>
-                    <p style="margin:0; opacity: 0.9;">Selecciona una fecha para ver los ganadores:</p>
+                    <h1>🏆 Nuestros Ganadores 🏆</h1>
+                    <p style="margin:0; opacity: 0.9; font-weight: bold;">Selecciona un sorteo para ver los resultados</p>
                     
-                    <div id="datesContainer" class="dates-container">
-                        <span style="font-size:12px; opacity:0.7;">Cargando fechas disponibles...</span>
-                    </div>
-
-                    <div class="manual-search-toggle" onclick="toggleManualSearch()">
-                        <i class="fas fa-search"></i> ¿No encuentras la fecha? Buscar manualmente
-                    </div>
-                    
-                    <div id="manualSearchBox" class="search-date-container">
-                        <span class="search-label">📅 Seleccionar Fecha:</span>
-                        <input type="date" id="dateSearchInput" class="date-input" onchange="buscarResultadosManual()">
+                    <div class="select-container">
+                        <select id="datesSelect" class="date-select" onchange="alCambiarFecha()">
+                            <option value="">Cargando fechas...</option>
+                        </select>
                     </div>
                 </div>
 
                 <div class="card-body">
                     <div style="text-align: center; margin-bottom: 10px;">
                         <h3 id="tituloFechaVisible" style="color: var(--primary-green); margin-top:10px;">
-                            <i class="fas fa-arrow-up"></i> Selecciona una fecha arriba
-                        </h3>
+                            </h3>
                     </div>
 
                     <div id="winnersGrid" class="winners-grid">
@@ -186,7 +182,7 @@
                     <a href="https://www.facebook.com/profile.php?id=61586188498729"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://www.instagram.com/calipso_bingo?igsh=ZHllOHZmY3NkN2pr"><i class="fab fa-instagram"></i></a>
                     <a href="#"><i class="fab fa-tiktok"></i></a>
-                    <a href="https://wa.me/584248991277" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a href="javascript:void(0)" onclick="abrirSoporte('Hola, vengo de la sección de ganadores')"><i class="fab fa-whatsapp"></i></a>
                 </div>
             </div>
             <div class="footer-legal-links">
@@ -205,12 +201,25 @@
         </div>
     </footer>
     
-    <a href="https://wa.me/584248991277" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    <a href="javascript:void(0)" onclick="abrirSoporte('Hola, tengo una duda sobre los ganadores')" class="whatsapp-float"><i class="fab fa-whatsapp"></i></a>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
+        // --- FUNCIÓN WHATSAPP INTELIGENTE ---
+        function abrirSoporte(mensaje) {
+            const telefono = "584248991277";
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            let url = "";
+            if (isMobile) {
+                url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+            } else {
+                url = `https://api.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
+            }
+            window.open(url, '_blank');
+        }
+
         const firebaseConfig = {
             apiKey: "AIzaSyBtj_J5wQ4y-U3UDwwphud9Wir1n7WcI2s",
             authDomain: "calipsobingo-f532b.firebaseapp.com",
@@ -228,45 +237,65 @@
         let todosLosGanadoresData = [];
         let fechasDisponibles = [];
 
-        // 1. INICIAR
+        // 1. CARGAR DATOS DE FIREBASE
         db.ref('resultados/ganadores').on('value', (snapshot) => {
             const data = snapshot.val();
-            const datesContainer = document.getElementById('datesContainer');
+            const datesSelect = document.getElementById('datesSelect');
             
             if (data) {
                 todosLosGanadoresData = Object.values(data);
                 
+                // Obtener fechas únicas
                 const todasLasFechas = todosLosGanadoresData.map(g => g.fecha ? g.fecha.trim() : "Sin Fecha");
                 fechasDisponibles = [...new Set(todasLasFechas)];
                 
-                datesContainer.innerHTML = "";
-                fechasDisponibles.forEach(fecha => {
-                    const btn = document.createElement('div');
-                    btn.className = 'date-chip';
-                    btn.innerHTML = `<i class="far fa-calendar-check"></i> ${fecha}`;
-                    btn.onclick = () => filtrarPorTextoExacto(fecha, btn);
-                    datesContainer.appendChild(btn);
+                // Llenar el Dropdown (Select)
+                datesSelect.innerHTML = ""; // Limpiar antes de llenar
+                
+                // Si hay fechas, agregar la opción por defecto
+                if(fechasDisponibles.length > 0) {
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = "";
+                    defaultOption.text = "-- Selecciona una Fecha --";
+                    datesSelect.appendChild(defaultOption);
+                } else {
+                    datesSelect.innerHTML = "<option>No hay sorteos registrados</option>";
+                }
+                
+                // Ordenar fechas (las más recientes primero) e insertarlas
+                fechasDisponibles.reverse().forEach(fecha => {
+                    const option = document.createElement('option');
+                    option.value = fecha;
+                    option.text = `Sorteo del ${fecha}`;
+                    datesSelect.appendChild(option);
                 });
 
+                // Seleccionar automáticamente la última fecha (la más reciente)
                 if(fechasDisponibles.length > 0) {
-                    const ultimaFecha = fechasDisponibles[fechasDisponibles.length - 1];
-                    filtrarPorTextoExacto(ultimaFecha, datesContainer.lastChild);
+                    datesSelect.selectedIndex = 1; // El índice 0 es "-- Selecciona --", el 1 es el más reciente
+                    alCambiarFecha(); // Cargar tarjetas inmediatamente
                 }
 
             } else {
                 todosLosGanadoresData = [];
-                datesContainer.innerHTML = "<span style='color:red;'>No hay sorteos registrados aún.</span>";
+                datesSelect.innerHTML = "<option>No hay sorteos registrados</option>";
                 mostrarVacio("La base de datos está vacía.");
             }
         });
 
-        function filtrarPorTextoExacto(fechaTexto, elementoBtn) {
-            document.querySelectorAll('.date-chip').forEach(b => b.classList.remove('active'));
-            if(elementoBtn) elementoBtn.classList.add('active');
+        // Evento al cambiar el Select
+        function alCambiarFecha() {
+            const select = document.getElementById('datesSelect');
+            const fechaSeleccionada = select.value;
+            if(fechaSeleccionada) {
+                filtrarPorTextoExacto(fechaSeleccionada);
+            }
+        }
 
+        function filtrarPorTextoExacto(fechaTexto) {
             const gridContainer = document.getElementById('winnersGrid');
             gridContainer.innerHTML = ""; 
-            document.getElementById('tituloFechaVisible').innerText = `Resultados del Sorteo: ${fechaTexto}`;
+            document.getElementById('tituloFechaVisible').innerText = `Resultados: ${fechaTexto}`;
 
             const ganadoresDelDia = todosLosGanadoresData.filter(g => g.fecha.trim() === fechaTexto);
             
@@ -275,62 +304,10 @@
                 return;
             }
 
+            // Invertir para mostrar primero el último premio cargado (ej. Cartón Lleno arriba)
             ganadoresDelDia.reverse();
             lanzarConfeti(); 
             renderizarTarjetas(ganadoresDelDia);
-        }
-
-        function toggleManualSearch() {
-            const box = document.getElementById('manualSearchBox');
-            box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
-        }
-
-        // --- SOLUCIÓN DE BÚSQUEDA MANUAL ---
-        function buscarResultadosManual() {
-            const fechaInput = document.getElementById('dateSearchInput').value; // YYYY-MM-DD
-            if(!fechaInput) return;
-
-            // 1. DESGLOSAR LA FECHA ELEGIDA
-            const partes = fechaInput.split("-");
-            const anio = partes[0];
-            const mesNum = parseInt(partes[1]); // 1
-            const diaNum = parseInt(partes[2]); // 8
-
-            // 2. OBTENER EL NOMBRE DEL MES
-            const meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
-            const nombreMes = meses[mesNum - 1]; // "enero"
-
-            // 3. GENERAR EL FORMATO DE TEXTO (ej: "8 de enero")
-            const textoFechaSimple = `${diaNum} de ${nombreMes}`; // "8 de enero"
-            const textoFechaConCero = `0${diaNum} de ${nombreMes}`; // "08 de enero" (por si acaso)
-            
-            // Otras variantes comunes
-            const formatoSlash = `${(diaNum < 10 ? '0' : '') + diaNum}/${(mesNum < 10 ? '0' : '') + mesNum}/${anio}`; // 08/01/2026
-            const formatoISO = fechaInput; // 2026-01-08
-
-            console.log("Buscando variaciones:", textoFechaSimple, formatoSlash, formatoISO);
-
-            document.getElementById('tituloFechaVisible').innerText = `Resultados para: ${textoFechaSimple} (${anio})`;
-            document.getElementById('winnersGrid').innerHTML = "";
-
-            // 4. FILTRAR BUSCANDO CUALQUIER COINCIDENCIA (Case Insensitive)
-            const ganadoresDelDia = todosLosGanadoresData.filter(g => {
-                if(!g.fecha) return false;
-                const f = g.fecha.toLowerCase().trim(); // Convertir a minúsculas
-                
-                // Comprobamos si la fecha guardada contiene "8 de enero" o es igual a las otras
-                return f.includes(textoFechaSimple.toLowerCase()) || 
-                       f === formatoSlash || 
-                       f === formatoISO;
-            });
-
-            if (ganadoresDelDia.length > 0) {
-                ganadoresDelDia.reverse();
-                renderizarTarjetas(ganadoresDelDia);
-                lanzarConfeti();
-            } else {
-                mostrarVacio(`No se encontraron ganadores para "<b>${textoFechaSimple}</b>". <br>Prueba seleccionando uno de los botones de arriba.`);
-            }
         }
 
         function renderizarTarjetas(listaGanadores) {
