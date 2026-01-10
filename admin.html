@@ -21,7 +21,7 @@
         .prize-card { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
         .prize-card.grand-prize { background: linear-gradient(135deg, #FF6B35, #e55a2b); border: none; transform: scale(1.05); box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4); }
         .prize-amount { font-size: 20px; font-weight: 800; display: block; margin-top: 5px; }
-        .input-promedio { width: 80px; text-align: center; font-weight: bold; border-radius: 5px; border: none; padding: 2px; }
+        .input-promedio { width: 80px; text-align: center; font-weight: bold; border-radius: 5px; border: none; padding: 2px; color: #333; }
         
         /* BARRA DE PROGRESO */
         .progress-container { margin-bottom: 20px; }
@@ -58,8 +58,8 @@
                     <small class="text-white-50">Tu Ganancia (30%): <span id="lblGanancia" class="fw-bold text-warning">Bs 0</span></small>
                 </div>
                 <div>
-                    <small>Precio Promedio:</small>
-                    <input type="number" id="inputPrecioPromedio" class="input-promedio" value="45" onchange="recalcularPremios()">
+                    <small>Precio Promedio (Est.):</small>
+                    <input type="number" id="inputPrecioPromedio" class="input-promedio" value="0" step="0.01" onchange="recalcularPremios()">
                 </div>
             </div>
             <div class="row g-3">
@@ -155,20 +155,29 @@
 
                     <div class="col-md-3"><label class="form-label fw-bold text-dark">📦 Total Cartones</label><input type="number" id="confTotalCartones" class="form-control" placeholder="Ej: 1000"></div>
                     
+                    <div class="col-12 mt-3 mb-1">
+                        <div class="form-check form-switch p-2 bg-light border rounded d-flex align-items-center">
+                            <input class="form-check-input me-2" type="checkbox" id="toggleDescuentos" onchange="calcularPreciosAutomaticos()">
+                            <label class="form-check-label fw-bold text-primary" for="toggleDescuentos">
+                                ✨ Aplicar Descuentos Automáticos (Si desactivas, cobra precio full)
+                            </label>
+                        </div>
+                    </div>
+
                     <div class="col-md-3">
                         <label class="form-label fw-bold text-success">Precio Base (1)</label>
                         <input type="number" id="confPrecioBase" class="form-control" step="0.01" placeholder="Ej: 50">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label fw-bold text-primary">Promo x 4 (10% Off)</label>
+                        <label class="form-label fw-bold text-secondary">Paquete x 4</label>
                         <input type="number" id="confPromo4" class="form-control" step="0.01" readonly style="background-color: #e8f5e9;">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label fw-bold text-primary">Promo x 8 (12.5% Off)</label>
+                        <label class="form-label fw-bold text-secondary">Paquete x 8</label>
                         <input type="number" id="confPromo8" class="form-control" step="0.01" readonly style="background-color: #e8f5e9;">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label fw-bold text-primary">Promo x 12 (15% Off)</label>
+                        <label class="form-label fw-bold text-secondary">Paquete x 12</label>
                         <input type="number" id="confPromo12" class="form-control" step="0.01" readonly style="background-color: #e8f5e9;">
                     </div>
 
@@ -256,46 +265,53 @@
         let totalVendidosCount = 0;
         let todosLosDatos = {}; 
         let valoresPremios = { t1: "Bs 0", t2: "Bs 0", t3: "Bs 0", t4: "Bs 0" };
-        
-        // Variables para notificación
         let primeraCarga = true; 
         let totalVentasAnterior = 0;
 
-        // --- FUNCIÓN DE CÁLCULO AUTOMÁTICO DE PRECIOS ---
-        document.getElementById('confPrecioBase').addEventListener('input', function() {
-            const base = parseFloat(this.value);
-            if(!isNaN(base)) {
-                // Promo 4: 10% descuento (factor 0.90)
-                document.getElementById('confPromo4').value = Math.round((base * 4) * 0.90);
-                
-                // Promo 8: 12.5% descuento (factor 0.875)
-                document.getElementById('confPromo8').value = Math.round((base * 8) * 0.875);
-                
-                // Promo 12: 15% descuento (factor 0.85)
-                document.getElementById('confPromo12').value = Math.round((base * 12) * 0.85);
-            }
-        });
+        // --- CÁLCULO INTELIGENTE CON INTERRUPTOR ---
+        function calcularPreciosAutomaticos() {
+            const base = parseFloat(document.getElementById('confPrecioBase').value);
+            const usarDescuentos = document.getElementById('toggleDescuentos').checked;
 
-        // --- FUNCIÓN UNIVERSAL DE WHATSAPP ---
+            if(!isNaN(base)) {
+                if(usarDescuentos) {
+                    // CON DESCUENTOS: 10%, 12.5%, 15%
+                    document.getElementById('confPromo4').value = Math.round((base * 4) * 0.90);
+                    document.getElementById('confPromo8').value = Math.round((base * 8) * 0.875);
+                    document.getElementById('confPromo12').value = Math.round((base * 12) * 0.85);
+                } else {
+                    // SIN DESCUENTOS (Precio Full)
+                    document.getElementById('confPromo4').value = base * 4;
+                    document.getElementById('confPromo8').value = base * 8;
+                    document.getElementById('confPromo12').value = base * 12;
+                }
+
+                // Cálculo del Precio Promedio Unitario para la Calculadora
+                const p4 = parseFloat(document.getElementById('confPromo4').value);
+                const p8 = parseFloat(document.getElementById('confPromo8').value);
+                const p12 = parseFloat(document.getElementById('confPromo12').value);
+                
+                // Promedio de los 4 escenarios (Unitario, y unitarios dentro de paquetes)
+                const avgUnit = (base + (p4/4) + (p8/8) + (p12/12)) / 4;
+                document.getElementById('inputPrecioPromedio').value = avgUnit.toFixed(2);
+                
+                recalcularPremios();
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('confPrecioBase').addEventListener('input', calcularPreciosAutomaticos);
+
         function abrirWhatsApp(telefonoRaw, mensaje) {
             let telefono = telefonoRaw.replace(/\D/g, ''); 
             if (!telefono.startsWith('58')) telefono = '58' + telefono;
-
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            let url = "";
-
-            if (isMobile) {
-                url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
-            } else {
-                url = `https://web.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
-            }
+            let url = isMobile 
+                ? `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`
+                : `https://web.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
             window.open(url, '_blank');
         }
 
-        // ==========================================
-        // LÓGICA DE REGISTRO AUTOMÁTICO
-        // ==========================================
-        
         resultadosRef.on('value', (snapshot) => {
             const data = snapshot.val() || {};
             const tbodyWin = document.getElementById('tableWinners');
@@ -320,14 +336,12 @@
         window.actualizarMontoPremio = function() {
             const seleccion = document.getElementById('selectTipoPremio').value;
             const inputPremio = document.getElementById('winPremio');
-            
             if(seleccion && valoresPremios[seleccion]) {
                 let etiqueta = "";
                 if(seleccion === 't1') etiqueta = "1ª Tanda";
                 if(seleccion === 't2') etiqueta = "2ª Tanda";
                 if(seleccion === 't3') etiqueta = "3ª Tanda";
                 if(seleccion === 't4') etiqueta = "CARTÓN LLENO";
-                
                 inputPremio.value = `${etiqueta} - ${valoresPremios[seleccion]}`;
             } else {
                 inputPremio.value = "";
@@ -337,12 +351,9 @@
         window.buscarDueño = function() {
             const numeroCarton = document.getElementById('winCarton').value;
             const inputNombre = document.getElementById('winNombre');
-            
             if(!numeroCarton) return;
-
             inputNombre.value = "Buscando...";
             inputNombre.style.backgroundColor = "#fff3cd"; 
-
             cartonesRef.child(numeroCarton).once('value').then((snapshot) => {
                 const datos = snapshot.val();
                 if(datos && datos.estado === 'vendido') {
@@ -368,41 +379,22 @@
             }
             
             if(c && p && n && !n.includes("NO VENDIDO")) {
-                resultadosRef.child('ganadores').push({ 
-                    carton: c, 
-                    premio: p, 
-                    nombre: n,
-                    fecha: fechaMaestra
-                });
-                
+                resultadosRef.child('ganadores').push({ carton: c, premio: p, nombre: n, fecha: fechaMaestra });
                 document.getElementById('winCarton').value = '';
                 document.getElementById('winPremio').value = '';
                 document.getElementById('winNombre').value = '';
                 document.getElementById('selectTipoPremio').value = '';
                 document.getElementById('winNombre').style.backgroundColor = "#e9ecef";
-            } else { 
-                alert("⚠️ Verifica los datos. Asegúrate de que el cartón esté vendido y tenga premio."); 
-            }
+            } else { alert("⚠️ Verifica los datos."); }
         }
 
-        window.borrarGanador = function(key) {
-            if(confirm('¿Eliminar este ganador de la lista?')) {
-                resultadosRef.child('ganadores').child(key).remove();
-            }
-        }
-
-        window.resetearGanadores = function() {
-            if(confirm("⚠️ ¿Seguro que quieres borrar TODOS los ganadores?")) {
-                resultadosRef.child('ganadores').remove();
-            }
-        }
+        window.borrarGanador = function(key) { if(confirm('¿Eliminar ganador?')) resultadosRef.child('ganadores').child(key).remove(); }
+        window.resetearGanadores = function() { if(confirm("⚠️ ¿Borrar TODOS los ganadores?")) resultadosRef.child('ganadores').remove(); }
         
-        // --- CARGAR CONFIGURACIÓN ---
         configRef.on('value', (snapshot) => {
             const config = snapshot.val();
             if (config) {
                 document.getElementById('confTitulo').value = config.titulo || '';
-                
                 const fechaCargada = config.fecha || '';
                 document.getElementById('confFecha').value = fechaCargada;
                 document.getElementById('confHora').value = config.hora || '';
@@ -426,8 +418,22 @@
                 document.getElementById('confPromo8').value = config.promo8 || 0;
                 document.getElementById('confPromo12').value = config.promo12 || 0;
                 
+                // Cargar estado del switch (si existe en DB, sino default true)
+                const usarDescuentos = config.usarDescuentos !== undefined ? config.usarDescuentos : true;
+                document.getElementById('toggleDescuentos').checked = usarDescuentos;
+
                 precioBaseActual = parseFloat(config.precioBase) || 0;
                 totalCartonesGlobal = parseInt(config.totalCartones) || 1000;
+                
+                // Calcular promedio inicial
+                const p4 = parseFloat(config.promo4) || 0;
+                const p8 = parseFloat(config.promo8) || 0;
+                const p12 = parseFloat(config.promo12) || 0;
+                if(precioBaseActual > 0 && p4 > 0) {
+                     const avgUnit = (precioBaseActual + (p4/4) + (p8/8) + (p12/12)) / 4;
+                     document.getElementById('inputPrecioPromedio').value = avgUnit.toFixed(2);
+                }
+
                 recalcularPremios();
             }
         });
@@ -441,12 +447,12 @@
                 precioBase: parseFloat(document.getElementById('confPrecioBase').value),
                 promo4: parseFloat(document.getElementById('confPromo4').value),
                 promo8: parseFloat(document.getElementById('confPromo8').value),
-                promo12: parseFloat(document.getElementById('confPromo12').value)
+                promo12: parseFloat(document.getElementById('confPromo12').value),
+                usarDescuentos: document.getElementById('toggleDescuentos').checked // Guardamos estado switch
             };
-            configRef.set(datos).then(() => alert("✅ Configuración actualizada correctamente."));
+            configRef.set(datos).then(() => alert("✅ Configuración actualizada."));
         };
 
-        // --- GESTIÓN DE VENTAS ---
         cartonesRef.on('value', (snapshot) => {
             const data = snapshot.val();
             todosLosDatos = data || {}; 
@@ -468,28 +474,17 @@
                             : '<span class="badge badge-pendiente"><i class="fas fa-clock"></i> Pendiente</span>';
 
                         let mensajeWS = `Hola ${item.nombre}, te escribo de Calipso Bingo referente a tu cartón #${item.id}...`;
-                        
                         const btnWhatsapp = `<a href="javascript:void(0)" onclick="abrirWhatsApp('${item.telefono}', '${mensajeWS}')" class="btn btn-success btn-sm btn-action" title="Chat WhatsApp"><i class="fab fa-whatsapp"></i></a>`;
-
                         const botonAccion = esVerificado
                             ? `<button class="btn btn-warning btn-sm btn-action" title="Desmarcar" onclick="toggleVerificado('${item.id}', false)"><i class="fas fa-undo"></i></button>`
                             : `<button class="btn btn-success btn-sm btn-action" title="Confirmar Pago" onclick="toggleVerificado('${item.id}', true)"><i class="fas fa-check"></i></button>`;
 
                         const tr = document.createElement('tr');
                         tr.className = claseFila;
-                        tr.innerHTML = `
-                            <td><strong>#${item.id}</strong></td>
-                            <td>${item.nombre}</td>
-                            <td>
-                                <small class="d-block text-muted">${item.telefono}</small>
-                                <span class="fw-bold text-primary">Ref: ${item.referencia}</span>
-                            </td>
+                        tr.innerHTML = `<td><strong>#${item.id}</strong></td><td>${item.nombre}</td>
+                            <td><small class="d-block text-muted">${item.telefono}</small><span class="fw-bold text-primary">Ref: ${item.referencia}</span></td>
                             <td>${badgeEstado}</td>
-                            <td class="text-end">
-                                ${btnWhatsapp}
-                                ${botonAccion}
-                                <button class="btn btn-outline-danger btn-sm btn-action" title="Eliminar" onclick="liberar('${item.id}')"><i class="fas fa-times"></i></button>
-                            </td>`;
+                            <td class="text-end">${btnWhatsapp}${botonAccion}<button class="btn btn-outline-danger btn-sm btn-action" onclick="liberar('${item.id}')"><i class="fas fa-times"></i></button></td>`;
                         tabla.appendChild(tr);
                     }
                 });
@@ -497,11 +492,10 @@
                 if (!primeraCarga && totalVendidosCount > totalVentasAnterior) {
                     const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3'); 
                     audio.volume = 0.5;
-                    audio.play().catch(e => console.log("Audio bloqueado por navegador"));
+                    audio.play().catch(e => console.log("Audio bloqueado"));
                 }
                 totalVentasAnterior = totalVendidosCount;
                 primeraCarga = false;
-
             } else {
                 tabla.innerHTML = '<tr><td colspan="5" class="text-center p-4 text-muted">No hay ventas registradas.</td></tr>';
             }
@@ -513,20 +507,15 @@
             const texto = document.getElementById('buscadorVentas').value.toLowerCase();
             const filtro = document.getElementById('filtroEstado').value;
             const filas = document.querySelectorAll('#tablaCuerpo tr');
-
             filas.forEach(fila => {
                 if(fila.cells.length < 2) return;
-
                 const textoFila = fila.innerText.toLowerCase();
                 const esVerificado = fila.querySelector('.badge-verificado') !== null;
                 const esPendiente = fila.querySelector('.badge-pendiente') !== null;
-                
                 let cumpleFiltro = true;
-
                 if (filtro === 'pendientes' && !esPendiente) cumpleFiltro = false;
                 if (filtro === 'verificados' && !esVerificado) cumpleFiltro = false;
                 if (cumpleFiltro && !textoFila.includes(texto)) cumpleFiltro = false;
-
                 fila.style.display = cumpleFiltro ? '' : 'none';
             });
         }
@@ -564,12 +553,7 @@
 
         window.toggleVerificado = function(id, estado) { cartonesRef.child(id).update({ verificado: estado }); }
         window.liberar = function(id) { if(confirm('¿Eliminar venta del cartón #' + id + '?')) cartonesRef.child(id).remove(); }
-        
-        window.reiniciarVentas = function() {
-            if(confirm("⚠️ ¿Estás seguro de borrar TODAS las ventas? (Se perderán los clientes)")) {
-                if(prompt("Escribe BORRAR para confirmar") === "BORRAR") cartonesRef.remove();
-            }
-        }
+        window.reiniciarVentas = function() { if(confirm("⚠️ ¿Estás seguro de borrar TODAS las ventas?")) { if(prompt("Escribe BORRAR para confirmar") === "BORRAR") cartonesRef.remove(); } }
 
         window.descargarExcel = function() {
             let csvContent = "data:text/csv;charset=utf-8,Carton;Nombre del Cliente\r\n";

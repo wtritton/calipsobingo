@@ -152,7 +152,7 @@
         .btn-comprar { background: linear-gradient(to right, #FF6B35, #FF8C42); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: 800; cursor: pointer; width: 100%; margin-top: 5px; box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3); transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px; }
         .btn-comprar:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4); }
         .consultar-btn { background-color: #FFD54F; color: #666; border: 2px solid #eee; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s; }
-        .consultar-btn:hover { border-color: #ccc; background-color: #fac410; }
+        .consultar-btn:hover { border-color: #ccc; background-color: #fac517; }
         .character-image { max-width: 100%; height: auto; max-height: 440px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15)); animation: float 6s ease-in-out infinite; position: relative; }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
         
@@ -593,7 +593,8 @@
             promo12: 520.00,
             totalCartones: 1000,
             fecha: "",
-            hora: ""
+            hora: "",
+            usarDescuentos: true // Default
         };
 
         let cantidadVendidos = 0;
@@ -622,20 +623,16 @@
         }
 
         // --- FUNCIÓN INTELIGENTE PARA ABRIR WHATSAPP ---
-        // Detecta si es PC o Móvil para usar el enlace correcto y no cerrar la pestaña
         function abrirSoporte(mensaje) {
             const telefono = "584248991277";
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             
             let url = "";
             if (isMobile) {
-                // En móvil usamos el protocolo directo de la app
                 url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
             } else {
-                // En PC forzamos la versión WEB para que no se cierre la pestaña
                 url = `https://web.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
             }
-            
             window.open(url, '_blank');
         }
 
@@ -643,9 +640,6 @@
         function actualizarCuentaRegresiva(fechaTexto, horaTexto) {
             if (countdownInterval) clearInterval(countdownInterval);
 
-            // Intentamos parsear la fecha
-            // Formatos posibles de 'fechaTexto': "2026-01-31" o "31 de Enero 2026" o "31 de Enero"
-            
             let targetDate;
             let targetYear = new Date().getFullYear();
             let targetMonth = 0;
@@ -663,7 +657,7 @@
                 // 2. Intentar parsear ISO "2026-01-28"
                 const d = new Date(fechaTexto);
                 if (!isNaN(d.getTime())) {
-                    targetDay = d.getUTCDate(); // Usar UTC para evitar cambios de zona horaria al parsear string simple
+                    targetDay = d.getUTCDate(); 
                     targetMonth = d.getUTCMonth();
                     targetYear = d.getUTCFullYear();
                 }
@@ -688,10 +682,8 @@
                 }
             }
 
-            // Crear objeto fecha final
             const fechaMeta = new Date(targetYear, targetMonth, targetDay, targetHour, targetMinute, 0).getTime();
 
-            // Iniciar intervalo
             countdownInterval = setInterval(function() {
                 const now = new Date().getTime();
                 const distance = fechaMeta - now;
@@ -730,23 +722,9 @@
             var duration = 2000;
             var end = Date.now() + duration;
             (function frame() {
-                confetti({
-                    particleCount: 3,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0 },
-                    zIndex: 10000
-                });
-                confetti({
-                    particleCount: 3,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1 },
-                    zIndex: 10000
-                });
-                if (Date.now() < end) {
-                    requestAnimationFrame(frame);
-                }
+                confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, zIndex: 10000 });
+                confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, zIndex: 10000 });
+                if (Date.now() < end) { requestAnimationFrame(frame); }
             }());
 
             setTimeout(function() {
@@ -759,15 +737,7 @@
 
             // --- LÓGICA DE NOTIFICACIONES DE ACTIVIDAD (SOCIAL PROOF) ---
             const nombresEjemplo = ["María G.", "Pedro R.", "Ana L.", "Carlos D.", "Luisa M.", "José A.", "Elena T.", "Wilmer M.", "Andrea S.", "Ricardo V."];
-            const accionesEjemplo = [
-                "está eligiendo sus números 🎱", 
-                "está revisando el cartón #777 👀", 
-                "agregó 4 cartones al carrito 🛒", 
-                "está completando el pago 💸", 
-                "está viendo la promoción x12 🔥",
-                "acaba de entrar a la tienda 🏃",
-                "está buscando su número de la suerte 🍀"
-            ];
+            const accionesEjemplo = [ "está eligiendo sus números 🎱", "está revisando el cartón #777 👀", "agregó 4 cartones al carrito 🛒", "está completando el pago 💸", "está viendo la promoción x12 🔥", "acaba de entrar a la tienda 🏃", "está buscando su número de la suerte 🍀" ];
             const notificacion = document.getElementById('salesNotification');
             const notifyName = document.getElementById('notifyName');
             const notifyAction = document.getElementById('notifyAction');
@@ -775,24 +745,15 @@
             function mostrarNotificacion() {
                 const nombreRandom = nombresEjemplo[Math.floor(Math.random() * nombresEjemplo.length)];
                 const accionRandom = accionesEjemplo[Math.floor(Math.random() * accionesEjemplo.length)];
-
                 notifyName.textContent = nombreRandom;
                 notifyAction.textContent = accionRandom;
-
                 notificacion.classList.add('active');
-
-                setTimeout(() => {
-                    notificacion.classList.remove('active');
-                }, 4000);
+                setTimeout(() => { notificacion.classList.remove('active'); }, 4000);
             }
 
             setTimeout(() => {
                 mostrarNotificacion();
-                setInterval(() => {
-                    if(Math.random() > 0.6) { 
-                        mostrarNotificacion();
-                    }
-                }, 8000); 
+                setInterval(() => { if(Math.random() > 0.6) { mostrarNotificacion(); } }, 8000); 
             }, 3000);
 
             const menuToggle = document.getElementById('mobile-menu');
@@ -864,36 +825,36 @@
                     configSorteo.totalCartones = parseInt(config.totalCartones) || 1000;
                     configSorteo.fecha = config.fecha || "Muy Pronto";
                     configSorteo.hora = config.hora || "";
+                    configSorteo.usarDescuentos = config.usarDescuentos; // Lee el estado del interruptor del Admin
 
-                    // CÁLCULO AUTOMÁTICO DE PROMOCIONES (Marketing)
-                    // 4 cartones: 10% descuento (factor 0.9)
-                    // 8 cartones: 12.5% descuento (factor 0.875)
-                    // 12 cartones: 15% descuento (factor 0.85)
-                    
-                    configSorteo.promo4 = Math.round((configSorteo.precioBase * 4) * 0.90);
-                    configSorteo.promo8 = Math.round((configSorteo.precioBase * 8) * 0.875);
-                    configSorteo.promo12 = Math.round((configSorteo.precioBase * 12) * 0.85);
+                    // Leemos los precios ya calculados y guardados por el Admin
+                    // Esto evita discrepancias entre lo que ve el Admin y el Usuario
+                    configSorteo.promo4 = parseFloat(config.promo4) || (configSorteo.precioBase * 4);
+                    configSorteo.promo8 = parseFloat(config.promo8) || (configSorteo.precioBase * 8);
+                    configSorteo.promo12 = parseFloat(config.promo12) || (configSorteo.precioBase * 12);
 
                     if(lblTitulo) lblTitulo.textContent = config.titulo || "Gran Sorteo";
                     
-                    // --- AQUÍ COMBINAMOS FECHA Y HORA ---
                     const textoFecha = configSorteo.fecha;
                     const textoHora = configSorteo.hora ? " - " + configSorteo.hora : "";
                     if(lblSubtitulo) lblSubtitulo.textContent = textoFecha + textoHora;
 
                     if(lblPrecioTag) lblPrecioTag.textContent = "Valor: Bs. " + configSorteo.precioBase.toFixed(2).replace('.', ',');
                     
-                    if(lblPromoText) {
+                    // Mostrar u ocultar texto de promoción según el interruptor
+                    if(configSorteo.usarDescuentos && lblPromoText) {
                         lblPromoText.innerHTML = `<strong>PROMOCIÓN:</strong> 4×Bs ${configSorteo.promo4} · 8×Bs ${configSorteo.promo8} · 12×Bs ${configSorteo.promo12}`;
+                        lblPromoText.style.display = 'inline-block';
+                    } else if (lblPromoText) {
+                        lblPromoText.style.display = 'none';
                     }
 
                     actualizarContadorDisponibles();
-                    actualizarCuentaRegresiva(configSorteo.fecha, configSorteo.hora); // PASAMOS LA HORA TAMBIEN
+                    actualizarCuentaRegresiva(configSorteo.fecha, configSorteo.hora); 
                     updateTotalPrice();
                 }
             });
             
-            // LISTENER DE VENTAS EN TIEMPO REAL
             cartonesRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 let cont = 0;
@@ -1042,7 +1003,7 @@
                         for(let i=0; i < maxSelections; i++) {
                             if(availableItems[i]) availableItems[i].classList.add('selected');
                         }
-                        updateSelectionText(); // Update box after random pick
+                        updateSelectionText(); 
                     });
                     cartonGrid.appendChild(randomOption);
 
@@ -1075,18 +1036,16 @@
                 });
             }
 
-            // NUEVA FUNCIÓN: RESETEAR SELECCIÓN
             if(btnResetSelection) {
                 btnResetSelection.addEventListener('click', function() {
                     document.querySelectorAll('.carton-item.selected').forEach(item => {
                         item.classList.remove('selected');
-                        // Restaurar color del botón "Azar" si estaba marcado
                         if(item.querySelector('.fa-random')) { 
                             item.style.backgroundColor = 'white'; 
                             item.style.color = '#FF8C42'; 
                         }
                     });
-                    updateSelectionText(); // Limpia el texto resumen
+                    updateSelectionText(); 
                 });
             }
 
@@ -1111,10 +1070,9 @@
             finalReserveBtn.addEventListener('click', function() {
                 const referencia = referenciaInput.value.trim();
                 
-                // VALIDACIÓN DE REFERENCIA (SIN ALERT)
                 if (referencia === "" || referencia.length < 4) {
                     referenciaInput.classList.add('input-error');
-                    referenciaError.style.display = 'block'; // MOSTRAR MENSAJE ROJO
+                    referenciaError.style.display = 'block'; 
                     return; 
                 } else {
                     referenciaInput.classList.remove('input-error');
@@ -1153,7 +1111,6 @@
                 });
             });
 
-            // LIMPIAR ERROR AL ESCRIBIR
             referenciaInput.addEventListener('input', function() {
                 if(this.value.length >= 4) {
                     referenciaInput.classList.remove('input-error');
@@ -1196,7 +1153,7 @@
                 if (this.classList.contains('selected')) {
                     this.classList.remove('selected');
                     if(this.querySelector('.fa-random')) { this.style.backgroundColor = 'white'; this.style.color = '#FF8C42'; }
-                    updateSelectionText(); // Update after deselect
+                    updateSelectionText(); 
                     return;
                 }
                 if (selectedItems.length >= maxSelections) {
@@ -1210,13 +1167,11 @@
                 }
                 this.classList.add('selected');
                 if(this.querySelector('.fa-random')) { this.style.backgroundColor = '#FF8C42'; this.style.color = 'white'; }
-                updateSelectionText(); // Update after select
+                updateSelectionText(); 
             }
 
-            // NEW HELPER FUNCTION TO UPDATE SUMMARY BOX
             function updateSelectionText() {
                 const selected = document.querySelectorAll('.carton-item.selected');
-                // Filter out the random button itself which has data-number="azar"
                 const nums = Array.from(selected)
                     .map(el => el.getAttribute('data-number'))
                     .filter(num => num !== 'azar');
@@ -1238,7 +1193,9 @@
                 let finalTotal = 0;
                 let remaining = quantity;
 
-                // --- LÓGICA DE PRECIO AUTOMÁTICO (MARKETING) ---
+                // --- LÓGICA DE PAQUETES (PRIORIDAD AL PAQUETE MÁS GRANDE) ---
+                // Nota: Usamos los valores 'promo' que vienen de la DB (calculados por el Admin)
+                
                 if (remaining >= 12) {
                     const sets12 = Math.floor(remaining / 12);
                     finalTotal += sets12 * configSorteo.promo12;
@@ -1292,7 +1249,6 @@
                 if (phoneInput.value.trim() === '') { phoneInput.classList.add('input-error'); error = true; }
                 if (error) { alert('Complete sus datos'); return; }
                 document.querySelectorAll('.carton-item.selected').forEach(item => item.classList.remove('selected'));
-                // Clear selection summary on open
                 document.getElementById('selectionSummary').style.display = 'none';
                 
                 cartonModal.style.display = 'block';
@@ -1313,7 +1269,6 @@
                     let totalAmount = 0;
                     let remaining = maxSelections;
                     
-                    // --- RECALCULAR TOTAL PARA EL MODAL DE PAGO ---
                     if (remaining >= 12) {
                         const sets12 = Math.floor(remaining / 12);
                         totalAmount += sets12 * configSorteo.promo12;
