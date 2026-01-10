@@ -30,6 +30,76 @@
 
         /* BUSCADOR TABLA */
         .search-panel { background: white; padding: 15px; border-bottom: 1px solid #eee; }
+
+        /* Estilo para el toggle switch del modo mantenimiento */
+        .maintenance-toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff0f0; /* Fondo rojo claro para destacar */
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid #ffcccc;
+        }
+        .maintenance-label {
+            margin: 0;
+            font-weight: bold;
+            color: #d32f2f;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .switch {
+          position: relative;
+          display: inline-block;
+          width: 50px;
+          height: 24px;
+        }
+        .switch input { 
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #ccc;
+          -webkit-transition: .4s;
+          transition: .4s;
+        }
+        .slider:before {
+          position: absolute;
+          content: "";
+          height: 16px;
+          width: 16px;
+          left: 4px;
+          bottom: 4px;
+          background-color: white;
+          -webkit-transition: .4s;
+          transition: .4s;
+        }
+        input:checked + .slider {
+          background-color: #d32f2f; /* Rojo cuando está activado */
+        }
+        input:focus + .slider {
+          box-shadow: 0 0 1px #d32f2f;
+        }
+        input:checked + .slider:before {
+          -webkit-transform: translateX(26px);
+          -ms-transform: translateX(26px);
+          transform: translateX(26px);
+        }
+        .slider.round {
+          border-radius: 24px;
+        }
+        .slider.round:before {
+          border-radius: 50%;
+        }
     </style>
 </head>
 <body>
@@ -41,7 +111,7 @@
                 <a href="index.html" class="btn btn-outline-light btn-sm" target="_blank">
                     <i class="fas fa-external-link-alt"></i> Ver Tienda
                 </a>
-                <a href="ganadones.html" class="btn btn-outline-warning btn-sm" target="_blank">
+                <a href="ganadores.html" class="btn btn-outline-warning btn-sm" target="_blank">
                     <i class="fas fa-trophy"></i> Ver Ganadores
                 </a>
                 <button class="btn btn-warning btn-sm fw-bold" onclick="window.location.href='index.html'">Salir</button>
@@ -180,8 +250,18 @@
                         <label class="form-label fw-bold text-secondary">Paquete x 12</label>
                         <input type="number" id="confPromo12" class="form-control" step="0.01" readonly style="background-color: #e8f5e9;">
                     </div>
+                    
+                    <div class="col-12">
+                        <div class="maintenance-toggle-container">
+                            <label for="mantenimientoToggle" class="maintenance-label"><i class="fas fa-ban"></i> Modo Mantenimiento (Cerrar Sitio):</label>
+                            <label class="switch">
+                                <input type="checkbox" id="mantenimientoToggle">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
 
-                    <div class="col-12 text-end">
+                    <div class="col-12 text-end mt-3">
                         <button class="btn btn-success fw-bold px-4" onclick="guardarConfiguracion()"><i class="fas fa-save"></i> ACTUALIZAR DATOS</button>
                     </div>
                 </div>
@@ -418,9 +498,13 @@
                 document.getElementById('confPromo8').value = config.promo8 || 0;
                 document.getElementById('confPromo12').value = config.promo12 || 0;
                 
-                // Cargar estado del switch (si existe en DB, sino default true)
+                // Cargar estado del switch de descuentos
                 const usarDescuentos = config.usarDescuentos !== undefined ? config.usarDescuentos : true;
                 document.getElementById('toggleDescuentos').checked = usarDescuentos;
+
+                // NUEVO: Cargar estado del switch de mantenimiento
+                const modoMantenimiento = config.modoMantenimiento !== undefined ? config.modoMantenimiento : false;
+                document.getElementById('mantenimientoToggle').checked = modoMantenimiento;
 
                 precioBaseActual = parseFloat(config.precioBase) || 0;
                 totalCartonesGlobal = parseInt(config.totalCartones) || 1000;
@@ -430,8 +514,8 @@
                 const p8 = parseFloat(config.promo8) || 0;
                 const p12 = parseFloat(config.promo12) || 0;
                 if(precioBaseActual > 0 && p4 > 0) {
-                     const avgUnit = (precioBaseActual + (p4/4) + (p8/8) + (p12/12)) / 4;
-                     document.getElementById('inputPrecioPromedio').value = avgUnit.toFixed(2);
+                      const avgUnit = (precioBaseActual + (p4/4) + (p8/8) + (p12/12)) / 4;
+                      document.getElementById('inputPrecioPromedio').value = avgUnit.toFixed(2);
                 }
 
                 recalcularPremios();
@@ -448,7 +532,8 @@
                 promo4: parseFloat(document.getElementById('confPromo4').value),
                 promo8: parseFloat(document.getElementById('confPromo8').value),
                 promo12: parseFloat(document.getElementById('confPromo12').value),
-                usarDescuentos: document.getElementById('toggleDescuentos').checked // Guardamos estado switch
+                usarDescuentos: document.getElementById('toggleDescuentos').checked,
+                modoMantenimiento: document.getElementById('mantenimientoToggle').checked // NUEVO: Guardamos estado del switch de mantenimiento
             };
             configRef.set(datos).then(() => alert("✅ Configuración actualizada."));
         };

@@ -10,6 +10,37 @@
     <meta property="og:image" content="https://calipsobingo1.vercel.app/Logo-oficial.png">
     
     <title>Calipso Bingo - Venta de Cartones</title>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script>
+        // Configuración de Firebase para la redirección de mantenimiento
+        const firebaseConfigMaintenance = {
+            apiKey: "AIzaSyBtj_J5wQ4y-U3UDwwphud9Wir1n7WcI2s",
+            authDomain: "calipsobingo-f532b.firebaseapp.com",
+            databaseURL: "https://calipsobingo-f532b-default-rtdb.firebaseio.com",
+            projectId: "calipsobingo-f532b",
+            storageBucket: "calipsobingo-f532b.firebasestorage.app",
+            messagingSenderId: "196074596826",
+            appId: "1:196074596826:web:db6280789eb0d51ddd38e3",
+            measurementId: "G-M9XK1H641N"
+        };
+        
+        // Inicializar una instancia separada de Firebase para esta comprobación rápida
+        const appMaintenance = firebase.initializeApp(firebaseConfigMaintenance, "maintenanceApp");
+        const dbMaintenance = appMaintenance.database();
+        const configRefMaintenance = dbMaintenance.ref('configuracion/modoMantenimiento');
+
+        // Escuchar cambios en el modo mantenimiento en tiempo real
+        configRefMaintenance.on('value', (snapshot) => {
+            const modoMantenimientoActivo = snapshot.val();
+            // Si el modo mantenimiento está activo (true), redirigir a mantenimiento.html
+            if (modoMantenimientoActivo === true) {
+                // Usamos .replace() para que el botón "Atrás" del navegador no vuelva a esta página
+                window.location.replace('mantenimiento.html');
+            }
+        });
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
@@ -570,6 +601,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     
     <script>
+        // Configuración Principal de Firebase para la lógica de la tienda
         const firebaseConfig = {
             apiKey: "AIzaSyBtj_J5wQ4y-U3UDwwphud9Wir1n7WcI2s",
             authDomain: "calipsobingo-f532b.firebaseapp.com",

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calipso Bingo - Preparando Sorteo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- ESTILOS CSS --- */
+        :root {
+            --primary-green: #1a5e3a;
+            --secondary-green: #2E8B57;
+            --accent-orange: #FF6B35;
+            --accent-orange-dark: #e55a2b;
+            --bg-color: #F4F7F6;
+            --text-dark: #2c3e50;
+            --white: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            font-size: 14px;
+            background-image: radial-gradient(#2E8B57 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
+            background-color: #f0fdf4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; width: 100%;
+        }
+        .logo { display: flex; align-items: center; gap: 10px; color: white; font-weight: bold; font-size: 1.1rem; text-decoration: none; z-index: 102; }
+        .logo img { height: 36px; border-radius: 50%; background: white; padding: 2px; }
+        .nav-links { display: flex; gap: 15px; align-items: center; }
+        .nav-links a { color: rgba(255,255,255,0.9); text-decoration: none; font-weight: 500; padding: 6px 10px; border-radius: 20px; font-size: 13px; transition: all 0.3s ease; cursor: pointer; }
+        .nav-links a:hover { background-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
+        .btn-nav-action { padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 12px; text-decoration: none; transition: transform 0.2s; display: inline-flex; align-items: center; gap: 5px; }
+        .btn-vendedor { background-color: transparent; color: var(--white); border: 2px solid rgba(255,255,255,0.5); }
+        .btn-soporte { background-color: var(--accent-orange); color: white; border: none; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer; }
+        .menu-toggle { display: none; cursor: pointer; z-index: 102; }
+        .bar { display: block; width: 25px; height: 3px; margin: 5px auto; transition: all 0.3s ease-in-out; background-color: white; }
+        
+        /* Estilos específicos para el contenido central de mantenimiento */
+        .maintenance-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .maintenance-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 40px;
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            border-top: 5px solid var(--accent-orange);
+        }
+        .maintenance-logo-large {
+            width: 120px;
+            margin-bottom: 20px;
+        }
+        .maintenance-title {
+            color: var(--primary-green);
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .maintenance-text {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .maintenance-icon {
+            font-size: 50px;
+            color: var(--accent-orange);
+            margin-bottom: 20px;
+            animation: spin-slow 4s linear infinite;
+        }
+        @keyframes spin-slow { 100% { transform: rotate(360deg); } }
+
+        /* Estilos del Footer */
+        .main-footer { background-color: #124029; color: #e0e0e0; padding: 30px 20px 20px; margin-top: auto; border-top: 5px solid var(--accent-orange); width: 100%; }
+        .footer-content { max-width: 1000px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; gap: 20px; }
+        .footer-social-title { font-weight: 700; margin-bottom: 10px; color: white; text-transform: uppercase; font-size: 13px; }
+        .social-icons { display: flex; justify-content: center; gap: 15px; }
+        .social-icons a { color: white; background: rgba(255,255,255,0.1); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%;text-decoration: none; font-size: 14px; }
+        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; font-size: 12px; color: #88a697; }
+        .whatsapp-float { position: fixed; bottom: 25px; right: 25px; background-color: #25D366; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); text-decoration: none; z-index: 1000; }
+
+        /* NUEVO ESTILO: Flechas indicadoras en el footer */
+        .join-arrows {
+            color: var(--accent-orange);
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 5px;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        @media (max-width: 850px) {
+            .menu-toggle { display: block; }
+            .nav-links { position: fixed; left: -100%; top: 56px; flex-direction: column; background-color: var(--primary-green); width: 100%; text-align: center; transition: 0.3s; padding: 20px 0; gap: 20px; }
+            .nav-links.active { left: 0; }
+            .menu-toggle.is-active .bar:nth-child(2) { opacity: 0; }
+            .menu-toggle.is-active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .menu-toggle.is-active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="#" class="logo">
+            <img src="Logo-oficial.png" alt="Bingo Logo">
+            Calipso Bingo
+        </a>
+        
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+
+        <div class="nav-links">
+            <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+            <a href="#" class="btn-nav-action btn-vendedor">SE VENDEDOR</a>
+            <a href="javascript:void(0)" onclick="abrirSoporte('Hola, necesito soporte')" class="btn-nav-action btn-soporte"><i class="fab fa-whatsapp"></i> SOPORTE</a>
+        </div>
+    </nav>
+    
+    <div class="maintenance-container">
+        <div class="maintenance-card">
+            <img src="Logo-oficial.png" alt="Calipso Bingo" class="maintenance-logo-large">
+            <div>
+                <i class="fas fa-cogs maintenance-icon"></i>
+            </div>
+            <h1 class="maintenance-title">Estamos preparando el próximo sorteo</h1>
+            <p class="maintenance-text">
+                Nuestra plataforma se está actualizando para ofrecerte la mejor experiencia. 
+                <br>¡Volveremos muy pronto con nuevos cartones y premios!
+            </p>
+            
+            <a href="https://chat.whatsapp.com/DYFXwLNjdPv8GE4BFlzDm8" target="_blank" class="btn-nav-action btn-soporte" style="padding: 12px 25px; font-size: 14px;">
+                <i class="fab fa-whatsapp"></i> Únete a nuestro grupo de WhatsApp
+            </a>
+
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="join-arrows">
+                    <i class="fas fa-chevron-down"></i>
+                    <i class="fas fa-chevron-down"></i>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="footer-social-title">Síguenos en nuestras redes:</div>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/profile.php?id=61586188498729"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/calipso_bingo?igsh=ZHllOHZmY3NkN2pr"><i class="fab fa-instagram"></i></a>
+                    <a href="javascript:void(0)" onclick="abrirSoporte('Hola, vengo de la web')"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright © 2026 Calipso Bingo. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+    <a href="javascript:void(0)" onclick="abrirSoporte('Hola, quiero más información')" class="whatsapp-float"><i class="fab fa-whatsapp"></i></a>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script>
+        // 1. Configuración de Firebase (TUS DATOS REALES)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtj_J5wQ4y-U3UDwwphud9Wir1n7WcI2s",
+            authDomain: "calipsobingo-f532b.firebaseapp.com",
+            databaseURL: "https://calipsobingo-f532b-default-rtdb.firebaseio.com",
+            projectId: "calipsobingo-f532b",
+            storageBucket: "calipsobingo-f532b.firebasestorage.app",
+            messagingSenderId: "196074596826",
+            appId: "1:196074596826:web:db6280789eb0d51ddd38e3",
+            measurementId: "G-M9XK1H641N"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const configRef = db.ref('configuracion/modoMantenimiento');
+
+        // 2. Script para el menú móvil
+        const menuToggle = document.getElementById('mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+        if(menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                menuToggle.classList.toggle('is-active');
+                navLinks.classList.toggle('active');
+            });
+        }
+
+        // 3. Función para WhatsApp (Soporte personal)
+        function abrirSoporte(mensaje) {
+            const telefono = "584248991277";
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            let url = isMobile 
+                ? `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`
+                : `https://web.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
+            window.open(url, '_blank');
+        }
+
+        // 4. LÓGICA INVERSA: Si el mantenimiento se DESACTIVA, volver al index
+        configRef.on('value', (snapshot) => {
+            const modoMantenimientoActivo = snapshot.val();
+            // Si el modo mantenimiento es FALSO (o nulo), significa que la tienda está abierta de nuevo
+            if (modoMantenimientoActivo === false || modoMantenimientoActivo === null) {
+                // Redirigir de vuelta a la página principal
+                window.location.replace('index.html');
+            }
+        });
+    </script>
+</body>
+</html>
