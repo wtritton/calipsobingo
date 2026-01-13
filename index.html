@@ -654,6 +654,65 @@
             });
         }
 
+        // ========== FUNCIÓN PARA GENERAR NÚMEROS BINGO VÁLIDOS ==========
+        function generarNumerosBingo() {
+            const carton = new Array(25).fill(0);
+            
+            // Generar números para cada columna B-I-N-G-O (5 columnas)
+            for (let col = 0; col < 5; col++) {
+                const min = (col * 15) + 1;  // B:1-15, I:16-30, N:31-45, G:46-60, O:61-75
+                const max = (col + 1) * 15;
+                const numerosColumna = [];
+                
+                // Generar 5 números únicos por columna
+                while (numerosColumna.length < 5) {
+                    const num = Math.floor(Math.random() * (max - min + 1)) + min;
+                    if (!numerosColumna.includes(num)) {
+                        numerosColumna.push(num);
+                    }
+                }
+                
+                // Ordenar y asignar a las filas
+                numerosColumna.sort((a, b) => a - b);
+                for (let fila = 0; fila < 5; fila++) {
+                    carton[fila * 5 + col] = numerosColumna[fila];
+                }
+            }
+            
+            // El centro (posición 12) es siempre libre (0)
+            carton[12] = 0;
+            
+            return carton;
+        }
+
+        // ========== FUNCIÓN TEMPORAL PARA ASIGNAR NÚMEROS A CARTONES EXISTENTES ==========
+        function asignarNumerosACartonesExistentes() {
+            if (!confirm('⚠️ ¿Asignar números BINGO a TODOS los cartones vendidos?\nEsto generará números aleatorios para cada cartón vendido.')) return;
+            
+            cartonesRef.once('value').then((snapshot) => {
+                const data = snapshot.val() || {};
+                const updates = {};
+                
+                Object.keys(data).forEach(key => {
+                    const carton = data[key];
+                    if (carton.estado === 'vendido' && !carton.numeros) {
+                        // Generar números para este cartón
+                        updates['/cartones/' + key + '/numeros'] = generarNumerosBingo();
+                    }
+                });
+                
+                if (Object.keys(updates).length > 0) {
+                    database.ref().update(updates).then(() => {
+                        alert(`✅ Se asignaron números BINGO a ${Object.keys(updates).length} cartones vendidos.\nAhora el sistema de detección funcionará correctamente.`);
+                    }).catch((error) => {
+                        alert('❌ Error al actualizar cartones: ' + error.message);
+                    });
+                } else {
+                    alert('ℹ️ Todos los cartones ya tienen números o no hay cartones vendidos.');
+                }
+            });
+        }
+
         // --- FUNCIÓN INTELIGENTE PARA ABRIR WHATSAPP ---
         function abrirSoporte(mensaje) {
             const telefono = "584248991277";
@@ -1099,6 +1158,7 @@
                 });
             });
 
+            // ========== MODIFICACIÓN CLAVE: FUNCIÓN DE VENTA CORREGIDA ==========
             finalReserveBtn.addEventListener('click', function() {
                 const referencia = referenciaInput.value.trim();
                 
@@ -1117,17 +1177,23 @@
                 const selectedItems = document.querySelectorAll('.carton-item.selected');
                 const selectedNumbers = Array.from(selectedItems).map(item => item.getAttribute('data-number'));
 
-                const userData = {
-                    nombre: nameInput.value,
-                    telefono: phoneInput.value,
-                    referencia: referencia,
-                    estado: 'vendido', 
-                    fecha: new Date().toISOString()
-                };
-
                 const updates = {};
                 selectedNumbers.forEach(num => {
-                    if(num !== 'azar') { updates['/cartones/' + num] = userData; }
+                    if(num !== 'azar') { 
+                        // Generar números BINGO para este cartón
+                        const numerosBingo = generarNumerosBingo();
+                        
+                        // Guardar TODOS los datos incluyendo los números
+                        updates['/cartones/' + num] = {
+                            nombre: nameInput.value,
+                            telefono: phoneInput.value,
+                            referencia: referencia,
+                            estado: 'vendido',
+                            fecha: new Date().toISOString(),
+                            numeros: numerosBingo, // ← ¡ESTO ES LO MÁS IMPORTANTE!
+                            verificado: false
+                        };
+                    }
                 });
 
                 database.ref().update(updates).then(() => {
@@ -1140,6 +1206,7 @@
                 }).catch((error) => {
                     alert("Error al reservar: " + error.message);
                     finalReserveBtn.disabled = false;
+                    finalReserveBtn.innerText = "RESERVAR CARTONES";
                 });
             });
 
@@ -1226,8 +1293,6 @@
                 let remaining = quantity;
 
                 // --- LÓGICA DE PAQUETES (PRIORIDAD AL PAQUETE MÁS GRANDE) ---
-                // Nota: Usamos los valores 'promo' que vienen de la DB (calculados por el Admin)
-                
                 if (remaining >= 12) {
                     const sets12 = Math.floor(remaining / 12);
                     finalTotal += sets12 * configSorteo.promo12;
