@@ -688,6 +688,7 @@
 
         let cantidadVendidos = 0;
         let countdownInterval;
+        let cartonesData = {}; // Almacén local de datos para recalcular
 
         function cerrarModalPago() {
             document.getElementById('paymentModal').style.display = 'none';
@@ -1006,6 +1007,25 @@
             let maxSelections = 1;
             let currentPreviewCardNumber = null;
 
+            // Función para recalcular vendidos basándose en la fecha actual
+            function recalcularVendidos() {
+                let cont = 0;
+                if (cartonesData) {
+                    Object.keys(cartonesData).forEach(key => {
+                        const carton = cartonesData[key];
+                        if (carton.estado === 'vendido') {
+                            // SOLO CONTAR SI LA FECHA DEL SORTEO COINCIDE
+                            // Esto permite "resetear" el juego simplemente cambiando la fecha en el panel
+                            if (carton.fechaSorteo === configSorteo.fecha) {
+                                cont++;
+                            }
+                        }
+                    });
+                }
+                cantidadVendidos = cont;
+                actualizarContadorDisponibles();
+            }
+
             configRef.on('value', (snapshot) => {
                 const config = snapshot.val();
                 if (config) {
@@ -1037,22 +1057,16 @@
                         lblPromoText.style.display = 'none';
                     }
 
-                    actualizarContadorDisponibles();
+                    // Recalcular disponibilidad con la nueva configuración
                     actualizarCuentaRegresiva(configSorteo.fecha, configSorteo.hora); 
+                    recalcularVendidos();
                     updateTotalPrice();
                 }
             });
             
             cartonesRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                let cont = 0;
-                if (data) {
-                      Object.keys(data).forEach(key => {
-                          if(data[key].estado === 'vendido') cont++;
-                      });
-                }
-                cantidadVendidos = cont;
-                actualizarContadorDisponibles();
+                cartonesData = snapshot.val() || {};
+                recalcularVendidos();
             });
 
             function actualizarContadorDisponibles() {
@@ -1112,14 +1126,17 @@
 
                     Object.keys(data).forEach(key => {
                         const carton = data[key];
+                        // Filtramos también por FECHA DE SORTEO para que el usuario solo vea los de este juego
                         if (carton.telefono === phoneToSearch && carton.estado === 'vendido') {
-                            foundCards.push(key);
-                            if (carton.verificado === true) {
-                                verifiedStatus = true;
-                            }
-                            if(!buyerName) {
-                                buyerName = carton.nombre;
-                                purchaseDate = new Date(carton.fecha).toLocaleString();
+                            if (carton.fechaSorteo === configSorteo.fecha) {
+                                foundCards.push(key);
+                                if (carton.verificado === true) {
+                                    verifiedStatus = true;
+                                }
+                                if(!buyerName) {
+                                    buyerName = carton.nombre;
+                                    purchaseDate = new Date(carton.fecha).toLocaleString();
+                                }
                             }
                         }
                     });
@@ -1145,7 +1162,7 @@
                         searchResultsContainer.appendChild(summaryDiv);
 
                         const title = document.createElement('h5');
-                        title.innerText = "Tus Cartones:";
+                        title.innerText = "Tus Cartones (Sorteo Actual):";
                         title.style.margin = "10px 0 5px 0";
                         title.style.fontSize = "14px";
                         searchResultsContainer.appendChild(title);
@@ -1162,7 +1179,7 @@
                             searchResultsContainer.appendChild(div);
                         });
                     } else {
-                        searchResultsContainer.innerHTML = '<p style="text-align:center; color:red; margin-top:20px;">No se encontraron cartones asociados a este número.</p>';
+                        searchResultsContainer.innerHTML = '<p style="text-align:center; color:red; margin-top:20px;">No se encontraron cartones para este sorteo con ese número.</p>';
                     }
                 });
             });
@@ -1202,7 +1219,15 @@
                         cartonItem.className = 'carton-item';
                         cartonItem.setAttribute('data-number', i);
                         cartonItem.id = `carton-${i}`;
-                        const estado = (data[i] && data[i].estado) ? data[i].estado : 'disponible';
+                        
+                        // Estado base
+                        let estado = 'disponible';
+                        // Chequear si está vendido Y si corresponde al sorteo actual
+                        if (data[i] && data[i].estado === 'vendido') {
+                            if (data[i].fechaSorteo === configSorteo.fecha) {
+                                estado = 'vendido';
+                            }
+                        }
                         
                         if (estado === 'vendido') {
                             cartonItem.classList.add('sold');
@@ -1291,14 +1316,15 @@
                         // Generar números BINGO para este cartón
                         const numerosBingo = generarNumerosBingo();
                         
-                        // Guardar TODOS los datos incluyendo los números
+                        // Guardar TODOS los datos incluyendo los números y la fecha del sorteo actual
                         updates['/cartones/' + num] = {
                             nombre: nameInput.value,
                             telefono: phoneInput.value,
                             referencia: referencia,
                             estado: 'vendido',
                             fecha: new Date().toISOString(),
-                            numeros: numerosBingo, // ← ¡ESTO ES LO MÁS IMPORTANTE!
+                            fechaSorteo: configSorteo.fecha, // ← IMPORTANTE: Vincula la compra a la fecha actual
+                            numeros: numerosBingo, 
                             verificado: false
                         };
                     }
