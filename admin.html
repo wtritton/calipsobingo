@@ -6,7 +6,6 @@
     <title>Admin - Calipso Bingo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Tesseract.js para OCR (Lectura de imágenes) -->
     <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
     <style>
         body { background-color: #f4f6f9; font-family: 'Segoe UI', sans-serif; }
@@ -594,7 +593,6 @@
 
     <div class="container">
         
-        <!-- ESTRUCTURA DE PREMIOS -->
         <div class="prizes-panel">
             <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
                 <div>
@@ -614,7 +612,6 @@
             </div>
         </div>
 
-        <!-- CONFIGURACIÓN DEL SORTEO (MOVIDO AQUÍ) -->
         <div class="card shadow-sm mb-4 card-config">
             <div class="card-header bg-white fw-bold">
                 <i class="fas fa-edit"></i> Configuración del Sorteo
@@ -661,7 +658,6 @@
                         <input type="number" id="confPromo12" class="form-control" step="0.01" readonly style="background-color: #e8f5e9;">
                     </div>
 
-                    <!-- NUEVA SECCIÓN DE TANDA ACTIVA EN CONFIGURACIÓN -->
                     <div class="col-md-6">
                         <label class="form-label fw-bold text-primary">🎯 Configurar Tanda de Juego</label>
                         <select id="confTandaSelect" class="form-select" onchange="actualizarPremioConfig()">
@@ -699,14 +695,23 @@
             </div>
         </div>
 
-        <!-- REGISTRO DE GANADORES -->
         <div class="card shadow-sm mb-4 card-winners">
-            <div class="card-header bg-primary text-white fw-bold d-flex justify-content-between align-items-center">
-                <span><i class="fas fa-trophy"></i> REGISTRO DE GANADORES</span>
+            <div class="card-header bg-primary text-white fw-bold d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-2">
+                    <span><i class="fas fa-trophy"></i> GANADORES:</span>
+                    <select id="filterWinners" class="form-select form-select-sm fw-bold text-primary" style="width: auto;" onchange="renderWinnersTable()">
+                        <option value="all">Ver Todos</option>
+                        <option value="1ª Tanda">1ª Tanda</option>
+                        <option value="2ª Tanda">2ª Tanda</option>
+                        <option value="3ª Tanda">3ª Tanda</option>
+                        <option value="CARTÓN LLENO">👑 Cartón Lleno</option>
+                    </select>
+                </div>
                 <span class="badge bg-warning text-dark shadow-sm">
                     <i class="far fa-calendar-alt"></i> Sorteo: <span id="badgeFechaActiva">Cargando...</span>
                 </span>
             </div>
+            
             <div class="card-body">
                 <p class="text-muted small mb-3">Los ganadores que registres aquí quedarán guardados bajo la fecha: <strong><span id="txtFechaConfirmacion">...</span></strong></p>
                 
@@ -773,7 +778,6 @@
 
         <div class="progress-container"><div class="progress"><div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%"></div></div></div>
 
-        <!-- INTEGRACIÓN BINGO CALLER (NUEVO CÓDIGO) -->
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-dark text-white fw-bold d-flex justify-content-between align-items-center">
                 <span><i class="fas fa-gamepad"></i> PANTALLA DE SORTEO</span>
@@ -819,7 +823,6 @@
                                 </div>
 
                                 <div class="controls-box mt-3">
-                                    <!-- SELECTOR DE PREMIO JUEGO -->
                                     <div class="mb-2">
                                         <label class="small fw-bold d-block text-center text-muted">JUGANDO POR:</label>
                                         <select id="gamePrizeSelect" class="form-select form-select-sm text-center fw-bold text-primary mb-2" onchange="updateGamePrizeDisplay()">
@@ -830,11 +833,9 @@
                                         </select>
                                     </div>
 
-                                    <!-- MOVIDO: SELECTOR DE FIGURA (PATRÓN) CON ID ÚNICO -->
                                     <div class="mb-3">
                                         <label class="small fw-bold d-block text-center text-muted">FIGURA A JUGAR:</label>
                                         <select id="cfgPatternSelectMain" class="form-select form-select-sm text-center fw-bold bg-light" onchange="changePattern()">
-                                            <!-- JS Populated -->
                                         </select>
                                     </div>
 
@@ -858,7 +859,6 @@
                         </div>
 
                         <div class="section-bottom">
-                            <!-- MODIFICADO: SAMPLE CARD BOX CON ONCLICK -->
                             <div class="sample-card-box" onclick="openPatternModal()" title="Clic para cambiar figura">
                                 <div class="sample-card-header">
                                     <span>FIGURA</span>
@@ -877,13 +877,15 @@
                                         <div class="detail-value prize" id="lblPrize">Bs 0,00</div>
                                     </div>
                                 </div>
-                                <!-- NUEVA FILA PARA TANDA -->
                                 <div class="details-row mt-2">
                                     <div class="detail-card w-100" style="background: #e8f5e9; border: 1px solid #1a5e3a;">
                                         <div class="detail-label text-success">TANDA ACTUAL</div>
                                         <div class="detail-value text-success" id="lblTandaActiva">1ª Tanda</div>
                                     </div>
                                 </div>
+                                <button class="btn btn-info w-100 mt-3 fw-bold text-white shadow-sm" onclick="checkBingoWinner()" style="background-color: #0dcaf0; border: none; padding: 12px; font-size: 1.1rem; text-transform: uppercase;">
+                                    <i class="fas fa-search me-2"></i> VER CARTÓN GANADOR
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -895,7 +897,6 @@
                             <label>Logo URL</label>
                             <input type="text" id="cfgLogo" placeholder="Logo-oficial.png" oninput="updateUI()">
                         </div>
-                        <!-- SELECTOR FIGURA EN MODAL CON ID ÚNICO -->
                         <div class="form-group">
                              <label>Seleccionar Figura</label>
                             <select id="cfgPatternSelect" onchange="changePattern()"></select>
@@ -915,18 +916,15 @@
                         <button class="btn-game btn-sacar" style="width:100%; margin-top:20px;" onclick="toggleConfig()">Cerrar</button>
                     </div>
 
-                    <!-- MODAL NÚMEROS ORDENADOS -->
                     <div class="numbers-modal" id="numbersModal">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h4 class="m-0 fw-bold">📜 Historial de Bolas (Orden de Salida)</h4>
                             <button class="btn btn-sm btn-danger" onclick="toggleNumbersModal()">x</button>
                         </div>
                         <div class="numbers-grid-history" id="numbersGridHistory">
-                            <!-- JS populated -->
-                        </div>
+                            </div>
                     </div>
                     
-                    <!-- MODAL EDITOR DE CARTONES CON IMAGEN -->
                     <div class="numbers-modal" id="editCardModal" style="z-index: 3100; max-width: 900px;">
                         <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
                             <h3 class="m-0 fw-bold"><i class="fas fa-edit"></i> Editor de Cartones</h3>
@@ -939,12 +937,10 @@
                             </div>
                             
                             <div class="edit-layout">
-                                <!-- Columna Imagen -->
                                 <div class="edit-image-col">
                                     <h6 class="text-muted mb-2">Referencia Visual (JPG)</h6>
                                     <img id="editCardImage" src="Logo-oficial-lineal.png" class="carton-preview-img" onerror="this.src='https://via.placeholder.com/300x400?text=Sin+Imagen+Disponible'" crossorigin="anonymous">
                                     
-                                    <!-- BOTÓN DE SUBIDA MANUAL DE IMAGEN -->
                                     <div class="mt-2 text-center w-100">
                                         <label class="btn btn-sm btn-outline-primary w-100">
                                             <i class="fas fa-upload"></i> Subir Foto del Cartón
@@ -954,12 +950,10 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Columna Inputs -->
                                 <div class="edit-inputs-col">
                                     <h6 class="text-muted mb-2">Base de Datos (Corregir Aquí)</h6>
                                     <div id="editGridContainer" class="edit-grid">
-                                        <!-- 25 Inputs generados por JS -->
-                                    </div>
+                                        </div>
                                     <div class="mt-4 text-end">
                                         <button class="btn btn-info fw-bold w-100 mb-2" onclick="autoDetectNumbers()">
                                             ✨ Auto-Leer con IA (OCR)
@@ -973,7 +967,6 @@
                         </div>
                     </div>
                     
-                    <!-- NUEVO MODAL: SELECCIÓN VISUAL DE FIGURAS -->
                     <div class="numbers-modal" id="patternSelectionModal" style="z-index: 3200; max-width: 800px; max-height: 90%;">
                         <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
                             <h3 class="m-0 fw-bold"><i class="fas fa-th"></i> Seleccionar Figura</h3>
@@ -987,15 +980,12 @@
                         </div>
                         
                         <div class="pattern-modal-grid" id="patternsGrid">
-                            <!-- JS Populated -->
-                        </div>
+                            </div>
                     </div>
 
                 </div>
             </div>
         </div>
-        <!-- FIN INTEGRACIÓN BINGO CALLER -->
-
         <div class="row mb-3">
             <div class="col-12 d-flex justify-content-between">
                 <button class="btn btn-success fw-bold" onclick="descargarExcel()"><i class="fas fa-file-excel"></i> DESCARGAR LISTA SIMPLIFICADA</button>
@@ -1035,22 +1025,15 @@
         </div>
     </div>
     
-    <!-- Modal Bingo Ganador -->
     <div class="modal fade" id="bingoWinnerModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content border-0 shadow-lg" style="overflow: hidden;">
-                <div class="modal-header bg-success text-white justify-content-center py-2" style="background: linear-gradient(135deg, #1a5e3a 0%, #2E8B57 100%);"> <!-- Reduced padding -->
-                    <div class="text-center">
-                        <!-- Título del Modal -->
-                        <h1 class="modal-title display-3 fw-bold text-warning mb-0" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">¡BINGO!</h1> <!-- Reduced font size -->
-                        <p class="mb-0 fs-5">Tenemos Ganador</p>
+                <div class="modal-header bg-success text-white justify-content-center py-2" style="background: linear-gradient(135deg, #1a5e3a 0%, #2E8B57 100%);"> <div class="text-center">
+                        <h1 class="modal-title display-3 fw-bold text-warning mb-0" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">¡BINGO!</h1> <p class="mb-0 fs-5">Tenemos Ganador</p>
                     </div>
                 </div>
-                <div class="modal-body bg-light" style="max-height: 70vh; overflow-y: auto;"> <!-- Scrollable -->
-                    <!-- Contenedor donde se insertan las tarjetas de ganadores -->
-                    <div id="winnerModalContent" class="d-flex justify-content-center flex-wrap gap-3 py-2">
-                        <!-- Cards injected via JS -->
-                    </div>
+                <div class="modal-body bg-light" style="max-height: 70vh; overflow-y: auto;"> <div id="winnerModalContent" class="d-flex justify-content-center flex-wrap gap-3 py-2">
+                        </div>
                     
                     <div class="row justify-content-center mt-2">
                         <div class="col-md-8">
@@ -1078,14 +1061,12 @@
         </div>
     </div>
     
-    <!-- Loading Overlay -->
     <div id="loadingOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; justify-content: center; align-items: center; font-size: 2rem; font-weight: bold; color: var(--primary-green);">
         <i class="fas fa-circle-notch fa-spin me-3"></i> Cargando Sorteo...
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <!-- Incluir JS de Bootstrap para el modal -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -1178,26 +1159,52 @@
             window.open(url, '_blank');
         }
 
+        // --- MODIFICACIÓN: LÓGICA DE FILTRADO DE GANADORES ---
+        let globalWinnersList = {}; // Variable para guardar los datos en memoria
+
         resultadosRef.on('value', (snapshot) => {
             const data = snapshot.val() || {};
+            globalWinnersList = data.ganadores || {}; // Guardamos los ganadores
+            renderWinnersTable(); // Llamamos a la función que pinta la tabla
+        });
+
+        // Función para pintar la tabla aplicando el filtro
+        function renderWinnersTable() {
             const tbodyWin = document.getElementById('tableWinners');
-            tbodyWin.innerHTML = '';
+            const filterValue = document.getElementById('filterWinners').value; // Obtenemos qué tanda quiere ver el usuario
             
-            if(data.ganadores) {
-                Object.entries(data.ganadores).forEach(([key, g]) => {
-                    const tr = `<tr>
-                        <td class="small text-muted fw-bold">${g.fecha || '-'}</td>
-                        <td class="fw-bold text-center fs-5">#${g.carton}</td>
-                        <td>${g.premio}</td>
-                        <td>${g.nombre}</td>
-                        <td class="text-center"><button class="btn btn-sm btn-outline-danger" onclick="borrarGanador('${key}')"><i class="fas fa-trash"></i></button></td>
-                    </tr>`;
-                    tbodyWin.innerHTML += tr;
+            tbodyWin.innerHTML = ''; // Limpiar tabla
+
+            if (Object.keys(globalWinnersList).length > 0) {
+                let hayResultados = false;
+
+                Object.entries(globalWinnersList).forEach(([key, g]) => {
+                    // LÓGICA DE FILTRO:
+                    // Si el filtro es "all" (todos), pasa.
+                    // Si no, verificamos si el texto del premio (ej: "1ª Tanda - Bs 50") incluye la selección.
+                    const matchFilter = (filterValue === 'all') || (g.premio && g.premio.includes(filterValue));
+
+                    if (matchFilter) {
+                        hayResultados = true;
+                        const tr = `<tr>
+                            <td class="small text-muted fw-bold">${g.fecha || '-'}</td>
+                            <td class="fw-bold text-center fs-5">#${g.carton}</td>
+                            <td>${g.premio}</td>
+                            <td>${g.nombre}</td>
+                            <td class="text-center"><button class="btn btn-sm btn-outline-danger" onclick="borrarGanador('${key}')"><i class="fas fa-trash"></i></button></td>
+                        </tr>`;
+                        tbodyWin.innerHTML += tr;
+                    }
                 });
+
+                if (!hayResultados) {
+                    tbodyWin.innerHTML = `<tr><td colspan="5" class="text-center text-muted small p-3">No hay ganadores registrados para <strong>${filterValue}</strong>.</td></tr>`;
+                }
+
             } else {
                 tbodyWin.innerHTML = '<tr><td colspan="5" class="text-center text-muted small p-3">No hay ganadores registrados todavía.</td></tr>';
             }
-        });
+        }
 
         window.actualizarMontoPremio = function() {
             const seleccion = document.getElementById('selectTipoPremio').value;
@@ -1902,18 +1909,78 @@
             }
         }
 
-        // UPDATE GAME PRIZE DISPLAY
+        // UPDATE GAME PRIZE DISPLAY AND PATTERN
         function updateGamePrizeDisplay() {
             const select = document.getElementById('gamePrizeSelect');
             if(select.selectedIndex === -1) return;
             const selectedKey = select.value;
             const selectedText = select.options[select.selectedIndex].text;
             
+            // 1. Update Labels
             if(valoresPremios && valoresPremios[selectedKey]) {
                 document.getElementById('lblPrize').innerText = valoresPremios[selectedKey];
             }
-            // Update Tanda Label
             document.getElementById('lblTandaActiva').innerText = selectedText;
+
+            // 2. Logic for Pattern Mapping
+            let newPattern = "Línea Horizontal 1"; 
+            if (selectedKey === 't1') newPattern = "Línea Horizontal 1";
+            else if (selectedKey === 't2') newPattern = "Línea Horizontal 2";
+            else if (selectedKey === 't3') newPattern = "Línea Horizontal 3"; 
+            else if (selectedKey === 't4') newPattern = "Cartón Lleno";
+
+            // 3. Force Update Pattern Variable
+            currentPatternKey = newPattern;
+            
+            // 4. Sync UI Pattern Selects
+            const selectMain = document.getElementById('cfgPatternSelectMain');
+            const selectModal = document.getElementById('cfgPatternSelect');
+            if(selectMain) selectMain.value = newPattern;
+            if(selectModal) selectModal.value = newPattern;
+            
+            // 5. Update Figure Display Text
+            document.getElementById('lblFig').innerText = newPattern;
+
+            // 6. Update Sample Grid manually (changePattern reads from select, which might be slow to update DOM)
+            const grid = document.getElementById('samplePatternGrid');
+            grid.innerHTML = '';
+            
+            const patternData = patternsDB[newPattern];
+            
+            // Re-fetch sample numbers logic (copied for safety to avoid glitches)
+            let sampleNumbers = null;
+            if (todosLosDatos) {
+                for (const key in todosLosDatos) {
+                    if (todosLosDatos[key].estado === 'vendido' && todosLosDatos[key].numeros) {
+                        sampleNumbers = todosLosDatos[key].numeros;
+                        if (typeof sampleNumbers === 'string') sampleNumbers = sampleNumbers.split(',');
+                        break;
+                    }
+                }
+            }
+            if (!sampleNumbers) {
+                sampleNumbers = new Array(25).fill(0);
+                 for (let col=0; col<5; col++) {
+                     let min = (col * 15) + 1; let max = (col + 1) * 15; let used = [];
+                     for (let row=0; row<5; row++) {
+                         let n; do { n = Math.floor(Math.random() * (max - min + 1)) + min; } while(used.includes(n)); used.push(n);
+                         sampleNumbers[row * 5 + col] = n;
+                     }
+                 }
+            }
+
+            for(let i=0; i<25; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'sample-cell';
+                if(i===12) { 
+                    cell.classList.add('center-free'); 
+                    cell.innerText = 'FREE';
+                } else {
+                    if(patternData && patternData[i] === 1) cell.classList.add('active-pattern');
+                    cell.innerText = sampleNumbers[i];
+                }
+                grid.appendChild(cell);
+            }
         }
 
         // TOGGLE NUMBERS MODAL
@@ -2101,39 +2168,19 @@
                 // Marcar visualmente las celdas ganadoras en el tablero
                 highlightWinningNumbers(winners);
                 
-                // Registrar automáticamente el primer ganador
+                // NO REGISTRAR AUTOMÁTICAMENTE (COMENTADO A PETICIÓN)
+                /*
                 if (winners.length > 0) {
                     const primerGanador = winners[0];
-                    const tipoPremio = document.getElementById('gamePrizeSelect').value;
-                    
-                    // Buscar datos completos del cartón
-                    cartonesRef.child(primerGanador.id).once('value').then((snapshot) => {
-                        const datosCarton = snapshot.val();
-                        if (datosCarton) {
-                            // Rellenar automáticamente el formulario de ganadores
-                            document.getElementById('winCarton').value = primerGanador.id;
-                            document.getElementById('selectTipoPremio').value = tipoPremio;
-                            actualizarMontoPremio();
-                            document.getElementById('winNombre').value = datosCarton.nombre || primerGanador.nombre;
-                            document.getElementById('winNombre').style.backgroundColor = "#d1e7dd";
-                            
-                            // AUTOMATIC REGISTRATION WITHOUT CONFIRMATION
-                            const fechaMaestra = document.getElementById('confFecha').value;
-                            if (fechaMaestra && fechaMaestra.trim() !== "") {
-                                     // Let's just do the push directly here for the first winner.
-                                     // Note: ideally loop through all winners
-                                     const winnerData = {
-                                        carton: primerGanador.id,
-                                        premio: document.getElementById('lblPrize').textContent, // Use the current prize label
-                                        nombre: datosCarton.nombre || primerGanador.nombre,
-                                        fecha: fechaMaestra
-                                     };
-                                     
-                                     resultadosRef.child('ganadores').push(winnerData);
-                            }
-                        }
-                    });
+                    // ... Lógica de registro automático ...
                 }
+                */
+            } else {
+                 // Feedback visual si no hay ganadores al pulsar el botón manualmente
+                 if(calledBalls.length > 4) {
+                     // Solo mostrar si no es automático, para no spammear
+                     // O usar un toast discreto
+                 }
             }
         }
 
@@ -2232,6 +2279,122 @@
                 }
             });
         }
+        
+        // --- FUNCIONES OCR Y EDICIÓN DE CARTONES ---
+        function toggleEditModal() {
+            const modal = document.getElementById('editCardModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+        
+        function loadCardForEdit() {
+            const id = document.getElementById('editCardId').value;
+            if(!id || !todosLosDatos[id]) { alert("Cartón no encontrado"); return; }
+            
+            const card = todosLosDatos[id];
+            
+            // 1. Cargar Imagen
+            const img = document.getElementById('editCardImage');
+            img.src = `cartones/${id}.jpg`; // Intentar cargar ruta local
+            
+            // 2. Cargar Números
+            const grid = document.getElementById('editGridContainer');
+            grid.innerHTML = '';
+            
+            let nums = card.numeros || new Array(25).fill(0);
+            if(typeof nums === 'string') nums = nums.split(',');
+            
+            for(let i=0; i<25; i++) {
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.id = `edit-cell-${i}`;
+                if(i===12) { 
+                    input.value = 0; 
+                    input.disabled = true; 
+                    input.style.backgroundColor = '#ccc';
+                } else {
+                    input.value = nums[i] || '';
+                }
+                grid.appendChild(input);
+            }
+        }
+        
+        function previewLocalImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('editCardImage').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        
+        // OCR INTELLIGENT PARSER
+        async function autoDetectNumbers() {
+            const imgElement = document.getElementById('editCardImage');
+            const btn = document.querySelector('.btn-info'); // Botón OCR
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Leyendo...';
+            btn.disabled = true;
+            
+            try {
+                // Tesseract.js worker
+                const worker = await Tesseract.createWorker('eng'); // 'eng' suele leer mejor dígitos que 'spa'
+                
+                // Reconocer imagen
+                const ret = await worker.recognize(imgElement);
+                console.log(ret.data.text);
+                
+                // Extraer todos los números encontrados
+                const foundNumbers = ret.data.text.match(/\d+/g);
+                
+                if(foundNumbers && foundNumbers.length >= 24) {
+                    // Intentar llenar el grid
+                    // Nota: Esto es experimental. Los OCR leen de izq a derecha, arriba a abajo.
+                    // Asumiremos que lee fila por fila.
+                    
+                    let numIndex = 0;
+                    for(let i=0; i<25; i++) {
+                        if(i === 12) continue; // Saltar centro
+                        
+                        // Filtrar números muy grandes o muy pequeños si es necesario (1-75)
+                        // Aquí tomamos los primeros 24 números que parezcan válidos
+                        if(numIndex < foundNumbers.length) {
+                             document.getElementById(`edit-cell-${i}`).value = foundNumbers[numIndex];
+                             numIndex++;
+                        }
+                    }
+                    alert("Lectura completada. Por favor VERIFICA los números.");
+                } else {
+                    alert("No se detectaron suficientes números. Intenta subir una imagen más clara.");
+                }
+                
+                await worker.terminate();
+                
+            } catch (err) {
+                console.error(err);
+                alert("Error en OCR: " + err);
+            }
+            
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+
+        function saveCardNumbers() {
+            const id = document.getElementById('editCardId').value;
+            if(!id) return;
+            
+            const newNumbers = [];
+            for(let i=0; i<25; i++) {
+                const val = document.getElementById(`edit-cell-${i}`).value;
+                newNumbers.push(parseInt(val) || 0);
+            }
+            
+            cartonesRef.child(id).update({ numeros: newNumbers }).then(() => {
+                alert("✅ Números actualizados correctamente para el cartón #" + id);
+                toggleEditModal();
+            });
+        }
 
         // Helpers
         function darkenColor(color, percent) {
@@ -2252,15 +2415,6 @@
             return luminance > 0.5 ? '#000000' : '#FFFFFF';
         }
 
-        function parseCurrency(str) {
-            if (!str) return 0;
-            return parseFloat(str.replace(/[^\d,]/g, '').replace(',', '.'));
-        }
-
-        function formatCurrency(num) {
-            return 'Bs ' + num.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        }
-
         // --- NUEVA FUNCIÓN: MOSTRAR MODAL DE GANADOR ---
         function showWinnerModal(winners, patternName, prizeValue) {
             const modalContent = document.getElementById('winnerModalContent');
@@ -2271,11 +2425,9 @@
             
             winners.forEach(w => {
                 const cardHtml = `
-                    <div class="card text-dark shadow-sm" style="width: 22rem;"> <!-- Increased width -->
-                      <div class="card-header bg-warning fw-bold fs-5">Cartón #${w.id}</div>
+                    <div class="card text-dark shadow-sm" style="width: 22rem;"> <div class="card-header bg-warning fw-bold fs-5">Cartón #${w.id}</div>
                       <div class="position-relative">
-                        <img src="cartones/${w.id}.jpg" class="card-img-top" alt="Cartón ${w.id}" onerror="this.src='https://via.placeholder.com/300x200?text=Sin+Imagen'" style="height: 300px; object-fit: contain; background: #f8f9fa;"> <!-- Increased height -->
-                      </div>
+                        <img src="cartones/${w.id}.jpg" class="card-img-top" alt="Cartón ${w.id}" onerror="this.src='https://via.placeholder.com/300x200?text=Sin+Imagen'" style="height: 300px; object-fit: contain; background: #f8f9fa;"> </div>
                       <div class="card-body p-2">
                         <h5 class="card-title fw-bold mb-0 text-truncate">${w.nombre}</h5>
                         <p class="card-text text-muted small mb-0">${w.telefono}</p>
