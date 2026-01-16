@@ -312,19 +312,21 @@
             .navbar { justify-content: space-between; }
 
             /* --- CORRECCIÓN LOGO NAVBAR MÓVIL --- */
+            /* Restauramos la visualización de la imagen del logo oficial */
             .logo {
-                font-size: 1.1rem; /* Restauramos tamaño */
-                text-transform: none; /* Restauramos texto normal */
-                letter-spacing: normal;
-                display: flex; /* Aseguramos flex para alinear img y texto */
+                display: flex;
+                align-items: center;
                 gap: 10px;
+                font-size: 1.1rem; 
+                text-transform: none;
+                letter-spacing: normal;
             }
             .logo img { 
-                display: block; /* Mostramos la imagen */
-                height: 40px; 
+                display: block; /* Volvemos a mostrar la imagen */
+                height: 36px; 
                 width: auto;
-                border-radius: 50%; 
-                background: white; 
+                border-radius: 50%;
+                background: white;
                 padding: 2px;
             }
             
