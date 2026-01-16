@@ -312,16 +312,18 @@
             .navbar { justify-content: space-between; }
 
             /* --- CORRECCIÓN LOGO NAVBAR MÓVIL --- */
+            /* Ocultamos la imagen del logo en móvil si está mala y mostramos solo el texto estilizado */
+            .logo {
+                font-size: 20px; /* Tamaño de fuente para el logo de texto */
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
             .logo img { 
-                height: 45px; 
-                width: auto; 
-                border-radius: 0; 
-                background: transparent; 
-                padding: 0; 
+                display: none; /* Ocultamos la imagen "mala" */
             }
             
-            /* Ajuste de altura del menú desplegable (45px img + 20px padding = 65px) */
-            .nav-links { position: fixed; left: -100%; top: 65px; flex-direction: column; background-color: var(--primary-green); width: 100%; text-align: center; transition: 0.3s; box-shadow: 0 10px 10px rgba(0,0,0,0.1); padding: 20px 0; gap: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+            /* Ajuste de altura del menú desplegable */
+            .nav-links { position: fixed; left: -100%; top: 60px; flex-direction: column; background-color: var(--primary-green); width: 100%; text-align: center; transition: 0.3s; box-shadow: 0 10px 10px rgba(0,0,0,0.1); padding: 20px 0; gap: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
             .nav-links.active { left: 0; }
             .nav-links a { display: block; padding: 10px; width: 80%; margin: 0 auto; }
             
