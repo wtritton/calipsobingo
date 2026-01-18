@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>¡Compra Exitosa! - Calipso Bingo</title>
+    
+    <!-- FIREBASE (Necesario para obtener los números del cartón) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -289,7 +294,7 @@
             <div class="card-body">
                 <div class="carton-list" id="cartonesContainer">
                     <div class="carton-row">
-                        <span class="carton-name"><i class="fas fa-ticket-alt"></i> Cargando...</span>
+                        <span class="carton-name"><i class="fas fa-spinner fa-spin"></i> Cargando cartones...</span>
                     </div>
                 </div>
 
@@ -347,6 +352,21 @@
     <a href="javascript:void(0)" onclick="irAWhatsapp('Hola, tengo una duda sobre mi compra')" class="whatsapp-float"><i class="fab fa-whatsapp"></i></a>
 
     <script>
+        // CONFIGURACIÓN DE FIREBASE (Misma que index.html)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtj_J5wQ4y-U3UDwwphud9Wir1n7WcI2s",
+            authDomain: "calipsobingo-f532b.firebaseapp.com",
+            databaseURL: "https://calipsobingo-f532b-default-rtdb.firebaseio.com",
+            projectId: "calipsobingo-f532b",
+            storageBucket: "calipsobingo-f532b.firebasestorage.app",
+            messagingSenderId: "196074596826",
+            appId: "1:196074596826:web:db6280789eb0d51ddd38e3",
+            measurementId: "G-M9XK1H641N"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
         // --- FUNCIÓN UNIVERSAL DE WHATSAPP ---
         function irAWhatsapp(mensaje) {
             const telefono = "584248991277";
@@ -354,14 +374,27 @@
             
             let url = "";
             if (isMobile) {
-                // Móvil: usa api.whatsapp.com (más universal hoy en día) o wa.me
                 url = `https://api.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
             } else {
-                // PC: FUERZA WEB.WHATSAPP.COM para evitar errores de app de escritorio
                 url = `https://web.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
             }
             window.open(url, '_blank');
         }
+
+        // --- FUNCIÓN GENERAR IMAGEN DEL CARTÓN (DESCARGA ESTÁTICA) ---
+        // Reemplaza la lógica anterior de canvas por descarga directa de archivo .jpg
+        window.generarImagenCarton = function(id, numeros, nombrePropietario, referencia, fechaCompra) {
+            const imageUrl = `cartones/${id}.jpg`;
+            const filename = `Calipso-Carton-${id}.jpg`;
+
+            const link = document.createElement('a');
+            link.href = imageUrl;
+            link.download = filename; 
+            link.target = '_blank';   
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
 
         // Menú Hamburguesa
         const menuToggle = document.getElementById('mobile-menu');
@@ -371,30 +404,6 @@
                 menuToggle.classList.toggle('is-active');
                 navLinks.classList.toggle('active');
             });
-        }
-
-        function forceDownload(url, fileName) {
-            fetch(url)
-                .then(response => response.blob())
-                .then(blob => {
-                    const blobUrl = window.URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.href = blobUrl;
-                    link.download = fileName;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    window.URL.revokeObjectURL(blobUrl);
-                })
-                .catch(() => {
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.download = fileName;
-                    link.target = '_blank';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                });
         }
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -415,49 +424,65 @@
             const cartonesData = localStorage.getItem('cartonesSeleccionados');
             const referenciaData = localStorage.getItem('compraReferencia') || 'N/A';
             const nombreCliente = localStorage.getItem('nombreComprador') || 'Amigo'; 
-            
             const container = document.getElementById('cartonesContainer');
             const btnNotify = document.getElementById('btnNotifyWhatsapp');
 
             if (cartonesData) {
-                const listaCartones = JSON.parse(cartonesData);
-                container.innerHTML = '';
-
-                if (listaCartones.length > 0) {
-                    listaCartones.forEach(numero => {
-                        const row = document.createElement('div');
-                        row.className = 'carton-row';
-                        let displayText = `Cartón #${numero}`;
-                        let imageUrl = `cartones/${numero}.jpg`; 
-                        let fileName = `Carton-${numero}.jpg`;
-                        const isRandom = (numero === 'Azar' || numero === 'azar');
-                        if (isRandom) { displayText = 'Cartón al Azar'; }
-                        
-                        let btnHtml = '';
-                        if(isRandom) {
-                            btnHtml = `<button class="download-btn" onclick="alert('Este cartón será enviado por WhatsApp')"><i class="fas fa-info-circle"></i> Info</button>`;
-                        } else {
-                            btnHtml = `<button class="download-btn" onclick="forceDownload('${imageUrl}', '${fileName}')"><i class="fas fa-download"></i> Descargar</button>`;
-                        }
-                        
-                        row.innerHTML = `<span class="carton-name"><i class="fas fa-ticket-alt"></i> ${displayText}</span>${btnHtml}`;
-                        container.appendChild(row);
+                const listaCartonesIds = JSON.parse(cartonesData);
+                
+                // Si la lista tiene elementos, buscamos los datos REALES en Firebase
+                if (listaCartonesIds.length > 0) {
+                    
+                    // Crear array de promesas para buscar cada cartón en Firebase
+                    const promesas = listaCartonesIds.map(id => {
+                        if(id === 'azar') return null;
+                        return database.ref('/cartones/' + id).once('value');
                     });
 
-                    // CONFIGURAR BOTÓN NOTIFICAR PAGO
-                    const numerosString = listaCartones.join(', ');
-                    const mensaje = `Hola Calipso Bingo! 🎱\n\nSoy *${nombreCliente}* y he realizado el pago de mis cartones.\n\n🆔 *Referencia:* ${referenciaData}\n🎫 *Cartones:* ${numerosString}\n\nQuedo atento a la confirmación.`;
-                    
-                    // Asignar evento al clic del botón
-                    btnNotify.onclick = function() {
-                        irAWhatsapp(mensaje);
-                    };
+                    Promise.all(promesas).then(snapshots => {
+                        container.innerHTML = ''; // Limpiar "Cargando..."
+
+                        snapshots.forEach(snap => {
+                            if(!snap) return; // skip azar placeholder
+                            const val = snap.val();
+                            const key = snap.key;
+
+                            if (val) {
+                                const row = document.createElement('div');
+                                row.className = 'carton-row';
+                                
+                                // Datos para generar el cartón
+                                const numerosStr = JSON.stringify(val.numeros || []);
+                                const fechaFormat = val.fecha ? new Date(val.fecha).toLocaleDateString() : new Date().toLocaleDateString();
+                                const ref = val.referencia || referenciaData;
+                                const nombre = val.nombre || nombreCliente;
+
+                                row.innerHTML = `
+                                    <span class="carton-name"><i class="fas fa-ticket-alt"></i> Cartón #${key}</span>
+                                    <button class="download-btn" 
+                                        onclick='generarImagenCarton("${key}", ${numerosStr}, "${nombre}", "${ref}", "${fechaFormat}")'>
+                                        <i class="fas fa-download"></i> Descargar
+                                    </button>
+                                `;
+                                container.appendChild(row);
+                            }
+                        });
+
+                        // Configurar botón notificar
+                        const numerosString = listaCartonesIds.filter(x => x !== 'azar').join(', ');
+                        const mensaje = `Hola Calipso Bingo! 🎱\n\nSoy *${nombreCliente}* y he realizado el pago de mis cartones.\n\n🆔 *Referencia:* ${referenciaData}\n🎫 *Cartones:* ${numerosString}\n\nQuedo atento a la confirmación.`;
+                        btnNotify.onclick = function() { irAWhatsapp(mensaje); };
+
+                    }).catch(err => {
+                        console.error(err);
+                        container.innerHTML = '<p style="color:red">Error al cargar datos de los cartones.</p>';
+                    });
 
                 } else {
                     container.innerHTML = '<p style="text-align:center; color:#666;">No se encontraron cartones seleccionados.</p>';
                 }
             } else {
-                container.innerHTML = `<div class="carton-row"><span class="carton-name">No hay datos de compra</span></div>`;
+                container.innerHTML = `<div class="carton-row"><span class="carton-name">No hay datos de compra recientes.</span></div>`;
             }
         });
     </script>

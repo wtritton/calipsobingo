@@ -77,7 +77,7 @@
             overflow-x: hidden;
         }
 
-        /* --- PANTALLA DE CARGA (SPLASH SCREEN) --- */
+        /* PANTALLA DE CARGA (SPLASH SCREEN) */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: #ffffff; z-index: 9999;
@@ -236,7 +236,7 @@
         #previewStatusText { margin: 10px 0; font-size: 13px; color: #666; }
         .single-card-actions { display: flex; gap: 10px; width: 100%; margin-top: 5px; }
         .btn-preview-action { flex: 1; border: none; padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 12px; color: white; transition: opacity 0.2s; }
-        .btn-want { background-color: var(--btn-preview-confirm); } 
+        .btn-want { background-color: var(--btn-preview-confirm); }
         .btn-dont-want { background-color: var(--btn-preview-reject); }
         .btn-remove { background-color: var(--btn-preview-remove); }
         .btn-continue-preview { background-color: #f0f0f0; color: #333; border: 1px solid #ccc; width: 100%; padding: 10px; border-radius: 5px; margin-top: 10px; font-weight: bold; cursor: pointer; }
@@ -263,7 +263,7 @@
             .styled-search-btn::before { content: "\f002"; font-family: "Font Awesome 5 Free"; font-weight: 900; font-size: 16px; }
         }
 
-        /* --- NOTIFICACIONES SOCIAL PROOF --- */
+        /* NOTIFICACIONES SOCIAL PROOF */
         .sales-notification {
             position: fixed; bottom: 20px; left: 20px; background-color: white; padding: 12px 15px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 12px; z-index: 9000; transform: translateY(100px); opacity: 0; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); max-width: 300px; border-left: 5px solid var(--accent-orange);
         }
@@ -277,16 +277,16 @@
             .sales-notification.active { transform: translateX(-50%) translateY(0); }
         }
 
-        /* --- FOOTER SEGURO --- */
-        .main-footer { 
-            background-color: #124029; 
-            color: #e0e0e0; 
-            padding: 30px 20px 20px; 
-            margin-top: auto; 
-            border-top: 5px solid var(--accent-orange); 
-            position: relative; 
+        /* FOOTER SEGURO */
+        .main-footer {
+            background-color: #124029;
+            color: #e0e0e0;
+            padding: 30px 20px 20px;
+            margin-top: auto;
+            border-top: 5px solid var(--accent-orange);
+            position: relative;
             z-index: 10;
-            width: 100%; 
+            width: 100%;
             flex-shrink: 0;
         }
         .footer-content { max-width: 1000px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; gap: 20px; }
@@ -302,62 +302,40 @@
         .developer-credit { margin-top: 5px; font-size: 11px; opacity: 0.7; }
         .developer-credit i { color: var(--accent-orange); }
 
-        /* --- MEDIA QUERIES (SIEMPRE AL FINAL) --- */
+        /* MEDIA QUERIES (SIEMPRE AL FINAL) */
         @media (max-width: 850px) {
             #countdown-desktop-wrapper { display: none; }
             #countdown-mobile-wrapper { display: block; }
             
-            .container { flex-direction: column; } 
+            .container { flex-direction: column; }
             .menu-toggle { display: block; }
             .navbar { justify-content: space-between; }
-
-            /* --- CORRECCIÓN LOGO NAVBAR MÓVIL --- */
-            /* Restauramos la visualización de la imagen del logo oficial */
-            .logo {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                font-size: 1.1rem; 
-                text-transform: none;
-                letter-spacing: normal;
-            }
-            .logo img { 
-                display: block; /* Volvemos a mostrar la imagen */
-                height: 36px; 
-                width: auto;
-                border-radius: 50%;
-                background: white;
-                padding: 2px;
-            }
-            
-            /* Ajuste de altura del menú desplegable */
-            .nav-links { position: fixed; left: -100%; top: 60px; flex-direction: column; background-color: var(--primary-green); width: 100%; text-align: center; transition: 0.3s; box-shadow: 0 10px 10px rgba(0,0,0,0.1); padding: 20px 0; gap: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+            .nav-links { position: fixed; left: -100%; top: 56px; flex-direction: column; background-color: var(--primary-green); width: 100%; text-align: center; transition: 0.3s; box-shadow: 0 10px 10px rgba(0,0,0,0.1); padding: 20px 0; gap: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
             .nav-links.active { left: 0; }
             .nav-links a { display: block; padding: 10px; width: 80%; margin: 0 auto; }
             
-            /* --- CORRECCIÓN DEFINITIVA DE CENTRADO DE IMAGEN (ANTES DEL FOOTER) --- */
-            .right-column { 
-                display: flex; 
-                flex-direction: column; 
-                justify-content: center; 
-                margin-top: 20px; 
-                order: 2; /* Esto asegura que vaya después del formulario (left-column) y antes del footer */
-                align-items: center; 
+            /* CORRECCIÓN DEFINITIVA DE CENTRADO DE IMAGEN */
+            .right-column {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                margin-top: 20px;
+                order: 2;
+                align-items: center;
                 width: 100%; /* Forzamos ancho completo para que pueda centrar */
-                margin-bottom: 20px; /* Espacio antes del footer */
             }
             
-            .character-image { 
+            .character-image {
                 position: static !important; /* Desactiva cualquier 'left:0' heredado */
-                display: block !important; 
-                margin: 0 auto !important; 
-                align-self: center !important; 
-                animation: none !important; 
-                max-height: 350px; /* Aumentado para que no se vea tan pequeño */
-                left: auto !important; 
+                display: block !important;
+                margin: 0 auto !important;
+                align-self: center !important;
+                animation: none !important;
+                max-height: 250px;
+                left: auto !important;
                 top: auto !important;
                 width: auto;
-                max-width: 90%; /* Aumentado ancho para mejor visibilidad */
+                max-width: 80%; /* Evita que se salga si es muy grande */
             }
 
             .left-column { width: 100%; order: 1; }
@@ -417,7 +395,7 @@
                     <div class="price-tag" id="lblPrecioTag">Valor: Bs. 50,00</div>
                     <div class="promo-text" id="lblPromoText"><strong>PROMOCIÓN:</strong> 4×Bs 180 · 8×Bs 360 · 12×Bs 520</div>
 
-                    <div class="countdown-wrapper countdown-mobile" id="countdown-mobile-wrapper">
+                    <div class="countdown-wrapper countdown-mobile">
                         <div class="countdown-title">Queda poco tiempo</div>
                         <div class="countdown-container pulse-animation" id="countdownBoxMobile">
                             <div class="time-box">
@@ -490,7 +468,7 @@
             </div>
             
             <p style="text-align: center; font-size: 13px; color: #888; margin-top: 10px;">
-                <i class="fas fa-lock"></i> Pago 100% seguro 
+                <i class="fas fa-lock"></i> Pago 100% seguro
             </p>
         </div>
         
@@ -587,12 +565,85 @@
         </div>
     </div>
     
-    <div id="paymentModal" class="modal"><div class="modal-content"><div class="payment-modal-header"><h3>Proceso de compra</h3><span class="close-payment" id="closePaymentModal">&times;</span></div><div class="timer-banner"><i class="far fa-clock"></i> Tienes <strong id="paymentTimer">05:00</strong> para completar el pago.</div><div class="modal-body payment-body"><p class="payment-instructions">Asegúrate de pagar el monto exacto...</p><div class="payment-details-list"><div class="payment-detail-row"><span class="detail-label">Monto exacto:</span><span class="detail-value"><span id="paymentAmountDisplay" class="copy-text">Bs 0,00</span><i class="far fa-copy copy-icon" onclick="copiarTexto('paymentAmountDisplay')" title="Copiar"></i></span></div><div class="payment-detail-row"><span class="detail-label">Banco:</span><span class="detail-value"><span class="copy-text">Banesco (0134)</span><i class="far fa-copy copy-icon" onclick="copiarTexto('0134')" title="Copiar"></i></span></div><div class="payment-detail-row"><span class="detail-label">Teléfono:</span><span class="detail-value"><span class="copy-text">04169921932</span><i class="far fa-copy copy-icon" onclick="copiarTexto('04169921932')" title="Copiar"></i></span></div><div class="payment-detail-row"><span class="detail-label">Cédula:</span><span class="detail-value"><span class="copy-text">V10069692</span><i class="far fa-copy copy-icon" onclick="copiarTexto('V10069692')" title="Copiar"></i></span></div><div class="payment-detail-row" style="background: #f9f9f9; padding: 8px; border-radius: 5px; margin-top: 5px;"><span class="detail-value" style="width:100%; justify-content: space-between;"><span id="comboPago" style="font-weight:700; font-size: 13px;">0134 04169921932 10069692</span><i class="far fa-copy copy-icon" onclick="copiarTexto('comboPago')" style="color: var(--accent-orange); cursor: pointer;" title="Copiar todo"></i></span></div><div class="payment-detail-row" style="border-bottom: none; padding-top: 15px;"><span class="detail-label">Cartones:</span><span class="detail-value" id="selectedCartonesList" style="word-break: break-all; text-align: right;">-</span></div></div><div class="payment-input-group"><label class="payment-label">Últimos 6 dígitos de la referencia:</label>
-    <input type="text" id="referenciaInput" class="payment-input" placeholder="Ej: 123456" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-    <div id="referenciaError" class="error-message">La referencia debe tener 4 dígitos o más.</div>
-    </div><div class="payment-input-group"><label class="payment-label">Comprobante de pago:</label><input type="file" id="comprobanteInput" style="display: none;" accept="image/*"><button class="upload-btn" id="triggerUploadBtn"><i class="fas fa-file-upload"></i> Subir comprobante de pago</button></div></div><div class="payment-footer"><button class="reservar-btn" id="finalReserveBtn">RESERVAR CARTONES</button></div></div></div>
-    
-    <div id="singleCardModal" class="modal" style="background-color: rgba(0,0,0,0.85);"><div class="modal-content"><div class="modal-header"><div>Proceso de compra</div><span style="font-size: 20px; cursor: pointer; color:white;" id="closeSingleCardModal">&times;</span></div><div class="modal-body"><p id="previewMaxText">Selecciona tus cartones (Máximo: 1)</p><img src="Logo-oficial.png" alt="Vista Previa Cartón" class="single-card-image" id="singleCardImage" onerror="this.src='https://via.placeholder.com/400x500?text=Bingo+Card'"><p id="previewStatusText">Confirma si deseas elegir este cartón</p><div class="single-card-actions" id="previewActionButtons"></div><button class="btn-continue-preview" id="btnContinuePreview">CONTINUAR</button></div></div></div>
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <div class="payment-modal-header">
+                <h3>Proceso de compra</h3>
+                <span class="close-payment" id="closePaymentModal">&times;</span>
+            </div>
+            <div class="timer-banner">
+                <i class="far fa-clock"></i> Tienes <strong id="paymentTimer">05:00</strong> para completar el pago.
+            </div>
+            <div class="modal-body payment-body">
+                <p class="payment-instructions">Asegúrate de pagar el monto exacto...</p>
+                <div class="payment-details-list">
+                    <div class="payment-detail-row">
+                        <span class="detail-label">Monto exacto:</span>
+                        <span class="detail-value">
+                            <span id="paymentAmountDisplay" class="copy-text">Bs 0,00</span>
+                            <i class="far fa-copy copy-icon" title="Copiar"></i>
+                        </span>
+                    </div>
+                    <div class="payment-detail-row">
+                        <span class="detail-label">Banco:</span>
+                        <span class="detail-value">
+                            <span class="copy-text">Banesco (0134)</span>
+                            <i class="far fa-copy copy-icon" title="Copiar"></i>
+                        </span>
+                    </div>
+                    <div class="payment-detail-row">
+                        <span class="detail-label">Teléfono:</span>
+                        <span class="detail-value">
+                            <span class="copy-text">04248991277</span>
+                            <i class="far fa-copy copy-icon" title="Copiar"></i>
+                        </span>
+                    </div>
+                    <div class="payment-detail-row">
+                        <span class="detail-label">Cédula:</span>
+                        <span class="detail-value">
+                            <span class="copy-text">V10069692</span>
+                            <i class="far fa-copy copy-icon" title="Copiar"></i>
+                        </span>
+                    </div>
+                    <div class="payment-detail-row" style="border-bottom: none; padding-top: 15px;">
+                        <span class="detail-label">Cartones:</span>
+                        <span class="detail-value" id="selectedCartonesList" style="word-break: break-all; text-align: right;">-</span>
+                    </div>
+                </div>
+                <div class="payment-input-group">
+                    <label class="payment-label">Últimos 6 dígitos de la referencia:</label>
+                    <input type="text" id="referenciaInput" class="payment-input" placeholder="Ej: 123456" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    <div id="referenciaError" class="error-message">La referencia debe tener 4 dígitos o más.</div>
+                </div>
+                <div class="payment-input-group">
+                    <label class="payment-label">Comprobante de pago:</label>
+                    <input type="file" id="comprobanteInput" style="display: none;" accept="image/*">
+                    <button class="upload-btn" id="triggerUploadBtn">
+                        <i class="fas fa-file-upload"></i> Subir comprobante de pago
+                    </button>
+                </div>
+            </div>
+            <div class="payment-footer">
+                <button class="reservar-btn" id="finalReserveBtn">RESERVAR CARTONES</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="singleCardModal" class="modal" style="background-color: rgba(0,0,0,0.85);">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>Proceso de compra</div>
+                <span style="font-size: 20px; cursor: pointer; color:white;" id="closeSingleCardModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="previewMaxText">Selecciona tus cartones (Máximo: 1)</p>
+                <img src="Logo-oficial.png" alt="Vista Previa Cartón" class="single-card-image" id="singleCardImage" onerror="this.src='https://via.placeholder.com/400x500?text=Bingo+Card'">
+                <p id="previewStatusText">Confirma si deseas elegir este cartón</p>
+                <div class="single-card-actions" id="previewActionButtons"></div>
+                <button class="btn-continue-preview" id="btnContinuePreview">CONTINUAR</button>
+            </div>
+        </div>
+    </div>
 
     <div id="searchModal" class="modal">
         <div class="modal-content">
@@ -608,7 +659,7 @@
                         <i class="fas fa-caret-down" style="font-size:10px; color:#666;"></i>
                         <span style="font-weight:600; margin-left:2px;">+58</span>
                     </div>
-                    <input type="tel" id="inputSearchPhone" class="styled-input" placeholder="0412-1234567" maxlength="12" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    <input type="tel" id="inputSearchPhone" class="styled-input" placeholder="412-1234567" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     <button id="btnSearchAction" class="styled-search-btn">Buscar</button>
                 </div>
                 <div class="search-results-container" id="searchResultsContainer"></div>
@@ -619,66 +670,6 @@
 
     <div id="toast" class="toast-notification">¡Copiado al portapapeles!</div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    
-    <script>
-        console.log("Cargando base de datos de cartones...");
-        
-        const baseDatosCartones = [
-          { "id": "00001", "numeros": [9, 7, 2, 11, 8, 27, 20, 16, 17, 30, 31, 42, 0, 34, 32, 46, 56, 59, 47, 52, 70, 72, 63, 62, 65] },
-          { "id": "00002", "numeros": [11, 7, 14, 8, 9, 23, 24, 30, 28, 27, 35, 31, 0, 32, 45, 50, 56, 55, 47, 48, 62, 71, 64, 69, 72] },
-          { "id": "00003", "numeros": [11, 4, 15, 6, 12, 29, 21, 25, 20, 22, 40, 33, 0, 41, 31, 58, 48, 55, 49, 46, 74, 66, 62, 63, 75] },
-          { "id": "00004", "numeros": [1, 9, 2, 7, 10, 26, 21, 23, 19, 16, 32, 45, 0, 31, 44, 49, 58, 59, 53, 56, 68, 62, 63, 73, 67] },
-          { "id": "00005", "numeros": [10, 3, 11, 7, 5, 23, 18, 27, 20, 16, 37, 38, 0, 45, 39, 47, 51, 60, 58, 57, 65, 75, 64, 71, 66] },
-          { "id": "00006", "numeros": [13, 9, 4, 1, 5, 25, 24, 16, 20, 21, 35, 32, 0, 33, 44, 52, 49, 50, 55, 47, 62, 72, 69, 70, 68] },
-          { "id": "00007", "numeros": [8, 3, 4, 13, 5, 26, 21, 16, 27, 25, 38, 34, 0, 39, 36, 57, 52, 53, 58, 55, 71, 75, 61, 73, 63] },
-          { "id": "00008", "numeros": [5, 1, 11, 4, 14, 25, 22, 28, 20, 18, 32, 43, 0, 35, 45, 47, 56, 58, 54, 55, 61, 70, 69, 75, 64] },
-          { "id": "00009", "numeros": [14, 5, 8, 9, 13, 18, 17, 19, 21, 22, 33, 31, 0, 32, 43, 56, 52, 48, 59, 53, 75, 61, 62, 69, 70] },
-          { "id": "00010", "numeros": [3, 14, 4, 10, 5, 23, 16, 22, 18, 24, 43, 41, 0, 42, 33, 52, 59, 56, 50, 51, 75, 71, 69, 73, 63] },
-          { "id": "00011", "numeros": [11, 13, 1, 15, 6, 29, 27, 24, 19, 17, 39, 43, 0, 32, 44, 56, 46, 52, 49, 58, 73, 63, 64, 61, 75] },
-          { "id": "00012", "numeros": [8, 13, 2, 7, 1, 27, 20, 29, 23, 22, 32, 43, 0, 35, 31, 52, 54, 60, 57, 48, 69, 73, 63, 65, 72] },
-          { "id": "00013", "numeros": [5, 11, 9, 4, 12, 19, 24, 17, 22, 23, 38, 41, 0, 37, 44, 50, 52, 56, 49, 51, 61, 72, 71, 69, 73] },
-          { "id": "00014", "numeros": [13, 11, 14, 1, 12, 22, 27, 21, 20, 16, 38, 31, 0, 32, 41, 55, 47, 50, 49, 54, 65, 66, 68, 62, 70] },
-          { "id": "00015", "numeros": [15, 4, 12, 11, 1, 25, 24, 30, 29, 17, 38, 34, 0, 44, 40, 54, 55, 46, 47, 59, 73, 64, 67, 74, 61] },
-          { "id": "00016", "numeros": [15, 6, 12, 5, 10, 28, 21, 18, 17, 30, 38, 37, 0, 35, 45, 53, 50, 51, 57, 49, 68, 62, 67, 69, 70] },
-          { "id": "00017", "numeros": [14, 2, 10, 8, 9, 26, 29, 23, 25, 17, 38, 36, 0, 42, 34, 46, 58, 59, 60, 47, 72, 71, 62, 69, 70] },
-          { "id": "00018", "numeros": [4, 1, 6, 11, 2, 29, 24, 25, 18, 23, 31, 35, 0, 36, 41, 46, 49, 54, 50, 59, 65, 74, 75, 64, 71] },
-          { "id": "00019", "numeros": [12, 9, 4, 14, 10, 24, 21, 25, 30, 16, 36, 45, 0, 43, 33, 46, 56, 58, 59, 57, 61, 64, 74, 67, 63] },
-          { "id": "00020", "numeros": [14, 13, 10, 11, 2, 20, 16, 22, 29, 18, 43, 32, 0, 41, 34, 52, 53, 56, 46, 47, 75, 70, 71, 66, 67] },
-          { "id": "00021", "numeros": [6, 1, 13, 3, 4, 29, 23, 28, 22, 24, 39, 40, 0, 37, 36, 51, 57, 59, 55, 47, 70, 71, 63, 67, 62] },
-          { "id": "00022", "numeros": [6, 11, 15, 2, 8, 25, 23, 22, 18, 27, 43, 42, 0, 35, 39, 49, 60, 52, 58, 57, 62, 63, 65, 75, 73] },
-          { "id": "00023", "numeros": [13, 2, 6, 5, 8, 26, 28, 17, 18, 20, 45, 31, 0, 33, 39, 53, 51, 58, 52, 56, 68, 65, 62, 64, 63] },
-          { "id": "00024", "numeros": [7, 5, 3, 11, 10, 29, 25, 20, 28, 24, 43, 41, 0, 32, 40, 55, 46, 50, 51, 48, 66, 73, 65, 72, 64] },
-          { "id": "00025", "numeros": [4, 10, 5, 14, 6, 29, 25, 18, 16, 22, 33, 44, 0, 41, 39, 59, 58, 46, 55, 57, 73, 75, 68, 65, 71] },
-          { "id": "00026", "numeros": [6, 3, 1, 10, 15, 30, 27, 26, 17, 18, 42, 37, 0, 33, 44, 48, 55, 59, 58, 60, 68, 71, 75, 64, 70] },
-          { "id": "00027", "numeros": [5, 13, 14, 11, 2, 28, 22, 30, 18, 16, 45, 43, 0, 37, 39, 52, 50, 47, 51, 55, 73, 69, 70, 75, 67] },
-          { "id": "00028", "numeros": [6, 2, 11, 3, 4, 30, 17, 29, 21, 24, 35, 41, 0, 36, 44, 48, 49, 58, 53, 59, 69, 74, 68, 66, 71] },
-          { "id": "00029", "numeros": [7, 2, 6, 5, 15, 27, 20, 17, 18, 22, 34, 33, 0, 39, 44, 52, 54, 49, 55, 51, 62, 70, 63, 65, 72] },
-          { "id": "00030", "numeros": [12, 14, 15, 9, 3, 21, 16, 27, 28, 30, 33, 31, 0, 34, 37, 49, 58, 48, 47, 53, 71, 69, 72, 67, 75] },
-          { "id": "00031", "numeros": [2, 10, 6, 11, 9, 23, 26, 19, 25, 29, 44, 32, 0, 39, 36, 52, 59, 55, 58, 51, 62, 70, 64, 61, 72] },
-          { "id": "00032", "numeros": [12, 6, 15, 10, 2, 30, 19, 29, 25, 28, 41, 34, 0, 33, 39, 58, 60, 48, 53, 54, 71, 61, 63, 68, 65] },
-          { "id": "00033", "numeros": [11, 5, 9, 4, 15, 29, 24, 21, 22, 26, 33, 35, 0, 34, 41, 48, 55, 60, 54, 49, 67, 63, 71, 73, 72] },
-          { "id": "00034", "numeros": [5, 4, 14, 2, 6, 22, 24, 17, 18, 21, 44, 35, 0, 36, 40, 54, 56, 57, 51, 53, 63, 68, 64, 72, 65] },
-          { "id": "00035", "numeros": [9, 10, 12, 15, 2, 23, 16, 17, 29, 26, 39, 45, 0, 31, 43, 58, 56, 54, 46, 59, 69, 72, 63, 74, 66] },
-          { "id": "00036", "numeros": [3, 1, 13, 14, 5, 26, 27, 25, 21, 18, 32, 43, 0, 39, 45, 55, 48, 52, 51, 53, 61, 68, 62, 63, 73] },
-          { "id": "00037", "numeros": [2, 12, 11, 10, 8, 20, 22, 17, 26, 29, 36, 43, 0, 42, 32, 49, 46, 60, 53, 50, 71, 61, 69, 72, 70] },
-          { "id": "00038", "numeros": [14, 1, 10, 15, 5, 30, 22, 27, 18, 25, 42, 35, 0, 40, 43, 46, 54, 53, 58, 50, 68, 62, 61, 67, 65] },
-          { "id": "00039", "numeros": [6, 11, 4, 5, 7, 23, 27, 25, 22, 30, 39, 36, 0, 42, 38, 53, 55, 50, 58, 52, 68, 71, 72, 66, 65] },
-          { "id": "00040", "numeros": [10, 9, 2, 4, 3, 28, 21, 16, 27, 30, 40, 32, 0, 41, 35, 46, 56, 53, 48, 59, 75, 62, 64, 73, 68] },
-          { "id": "00041", "numeros": [5, 14, 1, 10, 2, 29, 17, 18, 27, 21, 32, 43, 0, 36, 31, 56, 53, 50, 57, 49, 61, 69, 68, 70, 73] },
-          { "id": "00042", "numeros": [2, 9, 7, 13, 8, 22, 27, 19, 18, 26, 42, 34, 0, 39, 31, 48, 50, 57, 51, 47, 69, 65, 62, 74, 70] },
-          { "id": "00043", "numeros": [11, 10, 13, 8, 6, 27, 25, 17, 19, 24, 45, 38, 0, 41, 43, 54, 55, 58, 48, 53, 66, 62, 65, 73, 69] },
-          { "id": "00044", "numeros": [4, 14, 8, 11, 2, 27, 25, 26, 28, 17, 45, 32, 0, 34, 38, 59, 58, 48, 60, 47, 68, 73, 71, 70, 74] },
-          { "id": "00045", "numeros": [13, 11, 15, 6, 8, 16, 26, 29, 27, 30, 33, 44, 0, 43, 45, 51, 52, 59, 54, 46, 73, 66, 71, 64, 62] },
-          { "id": "00046", "numeros": [12, 10, 14, 11, 2, 22, 16, 17, 19, 25, 38, 31, 0, 33, 39, 57, 56, 50, 58, 55, 62, 72, 71, 74, 66] },
-          { "id": "00047", "numeros": [1, 5, 8, 2, 10, 30, 19, 24, 21, 18, 31, 38, 0, 45, 32, 55, 47, 59, 49, 46, 68, 64, 74, 63, 61] },
-          { "id": "00048", "numeros": [13, 8, 5, 11, 2, 29, 28, 26, 22, 18, 39, 41, 0, 34, 37, 57, 58, 60, 52, 47, 68, 71, 72, 62, 70] },
-          { "id": "00049", "numeros": [10, 8, 14, 9, 13, 30, 17, 25, 26, 28, 39, 36, 0, 33, 35, 57, 58, 47, 55, 51, 70, 73, 64, 62, 75] },
-          { "id": "00050", "numeros": [8, 12, 5, 15, 6, 26, 20, 28, 29, 18, 38, 32, 0, 34, 45, 53, 56, 52, 47, 50, 68, 62, 61, 71, 66] }
-        ];
-    </script>
-    
     <script>
         // Configuración Principal de Firebase para la lógica de la tienda
         const firebaseConfig = {
@@ -710,71 +701,30 @@
 
         let cantidadVendidos = 0;
         let countdownInterval;
-        let cartonesData = {}; // Almacén local de datos para recalcular
 
         function cerrarModalPago() {
             document.getElementById('paymentModal').style.display = 'none';
             document.body.style.overflow = 'auto';
         }
 
-        function forceDownload(url, fileName) {
-            fetch(url).then(r => r.blob()).then(blob => {
-                const link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.download = fileName;
-                link.click();
-            }).catch(() => {
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = fileName;
-                link.target = '_blank';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            });
-        }
+        // --- NUEVA LÓGICA DE DESCARGA ESTÁTICA ---
+        // Se crea un elemento "a" temporal y se hace click() en él.
+        // El atributo 'download' sugiere al navegador guardar el archivo.
+        // Si el usuario no tiene configurado "Preguntar dónde guardar", se guardará en Descargas.
+        window.generarImagenCarton = function(id, numeros, nombrePropietario, referencia, fechaCompra) {
+            const imageUrl = `cartones/${id}.jpg`;
+            const filename = `Calipso-Carton-${id}.jpg`;
 
-        // ========== FUNCIÓN DE COPIAR AL PORTAPAPELES ==========
-        window.copyToClipboard = function(elementId) {
-            let copyText = "";
-            const el = document.getElementById(elementId);
+            const link = document.createElement('a');
+            link.href = imageUrl;
+            link.download = filename; // Pide al navegador que descargue en lugar de navegar
+            link.target = '_blank';   // Fallback para abrir en nueva pestaña si falla la descarga
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
 
-            if(elementId === 'paymentAmountDisplay' || elementId === 'bancoData' || elementId === 'telefonoData' || elementId === 'cedulaData') {
-                 // Si el texto tiene paréntesis (ej: "0134 (Banesco)"), solo copiamos el número
-                 // o si tiene 'Bs', lo limpiamos
-                 let rawText = el.innerText;
-                 // Limpiar Bs y espacios
-                 if(rawText.includes("Bs")) {
-                     copyText = rawText.replace("Bs ", "").trim();
-                 } else {
-                     // Tomar la primera parte antes de un espacio (para el banco)
-                     copyText = rawText.split(' ')[0];
-                 }
-            } else {
-                 copyText = el.innerText;
-            }
-            
-            navigator.clipboard.writeText(copyText).then(() => {
-                const toast = document.getElementById("toast");
-                toast.className = "toast-notification show";
-                setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
-            }, (err) => {
-                console.error('Error al copiar: ', err);
-            });
-        }
-        // Funcion para copiar texto directo (usada en el nuevo elemento)
-        window.copiarTexto = function(id) {
-             const texto = document.getElementById(id).innerText;
-             navigator.clipboard.writeText(texto).then(() => {
-                const toast = document.getElementById("toast");
-                toast.className = "toast-notification show";
-                setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
-            }, (err) => {
-                console.error('Error al copiar: ', err);
-            });
-        }
-
-        // ========== FUNCIÓN PARA GENERAR NÚMEROS BINGO VÁLIDOS ==========
+        // ========== FUNCIÓN PARA GENERAR NÚMEROS BINGO VÁLIDOS (Lógica DB) ==========
         function generarNumerosBingo() {
             const carton = new Array(25).fill(0);
             
@@ -833,7 +783,7 @@
             });
         }
 
-        // --- FUNCIÓN INTELIGENTE PARA ABRIR WHATSAPP ---
+        // FUNCIÓN INTELIGENTE PARA ABRIR WHATSAPP
         function abrirSoporte(mensaje) {
             const telefono = "584248991277";
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -847,7 +797,7 @@
             window.open(url, '_blank');
         }
 
-        // --- FUNCIÓN ROBUSTA DE CUENTA REGRESIVA ---
+        // FUNCIÓN ROBUSTA DE CUENTA REGRESIVA
         function actualizarCuentaRegresiva(fechaTexto, horaTexto) {
             if (countdownInterval) clearInterval(countdownInterval);
 
@@ -946,7 +896,7 @@
                 }
             }, 2000);
 
-            // --- LÓGICA DE NOTIFICACIONES DE ACTIVIDAD (SOCIAL PROOF) ---
+            // LÓGICA DE NOTIFICACIONES DE ACTIVIDAD (SOCIAL PROOF)
             const nombresEjemplo = ["María G.", "Pedro R.", "Ana L.", "Carlos D.", "Luisa M.", "José A.", "Elena T.", "Wilmer M.", "Andrea S.", "Ricardo V."];
             const accionesEjemplo = [ "está eligiendo sus números 🎱", "está revisando el cartón #777 👀", "agregó 4 cartones al carrito 🛒", "está completando el pago 💸", "está viendo la promoción x12 🔥", "acaba de entrar a la tienda 🏃", "está buscando su número de la suerte 🍀" ];
             const notificacion = document.getElementById('salesNotification');
@@ -1029,25 +979,6 @@
             let maxSelections = 1;
             let currentPreviewCardNumber = null;
 
-            // Función para recalcular vendidos basándose en la fecha actual
-            function recalcularVendidos() {
-                let cont = 0;
-                if (cartonesData) {
-                    Object.keys(cartonesData).forEach(key => {
-                        const carton = cartonesData[key];
-                        if (carton.estado === 'vendido') {
-                            // SOLO CONTAR SI LA FECHA DEL SORTEO COINCIDE
-                            // Esto permite "resetear" el juego simplemente cambiando la fecha en el panel
-                            if (carton.fechaSorteo === configSorteo.fecha) {
-                                cont++;
-                            }
-                        }
-                    });
-                }
-                cantidadVendidos = cont;
-                actualizarContadorDisponibles();
-            }
-
             configRef.on('value', (snapshot) => {
                 const config = snapshot.val();
                 if (config) {
@@ -1079,16 +1010,22 @@
                         lblPromoText.style.display = 'none';
                     }
 
-                    // Recalcular disponibilidad con la nueva configuración
+                    actualizarContadorDisponibles();
                     actualizarCuentaRegresiva(configSorteo.fecha, configSorteo.hora); 
-                    recalcularVendidos();
                     updateTotalPrice();
                 }
             });
             
             cartonesRef.on('value', (snapshot) => {
-                cartonesData = snapshot.val() || {};
-                recalcularVendidos();
+                const data = snapshot.val();
+                let cont = 0;
+                if (data) {
+                      Object.keys(data).forEach(key => {
+                          if(data[key].estado === 'vendido') cont++;
+                      });
+                }
+                cantidadVendidos = cont;
+                actualizarContadorDisponibles();
             });
 
             function actualizarContadorDisponibles() {
@@ -1108,7 +1045,6 @@
                     triggerUploadBtn.innerHTML = `<i class="fas fa-check"></i> Archivo listo`;
                     triggerUploadBtn.style.backgroundColor = "#2E8B57";
                     triggerUploadBtn.style.color = "white";
-                    triggerUploadBtn.style.animation = ""; // reset animacion error si habia
                 }
             });
 
@@ -1134,31 +1070,31 @@
             btnBackFromSearch.addEventListener('click', () => searchModal.style.display = 'none');
 
             btnSearchAction.addEventListener('click', () => {
-                const phoneToSearch = inputSearchPhone.value.trim();
+                const phoneToSearch = inputSearchPhone.value.trim().toLowerCase(); // toLowerCase not strictly needed for numbers but harmless
                 if (!phoneToSearch) { alert("Ingresa un número de teléfono"); return; }
 
                 searchResultsContainer.innerHTML = '<p style="text-align:center;">Buscando...</p>';
 
                 cartonesRef.once('value').then(snapshot => {
                     const data = snapshot.val() || {};
-                    const foundCards = [];
+                    let foundCards = [];
                     let buyerName = "";
                     let purchaseDate = "";
                     let verifiedStatus = false;
 
                     Object.keys(data).forEach(key => {
                         const carton = data[key];
-                        // Filtramos también por FECHA DE SORTEO para que el usuario solo vea los de este juego
-                        if (carton.telefono === phoneToSearch && carton.estado === 'vendido') {
-                            if (carton.fechaSorteo === configSorteo.fecha) {
-                                foundCards.push(key);
-                                if (carton.verificado === true) {
-                                    verifiedStatus = true;
-                                }
-                                if(!buyerName) {
-                                    buyerName = carton.nombre;
-                                    purchaseDate = new Date(carton.fecha).toLocaleString();
-                                }
+                        // Búsqueda SOLO por Teléfono
+                        const matchPhone = carton.telefono && carton.telefono.includes(phoneToSearch);
+                        
+                        if (matchPhone && carton.estado === 'vendido') {
+                            foundCards.push(key);
+                            if (carton.verificado === true) {
+                                verifiedStatus = true;
+                            }
+                            if(!buyerName) {
+                                buyerName = carton.nombre;
+                                purchaseDate = new Date(carton.fecha).toLocaleString();
                             }
                         }
                     });
@@ -1184,7 +1120,7 @@
                         searchResultsContainer.appendChild(summaryDiv);
 
                         const title = document.createElement('h5');
-                        title.innerText = "Tus Cartones (Sorteo Actual):";
+                        title.innerText = "Tus Cartones:";
                         title.style.margin = "10px 0 5px 0";
                         title.style.fontSize = "14px";
                         searchResultsContainer.appendChild(title);
@@ -1192,16 +1128,23 @@
                         foundCards.forEach(key => {
                             const div = document.createElement('div');
                             div.className = 'found-carton-row';
+                            const cartonData = data[key];
+                            const numerosStr = JSON.stringify(cartonData.numeros || []);
+                            const fechaFormat = cartonData.fecha ? new Date(cartonData.fecha).toLocaleDateString() : "";
+                            const ref = cartonData.referencia || "";
+                            const nombreProp = cartonData.nombre || "Cliente";
+                            
                             div.innerHTML = `
                                 <span class="found-carton-info">Cartón #${key}</span>
-                                <button class="btn-ver-carton" style="width:auto; padding:5px 15px;" onclick="forceDownload('cartones/${key}.jpg', 'Carton-${key}.jpg')">
+                                <button class="btn-ver-carton" style="width:auto; padding:5px 15px;" 
+                                    onclick='generarImagenCarton("${key}", ${numerosStr}, "${nombreProp}", "${ref}", "${fechaFormat}")'>
                                     <i class="fas fa-download"></i> Descargar
                                 </button>
                             `;
                             searchResultsContainer.appendChild(div);
                         });
                     } else {
-                        searchResultsContainer.innerHTML = '<p style="text-align:center; color:red; margin-top:20px;">No se encontraron cartones para este sorteo con ese número.</p>';
+                        searchResultsContainer.innerHTML = '<p style="text-align:center; color:red; margin-top:20px;">No se encontraron cartones asociados a este número.</p>';
                     }
                 });
             });
@@ -1241,15 +1184,7 @@
                         cartonItem.className = 'carton-item';
                         cartonItem.setAttribute('data-number', i);
                         cartonItem.id = `carton-${i}`;
-                        
-                        // Estado base
-                        let estado = 'disponible';
-                        // Chequear si está vendido Y si corresponde al sorteo actual
-                        if (data[i] && data[i].estado === 'vendido') {
-                            if (data[i].fechaSorteo === configSorteo.fecha) {
-                                estado = 'vendido';
-                            }
-                        }
+                        const estado = (data[i] && data[i].estado) ? data[i].estado : 'disponible';
                         
                         if (estado === 'vendido') {
                             cartonItem.classList.add('sold');
@@ -1316,16 +1251,6 @@
                     referenciaError.style.display = 'none';
                 }
 
-                // VALIDACIÓN OBLIGATORIA DEL COMPROBANTE
-                if (comprobanteInput.files.length === 0) {
-                    alert("⚠️ Es obligatorio subir el comprobante de pago.");
-                    triggerUploadBtn.style.backgroundColor = "#ff4444"; 
-                    triggerUploadBtn.innerHTML = '<i class="fas fa-exclamation-circle"></i> Sube el comprobante';
-                    triggerUploadBtn.style.animation = "shake 0.3s ease-in-out"; 
-                    setTimeout(() => triggerUploadBtn.style.animation = "", 300); 
-                    return; 
-                }
-
                 finalReserveBtn.disabled = true;
                 finalReserveBtn.innerText = "Procesando...";
 
@@ -1338,15 +1263,14 @@
                         // Generar números BINGO para este cartón
                         const numerosBingo = generarNumerosBingo();
                         
-                        // Guardar TODOS los datos incluyendo los números y la fecha del sorteo actual
+                        // Guardar TODOS los datos incluyendo los números
                         updates['/cartones/' + num] = {
                             nombre: nameInput.value,
                             telefono: phoneInput.value,
                             referencia: referencia,
                             estado: 'vendido',
                             fecha: new Date().toISOString(),
-                            fechaSorteo: configSorteo.fecha, // ← IMPORTANTE: Vincula la compra a la fecha actual
-                            numeros: numerosBingo, 
+                            numeros: numerosBingo, // ← IMPORTANTE PARA VERIFICAR PREMIOS EN LA DB
                             verificado: false
                         };
                     }
@@ -1379,6 +1303,8 @@
                 const isSelected = cartonElement.classList.contains('selected');
                 previewMaxText.textContent = `Selecciona tus cartones (Máximo: ${maxSelections})`;
                 const imagenCarton = document.getElementById('singleCardImage');
+                
+                // Muestra la imagen estática directamente
                 imagenCarton.src = `cartones/${numero}.jpg`;
                 imagenCarton.onerror = function() { this.src = 'Logo-oficial.png'; };
 
@@ -1448,7 +1374,7 @@
                 let finalTotal = 0;
                 let remaining = quantity;
 
-                // --- LÓGICA DE PAQUETES (PRIORIDAD AL PAQUETE MÁS GRANDE) ---
+                // LÓGICA DE PAQUETES (PRIORIDAD AL PAQUETE MÁS GRANDE)
                 if (remaining >= 12) {
                     const sets12 = Math.floor(remaining / 12);
                     finalTotal += sets12 * configSorteo.promo12;
@@ -1545,52 +1471,6 @@
                     paymentModal.style.display = 'block';
                 } else { alert(`Faltan seleccionar cartones.`); }
             });
-
-            // =========================================================
-            // *** 2. AGREGADO: LÓGICA DE PRUEBA DE BINGO (CONSOLE ONLY) ***
-            // =========================================================
-            // Variable para guardar los números que ya salieron en el sorteo
-            let numerosSorteados = []; 
-
-            // Función para registrar una bola nueva y buscar ganadores
-            window.nuevaBola = function(numero) {
-                // 1. Agregamos el número a la lista de sorteados
-                numerosSorteados.push(numero);
-                console.log("Números sorteados hasta ahora:", numerosSorteados);
-
-                // 2. Revisamos si hay ganadores
-                verificarGanadores();
-            }
-
-            // Función que revisa los 500 cartones automáticamente
-            window.verificarGanadores = function() {
-                let ganadores = [];
-
-                if(typeof baseDatosCartones === 'undefined') {
-                    console.error("El archivo datos_bingo.js no se ha cargado correctamente.");
-                    return;
-                }
-
-                // Recorremos la base de datos que está en datos_bingo.js
-                baseDatosCartones.forEach(carton => {
-                    
-                    // Filtramos los números del cartón para ver si TODOS están en la lista de sorteados
-                    // (Ignoramos el 0 porque es el espacio libre)
-                    const faltantes = carton.numeros.filter(num => {
-                        return num !== 0 && !numerosSorteados.includes(num);
-                    });
-
-                    // Si no falta ningún número (faltantes.length es 0), es GANADOR
-                    if (faltantes.length === 0) {
-                        ganadores.push(carton.id);
-                    }
-                });
-
-                // 3. Si encontramos ganadores, avisamos
-                if (ganadores.length > 0) {
-                    alert("¡BINGO! Ganaron los cartones: " + ganadores.join(", "));
-                }
-            }
         });
     </script>
 </body>
