@@ -426,6 +426,7 @@ box-shadow: none; /* Sin sombras */
 z-index: 2000; display: none; overflow: hidden;
 flex-direction: column;
 }
+.numbers-modal.active { display: flex; }
 .numbers-grid-history {
 display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
 gap: 10px; overflow-y: auto; padding: 10px; flex: 1;
@@ -1358,16 +1359,14 @@ window.toggleVerificado = function(id, estado) { cartonesRef.child(id).update({ 
 window.liberar = function(id) { if(confirm('¿Eliminar venta del cartón #' + id + '?')) cartonesRef.child(id).remove(); }
 window.reiniciarVentas = function() { if(confirm("⚠️ ¿Estás seguro de borrar TODAS las ventas?")) { if(prompt("Escribe BORRAR para confirmar") === "BORRAR") cartonesRef.remove(); } }
 window.descargarExcel = function() {
-let csvContent = "text/csv;charset=utf-8,Carton;Nombre del Cliente\r
-";
+let csvContent = "data:text/csv;charset=utf-8,Carton;Nombre del Cliente\r\n";
 if(todosLosDatos) {
 const lista = Object.keys(todosLosDatos).map(key => ({ id: parseInt(key), ...todosLosDatos[key] }));
 lista.sort((a, b) => a.id - b.id);
 lista.forEach(item => {
 if(item.estado === 'vendido') {
 const nombreLimpio = (item.nombre || "Sin Nombre").replace(/;/g, " ");
-csvContent += `${item.id};${nombreLimpio}\r
-";
+csvContent += `${item.id};${nombreLimpio}\r\n`;
 }
 });
 }
@@ -1401,7 +1400,7 @@ const patternsDB = {
 "Línea Vertical G": [0,0,0,1,0, 0,0,0,1,0, 0,0,0,1,0, 0,0,0,1,0, 0,0,0,1,0],
 "Línea Vertical O": [0,0,0,0,1, 0,0,0,0,1, 0,0,0,0,1, 0,0,0,0,1, 0,0,0,0,1],
 "Diagonal Principal": [1,0,0,0,0, 0,1,0,0,0, 0,0,1,0,0, 0,0,0,1,0, 0,0,0,0,1],
-"Diagonal Inversa": [0,0,0,0,1, 0,0,0,1,0, 0,0,1,0,0, 0,1,0,1,0, 1,0,0,0,0],
+"Diagonal Inversa": [0,0,0,0,1, 0,0,0,1,0, 0,0,1,0,0, 0,1,0,0,0, 1,0,0,0,0],
 "Letra X": [1,0,0,0,1, 0,1,0,1,0, 0,0,1,0,0, 0,1,0,1,0, 1,0,0,0,1],
 "Cruz Grande": [0,0,1,0,0, 0,0,1,0,0, 1,1,1,1,1, 0,0,1,0,0, 0,0,1,0,0],
 "Cuatro Esquinas": [1,0,0,0,1, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 1,0,0,0,1],
@@ -1418,12 +1417,12 @@ const patternsDB = {
 "Letra J": [0,0,0,0,1, 0,0,0,0,1, 0,0,0,0,1, 1,0,0,0,1, 0,1,1,1,0],
 "Letra K": [1,0,0,1,0, 1,0,1,0,0, 1,1,0,0,0, 1,0,1,0,0, 1,0,0,1,0],
 "Letra L": [1,0,0,0,0, 1,0,0,0,0, 1,0,0,0,0, 1,0,0,0,0, 1,1,1,1,1],
-"Letra M": [1,0,0,0,1, 1,1,0,0,1, 1,0,1,0,1, 1,0,0,1,1, 1,0,0,0,1],
+"Letra M": [1,0,0,0,1, 1,1,0,1,1, 1,0,1,0,1, 1,0,0,0,1, 1,0,0,0,1],
 "Letra N": [1,0,0,0,1, 1,1,0,0,1, 1,0,1,0,1, 1,0,0,1,1, 1,0,0,0,1],
 "Letra P": [1,1,1,1,1, 1,0,0,0,1, 1,1,1,1,1, 1,0,0,0,0, 1,0,0,0,0],
 "Letra Q": [1,1,1,1,1, 1,0,0,0,1, 1,0,0,0,1, 1,0,0,1,0, 1,1,1,0,1],
 "Letra R": [1,1,1,1,0, 1,0,0,0,1, 1,1,1,1,0, 1,0,1,0,0, 1,0,0,1,0],
-"Letra S": [1,1,1,1,1, 0,0,0,0,1, 1,1,1,1,1, 0,0,0,0,1, 1,1,1,1,1],
+"Letra S": [1,1,1,1,1, 1,0,0,0,0, 1,1,1,1,1, 0,0,0,0,1, 1,1,1,1,1],
 "Letra T": [1,1,1,1,1, 0,0,1,0,0, 0,0,1,0,0, 0,0,1,0,0, 0,0,1,0,0],
 "Letra U": [1,0,0,0,1, 1,0,0,0,1, 1,0,0,0,1, 1,0,0,0,1, 1,1,1,1,1],
 "Letra V": [1,0,0,0,1, 1,0,0,0,1, 0,1,0,1,0, 0,1,0,1,0, 0,0,1,0,0],
@@ -1431,7 +1430,7 @@ const patternsDB = {
 "Letra Y": [1,0,0,0,1, 0,1,0,1,0, 0,0,1,0,0, 0,0,1,0,0, 0,0,1,0,0],
 "Letra Z": [1,1,1,1,1, 0,0,0,1,0, 0,0,1,0,0, 0,1,0,0,0, 1,1,1,1,1],
 "Diamante": [0,0,1,0,0, 0,1,0,1,0, 1,0,1,0,1, 0,1,0,1,0, 0,0,1,0,0],
-"Pirámide": [0,0,1,0,0, 0,0,1,0,0, 1,1,1,1,1, 0,0,0,0,0, 0,0,0,0,0],
+"Pirámide": [0,0,1,0,0, 0,1,1,1,0, 1,1,1,1,1, 0,0,0,0,0, 0,0,0,0,0],
 "Flecha Abajo": [0,0,1,0,0, 0,0,1,0,0, 1,0,1,0,1, 0,1,1,1,0, 0,0,1,0,0],
 "Ajedrez": [1,0,1,0,1, 0,1,0,1,0, 1,0,1,0,1, 0,1,0,1,0, 1,0,1,0,1],
 "Cuatro Estampillas": [1,1,0,1,1, 1,1,0,1,1, 0,0,0,0,0, 1,1,0,1,1, 1,1,0,1,1],
@@ -1515,8 +1514,8 @@ if(lastBall) {
 // El anterior vuelve a ser verde (last)
 const prevEl = document.getElementById(`cell-${lastBall}`);
 if(prevEl) {
-prevEl.classList.remove('last', 'winner');
-prevEl.classList.add('called');
+prevEl.classList.remove('called');
+prevEl.classList.add('last');
 prevEl.style.background = '';
 prevEl.style.color = '';
 }
@@ -1902,13 +1901,7 @@ telefono: carton.telefono || 'Sin teléfono'
 });
 // ADVERTENCIA si no hay cartones con números
 if (!hasNumerosField && calledBalls.length > 5 && !dataWarningShown) {
-alert("⚠️ ADVERTENCIA CRÍTICA:
-Los cartones vendidos NO tienen la propiedad 'numeros'.
-SOLUCIÓN:
-1. Ve a la página de venta
-2. Asegúrate que cada cartón guarde un array de 25 números
-3. Ejemplo: [5,12,0,0,18, 22,0,28,0,0, 0,0,0,0,42, 0,51,0,0,59, 61,0,0,70,0]
-(0 = espacio vacío)");
+alert("⚠️ ADVERTENCIA CRÍTICA:\nLos cartones vendidos NO tienen la propiedad 'numeros'.\n\nSOLUCIÓN:\n1. Ve a la página de venta\n2. Asegúrate que cada cartón guarde un array de 25 números\n3. Ejemplo: [5,12,0,0,18, 22,0,28,0,0, 0,0,0,0,42, 0,51,0,0,59, 61,0,0,70,0]\n(0 = espacio vacío)");
 dataWarningShown = true;
 }
 // MOSTRAR GANADORES
@@ -2020,7 +2013,6 @@ document.getElementById('btnShowWinningCards').style.display = 'block';
 alert("Aún no hay ganadores completados para la figura: " + currentPatternKey);
 }
 }
-
 // Función auxiliar para resaltar números ganadores
 function highlightWinningNumbers(winners) {
 // Primero quitar cualquier resaltado anterior
@@ -2083,8 +2075,7 @@ fecha: new Date().toISOString()
 }
 // Guardar en Firebase
 cartonesRef.update(cartonesEjemplo).then(() => {
-alert('✅ 5 cartones de ejemplo creados con números BINGO válidos.
-Ahora puedes probar el sistema de detección.');
+alert('✅ 5 cartones de ejemplo creados con números BINGO válidos.\nAhora puedes probar el sistema de detección.');
 });
 }
 // Función de diagnóstico
@@ -2129,88 +2120,27 @@ return parseFloat(str.replace(/[^\d,]/g, '').replace(',', '.'));
 function formatCurrency(num) {
 return 'Bs ' + num.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 }
-// --- NUEVA FUNCIÓN: MOSTRAR MODAL DE GANADOR CON CARTÓN REAL ---
+// --- NUEVA FUNCIÓN: MOSTRAR MODAL DE GANADOR ---
 function showWinnerModal(winners, patternName, prizeValue) {
 const modalContent = document.getElementById('winnerModalContent');
 document.getElementById('modalPatternName').textContent = patternName;
 document.getElementById('modalPrizeValue').textContent = prizeValue;
 modalContent.innerHTML = '';
-
-// Mostrar cada ganador con su cartón real
 winners.forEach(w => {
-const cartonData = todosLosDatos[w.id];
-if (!cartonData || !cartonData.numeros) return;
-
-let numeros = cartonData.numeros;
-if (typeof numeros === 'string') {
-numeros = numeros.split(',').map(n => parseInt(n.trim(), 10));
-}
-
-// Crear el cartón visual
-const cardDiv = document.createElement('div');
-cardDiv.className = 'card text-dark shadow-sm';
-cardDiv.style.width = '22rem';
-
-const header = document.createElement('div');
-header.className = 'card-header bg-warning fw-bold fs-5';
-header.textContent = `Cartón #${w.id}`;
-cardDiv.appendChild(header);
-
-const body = document.createElement('div');
-body.className = 'card-body p-2';
-
-// Crear la cuadrícula del cartón
-const grid = document.createElement('div');
-grid.className = 'edit-grid';
-grid.style.gridTemplateColumns = 'repeat(5, 1fr)';
-grid.style.gap = '2px';
-
-for (let i = 0; i < 25; i++) {
-const cell = document.createElement('div');
-cell.className = 'sample-cell';
-cell.style.aspectRatio = '1';
-cell.style.fontSize = '0.6rem';
-cell.style.fontWeight = 'bold';
-cell.style.display = 'flex';
-cell.style.alignItems = 'center';
-cell.style.justifyContent = 'center';
-
-if (i === 12) {
-cell.classList.add('center-free');
-cell.textContent = 'FREE';
-} else {
-const num = numeros[i];
-if (num === 0 || !num) {
-cell.textContent = '';
-cell.style.background = '#f8f9fa';
-} else {
-cell.textContent = num;
-// Verificar si el número ha sido llamado
-if (calledBalls.includes(num)) {
-cell.style.background = '#28a745';
-cell.style.color = 'white';
-}
-}
-}
-grid.appendChild(cell);
-}
-
-body.appendChild(grid);
-
-// Información del ganador
-const infoDiv = document.createElement('div');
-infoDiv.className = 'mt-2';
-infoDiv.innerHTML = `
+const cardHtml = `
+<div class="card text-dark shadow-sm" style="width: 22rem;"> <!-- Increased width -->
+<div class="card-header bg-warning fw-bold fs-5">Cartón #${w.id}</div>
+<div class="position-relative">
+<img src="cartones/${w.id}.jpg" class="card-img-top" alt="Cartón ${w.id}" onerror="this.src='https://via.placeholder.com/300x200?text=Sin+Imagen'" style="height: 300px; object-fit: contain; background: #f8f9fa;"> <!-- Increased height -->
+</div>
+<div class="card-body p-2">
 <h5 class="card-title fw-bold mb-0 text-truncate">${w.nombre}</h5>
 <p class="card-text text-muted small mb-0">${w.telefono}</p>
+</div>
+</div>
 `;
-
-body.appendChild(infoDiv);
-cardDiv.appendChild(body);
-
-modalContent.appendChild(cardDiv);
+modalContent.innerHTML += cardHtml;
 });
-
 const myModal = new bootstrap.Modal(document.getElementById('bingoWinnerModal'));
 myModal.show();
 }
@@ -2295,4 +2225,3 @@ modal.show();
 </script>
 </body>
 </html>
-
