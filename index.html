@@ -707,51 +707,85 @@
             document.body.style.overflow = 'auto';
         }
 
-        // --- LÓGICA DE DESCARGA CORREGIDA PARA MÓVILES (FETCH + BLOB) ---
+        // --- FUNCIÓN DE DESCARGA HÍBRIDA (PC + MÓVIL) ---
         window.generarImagenCarton = function(id, numeros, nombrePropietario, referencia, fechaCompra) {
-            // 1. Definir ruta
-            const imageUrl = `cartones/${id}.jpg`;
-            const filename = `Calipso-Carton-${id}.jpg`;
+            // CONFIGURACIÓN: Asegúrate que esto coincida con tus archivos
+            const folder = 'cartones'; // Nombre de la carpeta
+            const extension = '.jpg';  // Extensión del archivo (Cuidado con .JPG vs .jpg)
+            
+            const imageUrl = `${folder}/${id}${extension}`;
+            const filename = `Calipso-Carton-${id}${extension}`;
 
-            // 2. Feedback visual (Detectar botón)
+            // Feedback visual en el botón
             const btn = event ? event.target.closest('button') : null;
             const originalText = btn ? btn.innerHTML : '';
-            
             if(btn) {
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Bajando...';
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
                 btn.disabled = true;
             }
 
-            // 3. Forzar descarga con Blob (Funciona en Android/iOS)
-            fetch(imageUrl)
-                .then(response => {
-                    if (!response.ok) throw new Error("No se encontró la imagen");
-                    return response.blob();
-                })
-                .then(blob => {
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.style.display = 'none';
-                    a.href = url;
-                    a.download = filename;
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                    document.body.removeChild(a);
-                })
-                .catch(err => {
-                    console.error("Error descarga:", err);
-                    // Fallback para Safari/iOS muy antiguos o errores de red
-                    window.open(imageUrl, '_blank');
-                    alert('La descarga automática falló. La imagen se abrirá en una nueva pestaña, mantén presionado para guardar.');
-                })
-                .finally(() => {
-                    // 4. Restaurar botón
+            console.log("Intentando descargar:", imageUrl); // Para depuración en consola (F12)
+
+            // DETECTAR SI ES MÓVIL
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            if (!isMobile) {
+                // --- MÉTODO PC (Clásico y Rápido) ---
+                // En PC, el atributo 'download' funciona perfecto y es lo más seguro.
+                setTimeout(() => {
+                    const link = document.createElement('a');
+                    link.href = imageUrl;
+                    link.download = filename;
+                    link.target = '_blank'; // Por si falla la descarga, abre pestaña
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Restaurar botón
                     if(btn) {
                         btn.innerHTML = originalText;
                         btn.disabled = false;
                     }
-                });
+                }, 500);
+
+            } else {
+                // --- MÉTODO MÓVIL (Fetch + Blob) ---
+                // En Android/iOS, forzamos la creación de un archivo binario
+                fetch(imageUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.click();
+                        
+                        // Limpieza
+                        setTimeout(() => {
+                            window.URL.revokeObjectURL(url);
+                            document.body.removeChild(a);
+                        }, 100);
+                    })
+                    .catch(err => {
+                        console.error("Error en descarga móvil:", err);
+                        // INTENTO DE EMERGENCIA: Abrir directo
+                        alert(`No se pudo forzar la descarga (Error: ${err.message}). Abriendo imagen en pestaña nueva...`);
+                        window.location.href = imageUrl;
+                    })
+                    .finally(() => {
+                        if(btn) {
+                            btn.innerHTML = originalText;
+                            btn.disabled = false;
+                        }
+                    });
+            }
         };
 
         // ========== FUNCIÓN PARA GENERAR NÚMEROS BINGO VÁLIDOS (Lógica DB) ==========
