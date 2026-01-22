@@ -6,7 +6,6 @@
 <title>Admin - Calipso Bingo</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<!-- Tesseract.js para OCR (Lectura de imágenes) -->
 <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
 <style>
 body { background-color: #f4f6f9; font-family: 'Segoe UI', sans-serif; }
@@ -567,7 +566,6 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 </div>
 </nav>
 <div class="container">
-<!-- ESTRUCTURA DE PREMIOS -->
 <div class="prizes-panel">
 <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
 <div>
@@ -586,7 +584,6 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 <div class="col-6 col-md-3"><div class="prize-card grand-prize"><small class="text-uppercase fw-bold">👑 CARTÓN LLENO</small><span class="prize-amount" id="prizeT4">Bs 0,00</span></div></div>
 </div>
 </div>
-<!-- CONFIGURACIÓN DEL SORTEO (MOVIDO AQUÍ) -->
 <div class="card shadow-sm mb-4 card-config">
 <div class="card-header bg-white fw-bold">
 <i class="fas fa-edit"></i> Configuración del Sorteo
@@ -627,7 +624,6 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 <div class="form-label fw-bold text-secondary">Paquete x 12</div>
 <input type="number" id="confPromo12" class="form-control" step="0.01" readonly style="background-color: #e8f5e9;">
 </div>
-<!-- NUEVA SECCIÓN DE TANDA ACTIVA EN CONFIGURACIÓN -->
 <div class="col-md-6">
 <div class="form-label fw-bold text-primary">🎯 Configurar Tanda de Juego</div>
 <select id="confTandaSelect" class="form-select" onchange="actualizarPremioConfig()">
@@ -661,7 +657,6 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 </div>
 </div>
 </div>
-<!-- REGISTRO DE GANADORES -->
 <div class="card shadow-sm mb-4 card-winners">
 <div class="card-header bg-primary text-white fw-bold d-flex justify-content-between align-items-center">
 <span><i class="fas fa-trophy"></i> REGISTRO DE GANADORES</span>
@@ -699,7 +694,13 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 </div>
 </div>
 <div>
-<h6 class="text-muted border-bottom pb-2">📋 Lista de Ganadores Publicada</h6>
+<div class="d-flex justify-content-between align-items-center mb-2">
+<h6 class="text-muted border-bottom pb-2 m-0" style="flex-grow: 1;">📋 Lista de Ganadores Publicada</h6>
+<div class="input-group input-group-sm" style="width: 250px;">
+<span class="input-group-text"><i class="fas fa-search"></i></span>
+<input type="text" id="buscadorGanadores" class="form-control" placeholder="Buscar por fecha (Ej: 8 de Enero)..." onkeyup="filtrarGanadores()">
+</div>
+</div>
 <div class="table-responsive">
 <table class="table table-striped table-bordered align-middle">
 <thead class="table-light">
@@ -729,7 +730,6 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 <div class="col-md-4"><div class="card bg-white p-3 shadow-sm text-center border-0 h-100"><h6 class="text-muted text-uppercase small">Disponibles</h6><h2 class="text-secondary fw-bold" id="totalDisponibles">...</h2></div></div>
 </div>
 <div class="progress-container"><div class="progress"><div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%"></div></div></div>
-<!-- INTEGRACIÓN BINGO CALLER (NUEVO CÓDIGO) -->
 <div class="card shadow-sm mb-4">
 <div class="card-header bg-dark text-white fw-bold d-flex justify-content-between align-items-center">
 <span><i class="fas fa-gamepad"></i> PANTALLA DE SORTEO</span>
@@ -769,7 +769,6 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 </button>
 </div>
 <div class="controls-box mt-3">
-<!-- SELECTOR DE PREMIO JUEGO -->
 <div class="mb-2">
 <label class="small fw-bold d-block text-center text-muted">JUGANDO POR:</label>
 <select id="gamePrizeSelect" class="form-select form-select-sm text-center fw-bold text-primary mb-2" onchange="updateGamePrizeDisplay()">
@@ -779,11 +778,9 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 <option value="t4">👑 CARTÓN LLENO</option>
 </select>
 </div>
-<!-- MOVIDO: SELECTOR DE FIGURA (PATRÓN) CON ID ÚNICO -->
 <div class="mb-3">
 <label class="small fw-bold d-block text-center text-muted">FIGURA A JUGAR:</label>
 <select id="cfgPatternSelectMain" class="form-select form-select-sm text-center fw-bold bg-light" onchange="changePattern()">
-<!-- JS Populated -->
 </select>
 </div>
 <div class="radio-row">
@@ -803,7 +800,6 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 </div>
 </div>
 <div class="section-bottom">
-<!-- MODIFICADO: SAMPLE CARD BOX CON ONCLICK -->
 <div class="sample-card-box" onclick="openPatternModal()" title="Clic para cambiar figura">
 <div class="sample-card-header">
 <span>FIGURA</span>
@@ -821,14 +817,12 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 <div class="detail-value prize" id="lblPrize">Bs 0,00</div>
 </div>
 </div>
-<!-- NUEVA FILA PARA TANDA -->
 <div class="details-row mt-2">
 <div class="detail-card w-100" style="background: #e8f5e9; border: 1px solid #1a5e3a;">
 <div class="detail-label text-success">TANDA ACTUAL</div>
 <div class="detail-value text-success" id="lblTandaActiva">1ª Tanda</div>
 </div>
 </div>
-<!-- BOTÓN NUEVO: VER CARTONES GANADORES -->
 <button class="btn-view-winners" onclick="verGanadoresManual()">
 <i class="fas fa-eye"></i> 👁️ VER CARTONES GANADORES
 </button>
@@ -840,7 +834,6 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 <label>Logo URL</label>
 <input type="text" id="cfgLogo" placeholder="Logo-oficial.png" oninput="updateUI()">
 </div>
-<!-- SELECTOR FIGURA EN MODAL CON ID ÚNICO -->
 <div class="form-group">
 <label>Seleccionar Figura</label>
 <select id="cfgPatternSelect" onchange="changePattern()"></select>
@@ -859,17 +852,14 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 </div>
 <button class="btn-game btn-sacar" style="width:100%; margin-top:20px;" onclick="toggleConfig()">Cerrar</button>
 </div>
-<!-- MODAL NÚMEROS ORDENADOS -->
 <div class="numbers-modal" id="numbersModal">
 <div class="d-flex justify-content-between align-items-center mb-3">
 <h4 class="m-0 fw-bold">📜 Historial de Bolas (Orden de Salida)</h4>
 <button class="btn btn-sm btn-danger" onclick="toggleNumbersModal()">x</button>
 </div>
 <div class="numbers-grid-history" id="numbersGridHistory">
-<!-- JS populated -->
 </div>
 </div>
-<!-- MODAL EDITOR DE CARTONES CON IMAGEN -->
 <div class="numbers-modal" id="editCardModal" style="z-index: 3100; max-width: 900px;">
 <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
 <h3 class="m-0 fw-bold"><i class="fas fa-edit"></i> Editor de Cartones</h3>
@@ -881,11 +871,9 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 <button class="btn btn-primary" onclick="loadCardForEdit()">Cargar Números e Imagen</button>
 </div>
 <div class="edit-layout">
-<!-- Columna Imagen -->
 <div class="edit-image-col">
 <h6 class="text-muted mb-2">Referencia Visual (JPG)</h6>
 <img id="editCardImage" src="Logo-oficial-lineal.png" class="carton-preview-img" onerror="this.src='https://via.placeholder.com/300x400?text=Sin+Imagen+Disponible'" crossorigin="anonymous">
-<!-- BOTÓN DE SUBIDA MANUAL DE IMAGEN -->
 <div class="mt-2 text-center w-100">
 <label class="btn btn-sm btn-outline-primary w-100">
 <i class="fas fa-upload"></i> Subir Foto del Cartón
@@ -894,11 +882,9 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 <small class="text-muted d-block mt-1" style="font-size: 0.75rem;">Si la imagen no carga, súbela aquí.</small>
 </div>
 </div>
-<!-- Columna Inputs -->
 <div class="edit-inputs-col">
 <h6 class="text-muted mb-2">Base de Datos (Corregir Aquí)</h6>
 <div id="editGridContainer" class="edit-grid">
-<!-- 25 Inputs generados por JS -->
 </div>
 <div class="mt-4 text-end">
 <button class="btn btn-info fw-bold w-100 mb-2" onclick="autoDetectNumbers()">
@@ -912,7 +898,6 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 </div>
 </div>
 </div>
-<!-- NUEVO MODAL: SELECCIÓN VISUAL DE FIGURAS -->
 <div class="numbers-modal" id="patternSelectionModal" style="z-index: 3200; max-width: 800px; max-height: 90%;">
 <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
 <h3 class="m-0 fw-bold"><i class="fas fa-th"></i> Seleccionar Figura</h3>
@@ -924,13 +909,11 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 </button>
 </div>
 <div class="pattern-modal-grid" id="patternsGrid">
-<!-- JS Populated -->
 </div>
 </div>
 </div>
 </div>
 </div>
-<!-- FIN INTEGRACIÓN BINGO CALLER -->
 <div class="row mb-3">
 <div class="col-12 d-flex justify-content-between">
 <button class="btn btn-success fw-bold" onclick="descargarExcel()"><i class="fas fa-file-excel"></i> DESCARGAR LISTA SIMPLIFICADA</button>
@@ -966,21 +949,14 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 </div>
 </div>
 </div>
-<!-- Modal Bingo Ganador -->
 <div class="modal fade" id="bingoWinnerModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
 <div class="modal-dialog modal-dialog-centered modal-lg">
 <div class="modal-content border-0 shadow-lg" style="overflow: hidden;">
-<div class="modal-header bg-success text-white justify-content-center py-2" style="background: linear-gradient(135deg, #1a5e3a 0%, #2E8B57 100%);"> <!-- Reduced padding -->
-<div class="text-center">
-<!-- Título del Modal -->
-<h1 class="modal-title display-3 fw-bold text-warning mb-0" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">¡BINGO!</h1> <!-- Reduced font size -->
-<p class="mb-0 fs-5">Tenemos Ganador</p>
+<div class="modal-header bg-success text-white justify-content-center py-2" style="background: linear-gradient(135deg, #1a5e3a 0%, #2E8B57 100%);"> <div class="text-center">
+<h1 class="modal-title display-3 fw-bold text-warning mb-0" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">¡BINGO!</h1> <p class="mb-0 fs-5">Tenemos Ganador</p>
 </div>
 </div>
-<div class="modal-body bg-light" style="max-height: 70vh; overflow-y: auto;"> <!-- Scrollable -->
-<!-- Contenedor donde se insertan las tarjetas de ganadores -->
-<div id="winnerModalContent" class="d-flex justify-content-center flex-wrap gap-3 py-2">
-<!-- Cards injected via JS -->
+<div class="modal-body bg-light" style="max-height: 70vh; overflow-y: auto;"> <div id="winnerModalContent" class="d-flex justify-content-center flex-wrap gap-3 py-2">
 </div>
 <div class="row justify-content-center mt-2">
 <div class="col-md-8">
@@ -1007,7 +983,6 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 </div>
 </div>
 </div>
-<!-- NUEVO MODAL: CARTONES GANADORES DETECTADOS -->
 <div class="modal fade" id="winningCardsModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
 <div class="modal-dialog modal-dialog-centered modal-xl">
 <div class="modal-content border-0 shadow-lg">
@@ -1017,7 +992,6 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 </div>
 <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
 <div id="winningCardsContent" class="d-flex flex-wrap justify-content-center gap-3">
-<!-- Los cartones ganadores se inyectarán aquí -->
 </div>
 </div>
 <div class="modal-footer justify-content-center">
@@ -1026,13 +1000,11 @@ font-size: 2rem; font-weight: bold; color: var(--primary-green);
 </div>
 </div>
 </div>
-<!-- Loading Overlay -->
 <div id="loadingOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; justify-content: center; align-items: center; font-size: 2rem; font-weight: bold; color: var(--primary-green);">
 <i class="fas fa-circle-notch fa-spin me-3"></i> Cargando Sorteo...
 </div>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<!-- Incluir JS de Bootstrap para el modal -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 // CONTRASEÑA DE ACCESO PARA EVITAR USO NO AUTORIZADO
@@ -1065,6 +1037,9 @@ let valoresPremios = { t1: "Bs 0,00", t2: "Bs 0,00", t3: "Bs 0,00", t4: "Bs 0,00
 let primeraCarga = true;
 let totalVentasAnterior = 0;
 let dataWarningShown = false; // Prevents spamming alerts
+// NEW: Global variable for filtering winners
+let allWinnersData = [];
+
 // Helper to parse currency
 function parseCurrency(str) {
 if (!str) return 0;
@@ -1111,25 +1086,64 @@ let url = isMobile
 : `https://web.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
 window.open(url, '_blank');
 }
+
+// CAMBIO: LÓGICA DE FILTRADO DE GANADORES
 resultadosRef.on('value', (snapshot) => {
-const data = snapshot.val() || {};
-const tbodyWin = document.getElementById('tableWinners');
-tbodyWin.innerHTML = '';
-if(data.ganadores) {
-Object.entries(data.ganadores).forEach(([key, g]) => {
-const tr = `<tr>
-<td class="small text-muted fw-bold">${g.fecha || '-'}</td>
-<td class="fw-bold text-center fs-5">#${g.carton}</td>
-<td>${g.premio}</td>
-<td>${g.nombre}</td>
-<td class="text-center"><button class="btn btn-sm btn-outline-danger" onclick="borrarGanador('${key}')"><i class="fas fa-trash"></i></button></td>
-</tr>`;
-tbodyWin.innerHTML += tr;
+    const data = snapshot.val() || {};
+    if(data.ganadores) {
+        // Guardamos los ganadores en una variable global e invertimos el orden
+        allWinnersData = Object.entries(data.ganadores).map(([key, value]) => ({ key, ...value })).reverse();
+    } else {
+        allWinnersData = [];
+    }
+    // Renderizamos la tabla inicial (sin filtros o con el filtro actual)
+    filtrarGanadores();
 });
-} else {
-tbodyWin.innerHTML = '<tr><td colspan="5" class="text-center text-muted small p-3">No hay ganadores registrados todavía.</td></tr>';
+
+// NUEVA FUNCIÓN DE FILTRADO
+window.filtrarGanadores = function() {
+    const texto = document.getElementById('buscadorGanadores').value.toLowerCase().trim();
+    // Obtenemos la fecha configurada en el panel (La fecha del sorteo actual)
+    const fechaActualSorteo = document.getElementById('confFecha').value.toLowerCase().trim();
+    
+    const tbodyWin = document.getElementById('tableWinners');
+    tbodyWin.innerHTML = '';
+
+    const filtrados = allWinnersData.filter(g => {
+        const fecha = (g.fecha || '').toLowerCase();
+        const nombre = (g.nombre || '').toLowerCase();
+        const premio = (g.premio || '').toLowerCase();
+        const carton = (g.carton || '').toString();
+        
+        if (texto === "") {
+            // SI NO HAY BÚSQUEDA: Mostrar SOLO los de la fecha actual configurada
+            return fecha === fechaActualSorteo;
+        } else {
+            // SI HAY BÚSQUEDA: Filtrar por lo que escriba el usuario
+            return fecha.includes(texto) || nombre.includes(texto) || premio.includes(texto) || carton.includes(texto);
+        }
+    });
+
+    if(filtrados.length > 0) {
+        filtrados.forEach(g => {
+            const tr = `<tr>
+            <td class="small text-muted fw-bold">${g.fecha || '-'}</td>
+            <td class="fw-bold text-center fs-5">#${g.carton}</td>
+            <td>${g.premio}</td>
+            <td>${g.nombre}</td>
+            <td class="text-center"><button class="btn btn-sm btn-outline-danger" onclick="borrarGanador('${g.key}')"><i class="fas fa-trash"></i></button></td>
+            </tr>`;
+            tbodyWin.innerHTML += tr;
+        });
+    } else {
+        if(texto === "") {
+             tbodyWin.innerHTML = `<tr><td colspan="5" class="text-center text-muted small p-3">No hay ganadores registrados para la fecha de hoy (${document.getElementById('confFecha').value}).<br>Usa el buscador para ver fechas anteriores.</td></tr>`;
+        } else {
+             tbodyWin.innerHTML = '<tr><td colspan="5" class="text-center text-muted small p-3">No hay ganadores que coincidan con la búsqueda.</td></tr>';
+        }
+    }
 }
-});
+
 window.actualizarMontoPremio = function() {
 const seleccion = document.getElementById('selectTipoPremio').value;
 const inputPremio = document.getElementById('winPremio');
@@ -1239,6 +1253,8 @@ const avgUnit = (precioBaseActual + (p4/4) + (p8/8) + (p12/12)) / 4;
 document.getElementById('inputPrecioPromedio').value = avgUnit.toFixed(2);
 }
 recalcularPremios();
+// Actualizar tabla de ganadores por si cambió la fecha
+filtrarGanadores();
 }
 });
 window.guardarConfiguracion = function() {
@@ -1351,7 +1367,22 @@ actualizarPremioConfig(); // Actualizar premio en configuración
 }
 window.toggleVerificado = function(id, estado) { cartonesRef.child(id).update({ verificado: estado }); }
 window.liberar = function(id) { if(confirm('¿Eliminar venta del cartón #' + id + '?')) cartonesRef.child(id).remove(); }
-window.reiniciarVentas = function() { if(confirm("⚠️ ¿Estás seguro de borrar TODAS las ventas?")) { if(prompt("Escribe BORRAR para confirmar") === "BORRAR") cartonesRef.remove(); } }
+
+window.reiniciarVentas = function() {
+    // Confirmación de seguridad explícita
+    if(confirm("⚠️ ATENCIÓN:\n\nEsta acción eliminará TODAS las ventas actuales (Cartones vendidos).\n\n✅ EL REGISTRO DE GANADORES NO SE BORRARÁ.\nLos ganadores quedan guardados por fecha en el historial.\n\n¿Deseas continuar?")) {
+        if(prompt("Escribe BORRAR para confirmar el reinicio de ventas:") === "BORRAR") {
+            cartonesRef.remove()
+            .then(() => {
+                alert("🗑️ Ventas eliminadas correctamente.\n\nEl sistema está listo para un nuevo sorteo.\nLos ganadores anteriores permanecen en el registro.");
+            })
+            .catch(error => {
+                alert("Error al borrar: " + error.message);
+            });
+        }
+    }
+}
+
 window.descargarExcel = function() {
 let csvContent = "data:text/csv;charset=utf-8,Carton;Nombre del Cliente\r\n";
 if(todosLosDatos) {
@@ -2122,11 +2153,9 @@ document.getElementById('modalPrizeValue').textContent = prizeValue;
 modalContent.innerHTML = '';
 winners.forEach(w => {
 const cardHtml = `
-<div class="card text-dark shadow-sm" style="width: 22rem;"> <!-- Increased width -->
-<div class="card-header bg-warning fw-bold fs-5">Cartón #${w.id}</div>
+<div class="card text-dark shadow-sm" style="width: 22rem;"> <div class="card-header bg-warning fw-bold fs-5">Cartón #${w.id}</div>
 <div class="position-relative">
-<img src="cartones/${w.id}.jpg" class="card-img-top" alt="Cartón ${w.id}" onerror="this.src='https://via.placeholder.com/300x200?text=Sin+Imagen'" style="height: 300px; object-fit: contain; background: #f8f9fa;"> <!-- Increased height -->
-</div>
+<img src="cartones/${w.id}.jpg" class="card-img-top" alt="Cartón ${w.id}" onerror="this.src='https://via.placeholder.com/300x200?text=Sin+Imagen'" style="height: 300px; object-fit: contain; background: #f8f9fa;"> </div>
 <div class="card-body p-2">
 <h5 class="card-title fw-bold mb-0 text-truncate">${w.nombre}</h5>
 <p class="card-text text-muted small mb-0">${w.telefono}</p>
